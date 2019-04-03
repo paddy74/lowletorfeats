@@ -1,8 +1,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# Learning-To-Rank Feature Library
+# Learning-To-Rank Low-Level Feature Library
 
-A library for the collection of common features used in learning-to-rank algorithms.
+A library for the collection of common low-level features used in learning-to-rank algorithms such as TF-IDF.
+
+## Features
+
+The following features can be collected using this library:
+
+- 
 
 ## Versioning
 
