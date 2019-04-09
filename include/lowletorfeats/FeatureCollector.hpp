@@ -18,10 +18,10 @@ public:
     /* Public member variables */
     std::array<std::string, 8> const PRESET_FEATURES
     {
+        "dl",  // Document length
         "tfidf.tf",  // Term frequency
         "tfidf.idf",  // Inverse document frequency
         "tfidf.tfidf",  // TF/IDF
-        "dl",  // Document length
         "okapi.bm25",
         "lmir.abs",
         "lmir.dir",
@@ -59,17 +59,10 @@ public:
      *
      * @param featureName Name of the feature to collect.
      */
-    void collectNamedFeature(std::string const & featureName);
+    void collectFeature(base::FeatureNames fName);
 
-    /**
-     * @brief Collect a vector of named features and store to the same key.
-     *
-     * @param featureNameVect
-     */
-    void collectNamedFeature(std::vector<std::string> const & featureNameVect);
-
-    void saveFeatureMap(std::string const & saveFile);
-    void saveFeatureMap(std::string const & saveFile, std::string queryId);
+    void saveFeatureMap(std::string const & saveFile) const;
+    void saveFeatureMap(std::string const & saveFile, std::string const & queryId) const;
 
     /* Getter methods */
     std::vector<base::DocFeatureMap> getFeatureMapVect() const;
@@ -77,8 +70,22 @@ public:
 
 protected:
     /* Private member variables */
+    std::vector<base::TermFrequencyMap> docTFVector;
+    std::string queryText;
+
     std::vector<base::DocFeatureMap> featureMapVect;
     std::string queryId = "-1";
+
+    std::vector<uint> docMaxTermVect;
+    uint numDocs;
+    uint avgDocLength;
+
+    /* Private class methods */
+    void FeatureCollector::collectFeature(
+        base::FeatureNames fName,
+        std::size_t docIndex
+    );
+    void resetFeatureMap();
 };
 
 
@@ -92,6 +99,12 @@ public:
     /* Public member variables */
     std::array<std::string, 41> const PRESET_FEATURES
     {
+        "dl.full",  // Document length
+        "dl.body",
+        "dl.anchor",
+        "dl.title",
+        "dl.url",
+
         "tfidf.tf.full",  // Term frequency
         "tfidf.tf.body",
         "tfidf.tf.anchor",
@@ -109,12 +122,6 @@ public:
         "tfidf.tfidf.anchor",
         "tfidf.tfidf.title",
         "tfidf.tfidf.url",
-
-        "dl.full",  // Document length
-        "dl.body",
-        "dl.anchor",
-        "dl.title",
-        "dl.url",
 
         "okapi.bm25f",  // BM25F
 
