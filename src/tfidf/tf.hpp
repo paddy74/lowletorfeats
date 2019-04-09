@@ -51,4 +51,25 @@ double Tfidf::tfDoubleNorm(
     return tfDoubleNorm(docTermFrequency, docMaxTermFrequency, 0.5);
 }
 
+
+double Tfidf::queryTfLogNorm(base::TermFrequencyMap const & docTermFreqMap)
+{
+    double score = 0;
+    for (auto const & [term, tf] : docTermFreqMap)
+        score += tfLogNorm(tf);
+    return score;
+}
+
+
+double Tfidf::queryTfDoubleNorm(
+    base::TermFrequencyMap const & docTermFreqMap,
+    uint const & docMaxTermFrequency
+)
+{
+    double score = 0;
+    for (auto const & [term, tf] : docTermFreqMap)
+        score += tfDoubleNorm(tf, docMaxTermFrequency);
+    return score;
+}
+
 }

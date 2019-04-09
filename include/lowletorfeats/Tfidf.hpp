@@ -14,6 +14,15 @@ public:
         float const & k);
     static double tfDoubleNorm(
         uint const & docTermFrequency, uint const & docMaxTermFrequency);
+    static double queryTf(
+        base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency
+    );
+    static double queryTfLogNorm(
+        base::TermFrequencyMap const & docTermFreqMap
+    );
+    static double queryTfDoubleNorm(
+        base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency
+    );
 
     /* IDF */
     double static idfDefault(uint const & numDocs, uint const & numDocsWithTerm);
