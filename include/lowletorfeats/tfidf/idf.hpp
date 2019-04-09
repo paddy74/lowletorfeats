@@ -3,7 +3,7 @@
 #include <cmath>  // log
 
 
-namespace lowletorfeats
+namespace lowletorfeats::tfidf
 {
 
 /**

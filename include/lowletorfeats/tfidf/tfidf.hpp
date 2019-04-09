@@ -2,14 +2,24 @@
 
 #include <cassert>
 
-#include "base/stdllf.hpp"
+#include "lowletorfeats/base/stdllf.hpp"
 #include "tf.hpp"
 #include "idf.hpp"
 
 
-namespace lowletorfeats
+namespace lowletorfeats::tfidf
 {
 
+/**
+ * @brief Calculate Term Frequency / Inverse Document Frequency (TF/IDF) for
+ *  a single term.
+ *
+ * @param docTermFrequency The term's term frequency in the given document.
+ * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
+ * @param numDocs Number of documents in the collection.
+ * @param numDocsWithTerm Number of documents in the collection with the term.
+ * @return double
+ */
 double tfidf(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm
@@ -21,11 +31,11 @@ double tfidf(
 
 
 /**
- * @brief Calculate tf-idf with the given functions
+ * @brief Calculate TF/IDF with the given TF and IDF versions for a single term.
  *
- * @param numDocs
- * @param numDocsWithTerm
- * @param docTermFrequency
+ * @param docTermFrequency The term's term frequency in the given document.
+ * @param numDocs Number of documents in the collection.
+ * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
 double tfidf(
@@ -41,27 +51,28 @@ double tfidf(
 
 
 /**
- * @brief Calculate tf-idf with the given functions
+ * @brief Calculate TF/IDF with the given TF and IDF versions for a single term.
  *
- * @param numDocs
- * @param numDocsWithTerm
- * @param docTermFrequency
+ * @param docTermFrequency The term's term frequency in the given document.
+ * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
+ * @param numDocs Number of documents in the collection.
+ * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-/**double tfidf(
+double tfidf(
     double (*tfFunction)(uint, uint),
     double (*idfFunction)(uint, uint),
-    uint docTermFrequency, docMaxTermFrequency,
-    uint numDocs, uint numDocsWithTerm
+    uint const & docTermFrequency, uint const & docMaxTermFrequency,
+    uint const & numDocs, uint const & numDocsWithTerm
 )
 {
     return (*tfFunction)(docTermFrequency, docMaxTermFrequency)
         * (*idfFunction)(numDocs, numDocsWithTerm);
-}*/
+}
 
 
 /**
- * @brief Calculate the TF-IDF of a document for a group of terms.
+ * @brief Calculate the TF-IDF of a document for a group of terms (query).
  *  To calculate the TF-IDF for an entire document (no query) the
  *  `queryTermFreqMap` should be the document's token vector.
  *
@@ -79,8 +90,10 @@ double queryTfidf(
     base::TermFrequencyMap const & queryTermFreqMap
 )
 {
+    // Ensure the number of terms is the same
     assert(queryTermFreqMap.size() == docsWithTermFreqMap.size());
 
+    // Sum the scores for each term
     double score = 0;
     for (auto const & [term, tf] : queryTermFreqMap)
     {
@@ -98,6 +111,8 @@ double queryTfidf(
             continue;  // score += 0
         }
     }
+
+    return score;
 }
 
 }

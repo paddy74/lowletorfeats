@@ -3,9 +3,15 @@
 #include <cmath>  // log
 
 
-namespace lowletorfeats
+namespace lowletorfeats::tfidf
 {
 
+/**
+ * @brief Log normalized term frequency.
+ *
+ * @param docTermFrequency The term's frequency.
+ * @return double
+ */
 double tfLogNorm(uint const & docTermFrequency)
 {
     return log(1 + docTermFrequency);
@@ -16,7 +22,9 @@ double tfLogNorm(uint const & docTermFrequency)
  * @brief Double normalization term frequency.
  *  Prevents a bias towards longer documents.
  *
- * @param docTermFrequency
+ * @param docTermFrequency The term's frequency.
+ * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
+ * @param k
  * @return double
  */
 double tfDoubleNorm(
@@ -32,7 +40,8 @@ double tfDoubleNorm(
  * @brief Double normalization term frequency (k = 0.5).
  *  Prevents a bias towards longer documents.
  *
- * @param docTermFrequency
+ * @param docTermFrequency The term's frequency.
+ * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
  * @return double
  */
 double tfDoubleNorm(
