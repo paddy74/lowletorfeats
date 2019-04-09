@@ -17,10 +17,10 @@ public:
     static double queryTf(
         base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency
     );
-    static double queryTfLogNorm(
+    static double sumTfLogNorm(
         base::TermFrequencyMap const & docTermFreqMap
     );
-    static double queryTfDoubleNorm(
+    static double sumTfDoubleNorm(
         base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency
     );
 

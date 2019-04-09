@@ -2,6 +2,7 @@
 
 #include <cmath>  // log
 
+#include <lowletorfeats/base/utils.hpp>
 #include <lowletorfeats/Tfidf.hpp>
 
 namespace lowletorfeats
@@ -52,24 +53,18 @@ double Tfidf::tfDoubleNorm(
 }
 
 
-double Tfidf::queryTfLogNorm(base::TermFrequencyMap const & docTermFreqMap)
+double Tfidf::sumTfLogNorm(base::TermFrequencyMap const & docTermFreqMap)
 {
-    double score = 0;
-    for (auto const & [term, tf] : docTermFreqMap)
-        score += tfLogNorm(tf);
-    return score;
+    return Tfidf::tfLogNorm(base::mapValueSum(docTermFreqMap));;
 }
 
 
-double Tfidf::queryTfDoubleNorm(
+double Tfidf::sumTfDoubleNorm(
     base::TermFrequencyMap const & docTermFreqMap,
     uint const & docMaxTermFrequency
 )
 {
-    double score = 0;
-    for (auto const & [term, tf] : docTermFreqMap)
-        score += tfDoubleNorm(tf, docMaxTermFrequency);
-    return score;
+    return tfDoubleNorm(base::mapValueSum(docTermFreqMap), docMaxTermFrequency);
 }
 
 }
