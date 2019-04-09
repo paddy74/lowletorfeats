@@ -6,7 +6,7 @@
 #include "lowletorfeats/tfidf/idf.hpp"
 
 
-namespace lowletorfeats::okapi
+namespace lowletorfeats
 {
 
 /**

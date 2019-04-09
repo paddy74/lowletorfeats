@@ -1,9 +1,9 @@
 #pragma once
 
-#include "lowletorfeats/base/stdllf.hpp"
+#include <lowletorfeats/LMIR.hpp>
 
 
-namespace lowletorfeats::lmir
+namespace lowletorfeats
 {
 
 }

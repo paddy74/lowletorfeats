@@ -5,7 +5,7 @@
 #include "bm25plus.hpp"
 
 
-namespace lowletorfeats::okapi
+namespace lowletorfeats
 {
 
 
