@@ -8,7 +8,8 @@ A library for the collection of common low-level features used in learning-to-ra
 
 The following features can be collected using this library:
 
-- 
+- TF-IDF
+- BM25
 
 ## Versioning
 
