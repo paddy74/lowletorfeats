@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "lowletorfeats/base/stdllf.hpp"
+#include <lowletorfeats/Okapi.hpp>
 #include "lowletorfeats/tfidf/idf.hpp"
 
 
@@ -21,7 +21,7 @@ namespace lowletorfeats::okapi
  * @param delta
  * @return double
  */
-double bm25plus(
+double Okapi::bm25plus(
     uint const & docTermFrequency,
     uint const & numDocs, uint numDocsWithTerm,
     uint const & avgDocLen,
@@ -47,7 +47,7 @@ double bm25plus(
  * @param avgDocLen Average document length of the collection.
  * @return double
  */
-double bm25plus(
+double Okapi::bm25plus(
     uint const & docTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm,
     uint const & avgDocLen
@@ -78,7 +78,7 @@ double bm25plus(
  * @param queryTermFreqMap `TermFrequencyMap` for the query.
  * @return double
  */
-double queryBm25plus(
+double Okapi::queryBm25plus(
     base::TermFrequencyMap const & docTermFreqMap,
     uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
     uint const & avgDocLen,
