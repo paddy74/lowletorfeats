@@ -2,8 +2,9 @@
 
 #include <cmath>  // log
 
+#include <lowletorfeats/Tfidf.hpp>
 
-namespace lowletorfeats::tfidf
+namespace lowletorfeats
 {
 
 /**
@@ -12,7 +13,7 @@ namespace lowletorfeats::tfidf
  * @param docTermFrequency The term's frequency.
  * @return double
  */
-double tfLogNorm(uint const & docTermFrequency)
+double Tfidf::tfLogNorm(uint const & docTermFrequency)
 {
     return log(1 + docTermFrequency);
 }
@@ -27,7 +28,7 @@ double tfLogNorm(uint const & docTermFrequency)
  * @param k
  * @return double
  */
-double tfDoubleNorm(
+double Tfidf::tfDoubleNorm(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     float const & k)
 {
@@ -44,7 +45,7 @@ double tfDoubleNorm(
  * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
  * @return double
  */
-double tfDoubleNorm(
+double Tfidf::tfDoubleNorm(
     uint const & docTermFrequency, uint const & docMaxTermFrequency)
 {
     return tfDoubleNorm(docTermFrequency, docMaxTermFrequency, 0.5);

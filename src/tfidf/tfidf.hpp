@@ -2,12 +2,13 @@
 
 #include <cassert>
 
+#include <lowletorfeats/Tfidf.hpp>
 #include "lowletorfeats/base/stdllf.hpp"
 #include "tf.hpp"
 #include "idf.hpp"
 
 
-namespace lowletorfeats::tfidf
+namespace lowletorfeats
 {
 
 /**
@@ -20,7 +21,7 @@ namespace lowletorfeats::tfidf
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-double tfidf(
+double Tfidf::tfidf(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm
 )
@@ -38,7 +39,7 @@ double tfidf(
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-double tfidf(
+double Tfidf::tfidf(
     double (*tfFunction)(uint const &),
     double (*idfFunction)(uint const &, uint const &),
     uint const & docTermFrequency,
@@ -59,7 +60,7 @@ double tfidf(
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-double tfidf(
+double Tfidf::tfidf(
     double (*tfFunction)(uint, uint),
     double (*idfFunction)(uint, uint),
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
@@ -84,7 +85,7 @@ double tfidf(
  * @param queryTermFreqMap `TermFrequencyMap` for the query.
  * @return double
  */
-double queryTfidf(
+double Tfidf::queryTfidf(
     base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency,
     uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
     base::TermFrequencyMap const & queryTermFreqMap

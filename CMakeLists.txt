@@ -38,7 +38,8 @@ endif()
 # Set the library sources
 # -----------------------
 set(libsrc
-    src/lowletorfeats.cpp
+    src/collectDocFeatures.cpp
+    src/FeatureCollector.cpp
 )
 
 # Add the library

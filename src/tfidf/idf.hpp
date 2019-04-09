@@ -2,8 +2,10 @@
 
 #include <cmath>  // log
 
+#include <lowletorfeats/Tfidf.hpp>
 
-namespace lowletorfeats::tfidf
+
+namespace lowletorfeats
 {
 
 /**
@@ -13,7 +15,7 @@ namespace lowletorfeats::tfidf
  * @param numDocsWithTerm
  * @return double
  */
-double idfDefault(uint const & numDocs, uint const & numDocsWithTerm)
+double Tfidf::idfDefault(uint const & numDocs, uint const & numDocsWithTerm)
 {
     return log(numDocs / numDocsWithTerm);
 }
@@ -26,7 +28,7 @@ double idfDefault(uint const & numDocs, uint const & numDocsWithTerm)
  * @param numDocsWithTerm
  * @return double
  */
-double idfSmooth(uint const & numDocs, uint const & numDocsWithTerm)
+double Tfidf::idfSmooth(uint const & numDocs, uint const & numDocsWithTerm)
 {
     return log(numDocs / (1 + numDocsWithTerm));
 }
@@ -39,7 +41,7 @@ double idfSmooth(uint const & numDocs, uint const & numDocsWithTerm)
  * @param docMaxTermFrequency
  * @return double
  */
-double idfMax(uint const & numDocsWithTerm, uint const & docMaxTermFrequency)
+double Tfidf::idfMax(uint const & numDocsWithTerm, uint const & docMaxTermFrequency)
 {
     return log((docMaxTermFrequency * numDocsWithTerm)
         / (1 + numDocsWithTerm));
@@ -53,7 +55,7 @@ double idfMax(uint const & numDocsWithTerm, uint const & docMaxTermFrequency)
  * @param numDocsWithTerm
  * @return double
  */
-double idfProb(uint const & numDocs, uint const & numDocsWithTerm)
+double Tfidf::idfProb(uint const & numDocs, uint const & numDocsWithTerm)
 {
     return log((numDocs - numDocsWithTerm) / numDocsWithTerm);
 }
@@ -66,7 +68,7 @@ double idfProb(uint const & numDocs, uint const & numDocsWithTerm)
  * @param numDocsWithTerm
  * @return double
  */
-double idfNorm(uint const & numDocs, uint const & numDocsWithTerm)
+double Tfidf::idfNorm(uint const & numDocs, uint const & numDocsWithTerm)
 {
     uint const numDocsWithoutTerm = numDocs - numDocsWithTerm;
     return log((numDocsWithoutTerm + 0.5) / (numDocsWithTerm + 0.5));
