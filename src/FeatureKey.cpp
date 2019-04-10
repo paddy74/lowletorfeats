@@ -11,7 +11,7 @@ namespace lowletorfeats
 
 FeatureKey::FeatureKey(std::string const & fKey)
 {
-    auto const & fDelim = base::strSplit(fKey, '.');
+    auto const & fDelim = utillf::strSplit(fKey, '.');
 
     this->fType = fDelim.at(0);
     this->fName = fDelim.at(1);

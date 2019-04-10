@@ -1,9 +1,12 @@
 #pragma once
 
+#include <numeric>  // accumulate
+#include <algorithm>  // max_element
+
 #include "stdllf.hpp"
 
 
-namespace lowletorfeats::base
+namespace lowletorfeats::utillf
 {
     /**
      * @brief Calculate the sum of every value in the `unordered_map`.
@@ -40,8 +43,8 @@ namespace lowletorfeats::base
         std::unordered_map<KEY_T, VALUE_T> const & b
     )
     {
-        for (auto const & it = b.begin(); it != b.end(); ++it)
-            a[it->first] += it->second;
+        for (auto const & [key, value] : b)
+            a[key] += value;
     }
 
 
@@ -59,7 +62,7 @@ namespace lowletorfeats::base
         std::unordered_map<KEY_T, VALUE_T> const & x
     )
     {
-        using pairtype=std::pair<KeyType,ValueType>;
+        using pairtype=std::pair<KEY_T, VALUE_T>;
 
         return *std::max_element(
             x.begin(),
@@ -109,6 +112,29 @@ namespace lowletorfeats::base
         outVect.reserve(x.size());
 
         for (auto const & imap : x)
-            outVect.push_back
+        {
+            outVect.push_back(imap.first);
+        }
+    }
+
+
+    /**
+     * @brief Get a vector of the map's values
+     *
+     * @tparam KEY_T
+     * @tparam VALUE_T
+     * @param x
+     * @return std::vector<KEY_T>
+     */
+    template<typename KEY_T, typename VALUE_T>
+    std::vector<KEY_T> getValueVect(std::unordered_map<KEY_T, VALUE_T> x)
+    {
+        std::vector<KEY_T> outVect;
+        outVect.reserve(x.size());
+
+        for (auto const & imap : x)
+        {
+            outVect.push_back(imap.second);
+        }
     }
 }

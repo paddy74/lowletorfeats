@@ -1,4 +1,4 @@
-#include <lowletorfeats/base/stdllf.hpp>
+#include <lowletorfeats/base/utillf.hpp>
 
 
 namespace lowletorfeats
@@ -96,8 +96,8 @@ public:
      *
      * @return std::vector<base::FeatureNames> const&
      */
-    std::vector<base::FeatureNames> const & getFeatureNames() const
-    { return base::getKeyVect(this->featureMap); }
+    std::vector<base::FeatureNames> const getFeatureNames() const
+    { return utillf::getKeyVect(this->featureMap); }
 
     /**
      * @brief Get the value of the given feature.

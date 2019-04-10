@@ -15,13 +15,13 @@ public:
     static double tfDoubleNorm(
         uint const & docTermFrequency, uint const & docMaxTermFrequency);
     static double queryTf(
-        base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency
+        base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency
     );
     static double sumTfLogNorm(
-        base::TermFrequencyMap const & docTermFreqMap
+        base::StrUintMap const & docTermFreqMap
     );
     static double sumTfDoubleNorm(
-        base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency
+        base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency
     );
 
     /* IDF */
@@ -49,9 +49,9 @@ public:
         uint const & numDocs, uint const & numDocsWithTerm
     );
     double static queryTfidf(
-        base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency,
-        uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
-        base::TermFrequencyMap const & queryTermFreqMap
+        base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency,
+        uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
+        base::StrUintMap const & queryTermFreqMap
     );
 
 private:

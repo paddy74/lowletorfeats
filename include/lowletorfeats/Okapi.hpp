@@ -20,10 +20,10 @@ public:
         uint const & avgDocLen
     );
     static double queryBm25(
-        base::TermFrequencyMap const & docTermFreqMap,
-        uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
+        base::StrUintMap const & docTermFreqMap,
+        uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
         uint const & avgDocLen,
-        base::TermFrequencyMap const & queryTermFreqMap
+        base::StrUintMap const & queryTermFreqMap
     );
 
     /* BM25+ */
@@ -39,10 +39,10 @@ public:
         uint const & avgDocLen
     );
     static double queryBm25plus(
-        base::TermFrequencyMap const & docTermFreqMap,
-        uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
+        base::StrUintMap const & docTermFreqMap,
+        uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
         uint const & avgDocLen,
-        base::TermFrequencyMap const & queryTermFreqMap
+        base::StrUintMap const & queryTermFreqMap
     );
 
 private:
