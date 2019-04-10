@@ -7,9 +7,6 @@
 
 namespace lowletorfeats::base
 {
-    typedef std::unordered_map<std::string, uint> TermFrequencyMap;  // Map of term frequency
-    typedef std::unordered_map<std::string, double> DocFeatureMap;  // Features for a given document
-
     typedef enum FeatureNames
     {
         // Document length
@@ -36,4 +33,10 @@ namespace lowletorfeats::base
         dir,
         jm
     } FeatureNames;
+
+    typedef std::unordered_map<std::string, uint> StrUintMap;
+    typedef std::unordered_map<std::string, std::string> StrStrMap;
+    typedef std::unordered_map<std::string, base::StrUintMap>
+        StructuredTermFrequencyMap;
+    typedef std::unordered_map<FeatureNames, double> DocFeatureMap;
 }

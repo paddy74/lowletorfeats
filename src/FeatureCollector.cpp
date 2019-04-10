@@ -12,74 +12,146 @@ namespace lowletorfeats
 
 /* Constructors */
 
-
-
-/* Public member functions */
-
 /**
- * @brief Split a string on a delimiter. TODO: Better performance (vector bad)
+ * @brief Construct a new Feature Collector from raw full text documents.
  *
- * @param str
- * @param delim
- * @return std::vector<std::string>
+ * @param docTextMapVect
+ * @param queryText
  */
-std::vector<std::string> strSplit(std::string const & str, char const & delim)
-{
-    std::vector<std::string> out;
-
-    size_t start;
-    size_t end = 0;
-
-    while ( (start = str.find_first_not_of(delim, end)) != std::string::npos)
-    {
-        end = str.find(delim, start);
-        out.push_back(str.substr(start, end - start));
-    }
-}
-
-
-void FeatureCollector::runFeatureCollection()
-{
-    this->resetFeatureMap();
-
-    for (auto const & featureName : this->PRESET_FEATURES)
-    {
-
-    }
-}
-
-
-void FeatureCollector::collectFeature(base::FeatureNames fName)
-{
-    for (int i = 0; i < this->numDocs; ++i)
-    {
-        collectFeature(fName, i);
-    }
-
-}
-
-
-/* Private class methods */
-
-void FeatureCollector::collectFeature(
-    base::FeatureNames fName,
-    std::size_t docIndex
+FeatureCollector::FeatureCollector(
+    std::vector<base::StrStrMap> const & docTextMapVect,
+    std::string const & queryText
 )
 {
-    base::DocFeatureMap & singleFeatureMap = this->featureMapVect[docIndex];
-    base::TermFrequencyMap const & docTFMap =
-        this->docTFVector[docIndex];
+    this->numDocs = docTextMapVect.size();
 
+    // Initialize every document
+    this->docVect.reserve(this->numDocs);
+    for (int i = 0; i < this->numDocs; ++i)
+    {
+        StructuredDocument newDoc(docTextMapVect.at(i));
+        docVect.push_back(newDoc);
+    }
+
+    // Additional info
+    calcAvgDocLengths();
+    createDocsWithTermMap();
+
+    // Query text
+    //Analyzer::fullAnalyzeToTfMap(queryText);
+
+    // Ensure everything was done right
+    this->assertProperties();
+}
+
+
+/**
+ * @brief Construct a new Feature Collector from raw full text documents with
+ *  a query id.
+ *
+ * @param docTextMapVect
+ * @param queryText
+ * @param queryId
+ */
+FeatureCollector::FeatureCollector(
+    std::vector<base::StrStrMap> const & docTextMapVect,
+    std::string const & queryText,
+    std::string const & queryId
+)
+: FeatureCollector::FeatureCollector(docTextMapVect, queryText)
+{ this->queryId = queryId; }
+
+
+/**
+ * @brief Construct a new Feature Collector from preanalyzed structured docs.
+ *
+ * @param docLenMapVect
+ * @param docTfMapVect
+ * @param queryText
+ */
+FeatureCollector::FeatureCollector(
+    std::vector<base::StrUintMap> const & docLenMapVect,
+    std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
+    std::string const & queryText
+)
+{
+    this->numDocs = docTfMapVect.size();
+
+    // Initialize every document
+    this->docVect.reserve(this->numDocs);
+    for (int i = 0; i < this->numDocs; ++i)
+    {
+        StructuredDocument newDoc(docLenMapVect.at(i), docTfMapVect.at(i));
+        docVect.push_back(newDoc);
+    }
+
+    // Additional info
+    calcAvgDocLengths();
+    createDocsWithTermMap();
+
+    // Query text
+    //Analyzer::fullAnalyzeToTfMap(queryText);
+
+    // Ensure everything was done right
+    this->assertProperties();
+}
+
+
+/**
+ * @brief Construct a new Feature Collector from preanalyzed structured docs
+ *  with a query id.
+ *
+ * @param docLenMapVect
+ * @param docTfMapVect
+ * @param queryText
+ * @param queryId
+ */
+FeatureCollector::FeatureCollector(
+    std::vector<base::StrUintMap> const & docLenMapVect,
+    std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
+    std::string const & queryText,
+    std::string const & queryId
+)
+: FeatureCollector::FeatureCollector(docLenMapVect, docTfMapVect, queryText)
+{ this->queryId = queryId; }
+
+
+/* Public class methods */
+
+void FeatureCollector::collectPresetFeatures()
+{
+    this->collectFeatures(this->PRESET_FEATURES);
+}
+
+
+void FeatureCollector::reCollectFeatures()
+{
+    // Get vector of keys
+    std::vector<base::FeatureNames> keyVect =
+        this->docVect.at(0).getFeatureNames();
+
+    // Clear all feature maps
+    this->clearFeatureMaps();
+
+    // Collect featuers from key vector
+    this->collectFeatures(keyVect);
+}
+
+
+void FeatureCollector::collectFeatures(base::FeatureNames fName)
+{
     switch (fName)
     {
         /* Other */
 
         case base::FeatureNames::dl:
         {
-            std::string const key = "tfidf.dl";
-            double const val = base::mapValueSum(docTFMap);
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
@@ -87,73 +159,89 @@ void FeatureCollector::collectFeature(
 
         case base::FeatureNames::tflognorm:
         {
-            std::string const key = "tfidf.tflognorm";
-            double const val = Tfidf::queryTfLogNorm(docTFMap);
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::tfdoublenorm:
         {
-            std::string const key = "tfidf.tfdoublenorm";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::idfdefault:
         {
-            std::string const key = "tfidf.idfdefault";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::idfsmooth:
         {
-            std::string const key = "tfidf.idfsmooth";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::idfmax:
         {
-            std::string const key = "tfidf.idfmax";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::idfprob:
         {
-            std::string const key = "tfidf.idfprob";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::idfnorm:
         {
-            std::string const key = "tfidf.idfnorm";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::tfidf:
         {
-            std::string const key = "tfidf.tfidf";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
@@ -161,19 +249,23 @@ void FeatureCollector::collectFeature(
 
         case base::FeatureNames::bm25:
         {
-            std::string const key = "okapi.bm25";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::bm25plus:
         {
-            std::string const key = "okapi.bm25plus";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
@@ -181,28 +273,34 @@ void FeatureCollector::collectFeature(
 
         case base::FeatureNames::abs:
         {
-            std::string const key = "lmir.abs";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::dir:
         {
-            std::string const key = "lmir.dir";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
         case base::FeatureNames::jm:
         {
-            std::string const key = "lmir.jm";
-            double const val = 0;
+            for (auto & doc : docVect)
+            {
+                double const val = 0;
 
-            singleFeatureMap[key] = val;
+                doc.updateFeature(fName, val);
+            }
             break;
         }
 
@@ -212,10 +310,14 @@ void FeatureCollector::collectFeature(
 }
 
 
-void FeatureCollector::resetFeatureMap()
+void FeatureCollector::collectFeatures(
+    std::vector<base::FeatureNames> fNameVect
+)
 {
-    this->featureMapVect.clear();
-    this->featureMapVect.reserve(this->numDocs);
+    for (auto const & fName : fNameVect)
+        this->collectFeatures(fName);
 }
+
+/* Private class methods */
 
 }

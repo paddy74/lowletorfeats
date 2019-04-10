@@ -85,9 +85,9 @@ double Tfidf::tfidf(
  * @return double
  */
 double Tfidf::queryTfidf(
-    base::TermFrequencyMap const & docTermFreqMap, uint const & docMaxTermFrequency,
-    uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
-    base::TermFrequencyMap const & queryTermFreqMap
+    base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency,
+    uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
+    base::StrUintMap const & queryTermFreqMap
 )
 {
     // Ensure the number of terms is the same
