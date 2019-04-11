@@ -89,7 +89,7 @@ public:
      */
     static std::vector<std::string> strSplit(std::string const & str, char const & delim)
     {
-        std::vector<std::string> out;
+        std::vector<std::string> outVect;
 
         size_t start;
         size_t end = 0;
@@ -97,8 +97,10 @@ public:
         while ( (start = str.find_first_not_of(delim, end)) != std::string::npos)
         {
             end = str.find(delim, start);
-            out.push_back(str.substr(start, end - start));
+            outVect.push_back(str.substr(start, end - start));
         }
+
+        return outVect;
     }
 
 
@@ -117,9 +119,9 @@ public:
         outVect.reserve(x.size());
 
         for (auto const & imap : x)
-        {
             outVect.push_back(imap.first);
-        }
+
+        return outVect;
     }
 
 
@@ -138,9 +140,9 @@ public:
         outVect.reserve(x.size());
 
         for (auto const & imap : x)
-        {
             outVect.push_back(imap.second);
-        }
+
+        return outVect;
     }
 
 private:

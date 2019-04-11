@@ -8,13 +8,33 @@
 namespace lowletorfeats::base
 {
 
+
 class FeatureKey
 {
 public:
+    /* Public type definitions */
+    enum class ValidTypes { other, tfidf, okapi,  lmir };
+
+    enum class ValidNames
+    {
+        // Other
+        dl,
+
+        // TF/IDF
+        tflognorm, tfdoublenorm,
+        idfdefault, idfsmooth, idfmax, idfprob, idfnorm,
+        tfidf,
+
+        // Okapi
+        bm25, bm25plus,
+
+        // LMIR
+        abs, dir, jm
+    };
+
+    enum class ValidSections { full, body, anchor, title, url };
+
     /* Public member variables */
-    std::string fType;
-    std::string fName;
-    std::string fSection;
 
     /* Constructors */
     FeatureKey(std::string const & fKey);
@@ -26,9 +46,31 @@ public:
 
     /* Public class methods */
     std::string toString() const;
+    std::size_t toHash() const;
+
+    /* Getters */
+
+    std::string const & getFType() const { return this->fType; }
+    std::string const & getFName() const { return this->fName; }
+    std::string const & getFSection() const { return this->fSection; }
+
+    ValidTypes const & getVType() const { return this->vType; }
+    ValidNames const & getVName() const { return this->vName; }
+    ValidSections const & getVSection() const { return this->vSection; }
+
+    /* Setters */
+
+    /**
+     * @brief Recreates the `FeatureKey` with the given key string.
+     *
+     * @param newKeyString Str for the new key in format :type.name.section".
+     */
+    void setNewKey(std::string const & newKeyString)
+    { *(this) = FeatureKey(newKeyString); }
 
     /* Public operators */
-    //bool operator== (FeatureKey const & other) const;
+    //operator std::string() const { return this->toString(); }  // implicit
+    //explicit operator std::string*() const { return &(this->toString()); }
 
     /* Public friend methods */
     friend bool operator== (FeatureKey const & fKey1, FeatureKey const & fKey2);
@@ -37,19 +79,33 @@ public:
 private:
     /* Private member variables */
 
-    std::vector<std::string> static const validTypes;
-    std::vector<std::string> static const validNames;
-    std::vector<std::string> static const validSections;
+    // Feature key as a string
+    std::string fType;
+    std::string fName;
+    std::string fSection;
+
+    // Feature key as a enum
+    ValidTypes vType;
+    ValidNames vName;
+    ValidSections vSection;
+
+    // Valid type maps
+    std::unordered_map<ValidTypes, std::string>
+        static const validTypeMap;
+    std::unordered_map<ValidNames, std::string>
+        static const validNameMap;
+    std::unordered_map<ValidSections, std::string>
+        static const validSectionMap;
+
+    // Inverse valid type maps
+    std::unordered_map<std::string, ValidTypes>
+        static const inverseValidTypeMap;
+    std::unordered_map<std::string, ValidNames>
+        static const inverseValidNameMap;
+    std::unordered_map<std::string, ValidSections>
+        static const inverseValidSectionMap;
 
     /* Private class methods */
-
-    /**
-     * @brief Assert that the feature key matches the available options.
-     *
-     * @return true
-     * @return false
-     */
-    void isValid() const;
 };
 
 }
@@ -68,11 +124,7 @@ struct hash<lowletorfeats::base::FeatureKey>
 {
     std::size_t operator() (lowletorfeats::base::FeatureKey const & fKey) const
     {
-        return (
-            (std::hash<std::string>()(fKey.fType))
-            ^ (std::hash<std::string>()(fKey.fName))
-            ^ (std::hash<std::string>()(fKey.fSection))
-        );
+        return fKey.toHash();
     }
 };
 

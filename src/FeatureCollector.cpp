@@ -1,5 +1,4 @@
 #include <lowletorfeats/FeatureCollector.hpp>
-#include <lowletorfeats/base/Utillf.hpp>
 
 #include <lowletorfeats/Tfidf.hpp>
 #include <lowletorfeats/Okapi.hpp>
@@ -139,36 +138,81 @@ void FeatureCollector::reCollectFeatures()
 
 void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 {
-    if (fKey.fType == "other")
-    {
-        if (fKey.fName == "dl")
-        {
+    typedef base::FeatureKey::ValidTypes VTypes;
+    typedef base::FeatureKey::ValidNames VNames;
+    typedef base::FeatureKey::ValidSections VSections;
 
-        }
-    }
-    else if (fKey.fType == "tfidf")
+    switch (fKey.getVType())
     {
-        if (fKey.fName == "tflognorm")
+        case VTypes::other:
         {
+            switch (fKey.getVName())
+            {
+                case VNames::dl:
 
-        }
-        else if (fKey.fName == "tfdoublenorm")
-        {
-            /* code */
-        }
-        else if (fKey.fName == "idfdefault")
-        {
-            /* code */
-        }
-        // ...
-    }
-    else if (fKey.fType == "okapi")
-    {
+                    break;
 
-    }
-    else if (fKey.fType == "lmir")
-    {
-        /* code */
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case VTypes::tfidf:
+        {
+            switch (fKey.getVName())
+            {
+                case VNames::tflognorm:
+                    /* code */
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case VTypes::okapi:
+        {
+            switch (fKey.getVName())
+            {
+                case VNames::bm25:
+                    /* code */
+                    break;
+
+                case VNames::bm25plus:
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case VTypes::lmir:
+        {
+            switch (fKey.getVName())
+            {
+                case VNames::abs:
+                    /* code */
+                    break;
+
+                case VNames::dir:
+                    /* code */
+                    break;
+
+                case VNames::jm:
+                    /* code */
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        default:
+            break;
     }
 }
 

@@ -26,7 +26,9 @@ FeatureKey::FeatureKey(std::string const & fKey)
         this->fSection = "full";
     }
 
-    this->isValid();
+    this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
+    this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
+    this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
 }
 
 
@@ -39,8 +41,6 @@ FeatureKey::FeatureKey(
     this->fType = fType;
     this->fName = fName;
     this->fSection = fSection;
-
-    this->isValid();
 }
 
 
@@ -48,6 +48,15 @@ FeatureKey::FeatureKey(
 
 std::string FeatureKey::toString() const
 { return fType + '.' + fName + '.' +fSection; }
+
+std::size_t FeatureKey::toHash() const
+{
+    return (
+        (std::hash<std::string>()(this->fType))
+        ^ (std::hash<std::string>()(this->fName))
+        ^ (std::hash<std::string>()(this->fSection))
+    );
+}
 
 
 /* Public operators */
@@ -63,47 +72,92 @@ bool operator!= (FeatureKey const & fKey1, FeatureKey const & fKey2)
 
 /* Private member variables */
 
-std::vector<std::string> const FeatureKey::validTypes
+std::unordered_map<FeatureKey::ValidTypes, std::string>
+    const FeatureKey::validTypeMap
 {
-    "other",
-    "tfidf",
-    "okapi",
-    "lmir"
+    { FeatureKey::ValidTypes::other, "tfidf" },
+    { FeatureKey::ValidTypes::tfidf, "tfidf" },
+    { FeatureKey::ValidTypes::okapi, "okapi" },
+    { FeatureKey::ValidTypes::lmir, "lmir" }
 };
 
-std::vector<std::string> const FeatureKey::validNames
+std::unordered_map<std::string, FeatureKey::ValidTypes>
+    const inverseValidTypeMap
 {
+    { "other", FeatureKey::ValidTypes::other },
+    { "tfidf", FeatureKey::ValidTypes::tfidf },
+    { "okapi", FeatureKey::ValidTypes::okapi },
+    { "lmir", FeatureKey::ValidTypes::lmir}
+};
+
+
+std::unordered_map<FeatureKey::ValidNames, std::string>
+    const FeatureKey::validNameMap
+{
+    // Other
+    { FeatureKey::ValidNames::dl, "dl"},
+
     // TF/IDF
-    "tflognorm", "tfdoublenorm",
-    "idfdefault", "idfsmooth", "idfmax", "idfprob", "idfnorm",
-    "tfidf",
+    { FeatureKey::ValidNames::tflognorm, "tflognorm" },
+    { FeatureKey::ValidNames::tfdoublenorm, "tfdoublenorm" },
+    { FeatureKey::ValidNames::idfdefault, "idfdefault" },
+    { FeatureKey::ValidNames::idfmax, "idfmax" },
+    { FeatureKey::ValidNames::idfprob, "idfprob" },
+    { FeatureKey::ValidNames::idfnorm, "idfnorm" },
+    { FeatureKey::ValidNames::tfidf, "tfidf" },
 
     // Okapi
-    "bm25", "bm25plus",
+    { FeatureKey::ValidNames::bm25, "bm25" },
+    { FeatureKey::ValidNames::bm25plus, "bm25plus" },
 
     // LMIR
-    "abs", "dir", "jm"
+    { FeatureKey::ValidNames::abs, "abs" },
+    { FeatureKey::ValidNames::dir, "dir" },
+    { FeatureKey::ValidNames::jm, "jm" }
 };
 
-std::vector<std::string> const FeatureKey::validSections
+std::unordered_map<std::string, FeatureKey::ValidNames>
+    const FeatureKey::inverseValidNameMap =
 {
-    "full",
-    "body",
-    "anchor",
-    "title",
-    "url"
+    // Other
+    { "dl", FeatureKey::ValidNames::dl },
+
+    // TF/IDF
+    { "tflognorm", FeatureKey::ValidNames::tflognorm },
+    { "tfdoubleNorm", FeatureKey::ValidNames::tfdoublenorm },
+    { "idfdefault", FeatureKey::ValidNames::idfdefault },
+    { "idfmax", FeatureKey::ValidNames::idfmax },
+    { "idfprob", FeatureKey::ValidNames::idfprob },
+    { "idfnorm", FeatureKey::ValidNames::idfnorm },
+
+    // Okapi
+    { "bm25", FeatureKey::ValidNames::bm25 },
+    { "bm25plus", FeatureKey::ValidNames::bm25plus },
+
+    // LMIR
+    { "abs", FeatureKey::ValidNames::abs },
+    { "dir", FeatureKey::ValidNames::dir },
+    { "jm", FeatureKey::ValidNames::jm }
 };
 
-/* Private class methods */
 
-void FeatureKey::isValid() const
+std::unordered_map<FeatureKey::ValidSections, std::string>
+    const FeatureKey::validSectionMap
 {
-    assert(std::binary_search(validTypes.begin(), validTypes.end(),
-        this->fType));
-    assert(std::binary_search(validNames.begin(), validNames.end(),
-        this->fName));
-    assert(std::binary_search(validSections.begin(), validSections.end(),
-        this->fSection));
-}
+    { FeatureKey::ValidSections::full, "full" },
+    { FeatureKey::ValidSections::body, "body" },
+    { FeatureKey::ValidSections::anchor, "anchor" },
+    { FeatureKey::ValidSections::title, "title" },
+    { FeatureKey::ValidSections::url, "url" }
+};
+
+std::unordered_map<std::string, FeatureKey::ValidSections>
+    const inverseValidSectionMap
+{
+    { "full", FeatureKey::ValidSections::full },
+    { "body", FeatureKey::ValidSections::body },
+    { "anchor", FeatureKey::ValidSections::anchor },
+    { "url", FeatureKey::ValidSections::url }
+};
 
 }
