@@ -2,14 +2,17 @@
 
 # Learning-To-Rank Low-Level Feature Library
 
-A library for the collection of common low-level features used in learning-to-rank algorithms such as TF-IDF.
+A library for the collection of common low-level features used in learning-to-rank algorithms. These features are calculated using well-defined algorithms.
+
+If you feel there are additional features that might be added to this library, create a [new issue](issues/new) or submit a pull request.
 
 ## Features
 
-The following features can be collected using this library:
+The following categories of low-level features are collected using this library:
 
 - TF-IDF
-- BM25
+- Okapi BM25
+- LMIR
 
 ## Versioning
 
