@@ -1,3 +1,5 @@
+#pragma once
+
 #include <lowletorfeats/base/stdllf.hpp>
 
 

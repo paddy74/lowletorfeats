@@ -1,13 +1,18 @@
 #pragma once
 
+#include <vector>  // vector
+#include <unordered_map>  // unordered_map
+
 #include <numeric>  // accumulate
 #include <algorithm>  // max_element
 
-#include "stdllf.hpp"
 
-
-namespace lowletorfeats::utillf
+namespace lowletorfeats::base
 {
+
+class Utillf
+{
+public:
     /**
      * @brief Calculate the sum of every value in the `unordered_map`.
      *
@@ -17,7 +22,7 @@ namespace lowletorfeats::utillf
      * @return VALUE_T
      */
     template<typename KEY_T, typename VALUE_T>
-    VALUE_T mapValueSum(std::unordered_map<KEY_T, VALUE_T> const & a)
+    static VALUE_T mapValueSum(std::unordered_map<KEY_T, VALUE_T> const & a)
     {
         return std::accumulate(
             a.begin(),
@@ -38,7 +43,7 @@ namespace lowletorfeats::utillf
      * @param b
      */
     template<typename KEY_T, typename VALUE_T>
-    void additiveMergeInplace(
+    static void additiveMergeInplace(
         std::unordered_map<KEY_T, VALUE_T> & a,
         std::unordered_map<KEY_T, VALUE_T> const & b
     )
@@ -58,7 +63,7 @@ namespace lowletorfeats::utillf
      * @return std::pair<KEY_T, VALUE_T>
      */
     template<typename KEY_T, typename VALUE_T>
-    std::pair<KEY_T, VALUE_T> findMaxValuePair(
+    static std::pair<KEY_T, VALUE_T> findMaxValuePair(
         std::unordered_map<KEY_T, VALUE_T> const & x
     )
     {
@@ -82,7 +87,7 @@ namespace lowletorfeats::utillf
      * @param delim
      * @return std::vector<std::string>
      */
-    std::vector<std::string> strSplit(std::string const & str, char const & delim)
+    static std::vector<std::string> strSplit(std::string const & str, char const & delim)
     {
         std::vector<std::string> out;
 
@@ -106,7 +111,7 @@ namespace lowletorfeats::utillf
      * @return std::vector<KEY_T>
      */
     template<typename KEY_T, typename VALUE_T>
-    std::vector<KEY_T> getKeyVect(std::unordered_map<KEY_T, VALUE_T> x)
+    static std::vector<KEY_T> getKeyVect(std::unordered_map<KEY_T, VALUE_T> x)
     {
         std::vector<KEY_T> outVect;
         outVect.reserve(x.size());
@@ -127,7 +132,7 @@ namespace lowletorfeats::utillf
      * @return std::vector<KEY_T>
      */
     template<typename KEY_T, typename VALUE_T>
-    std::vector<KEY_T> getValueVect(std::unordered_map<KEY_T, VALUE_T> x)
+    static std::vector<KEY_T> getValueVect(std::unordered_map<KEY_T, VALUE_T> x)
     {
         std::vector<KEY_T> outVect;
         outVect.reserve(x.size());
@@ -137,4 +142,9 @@ namespace lowletorfeats::utillf
             outVect.push_back(imap.second);
         }
     }
+
+private:
+    Utillf() {}
+};
+
 }

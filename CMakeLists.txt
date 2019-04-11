@@ -38,8 +38,8 @@ endif()
 # Set the library sources
 # -----------------------
 set(libsrc
-    src/FeatureKey.cpp
-    src/Document.cpp
+    src/base/FeatureKey.cpp
+    src/base/Document.cpp
     src/FeatureCollector.cpp
 )
 

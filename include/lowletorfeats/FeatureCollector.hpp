@@ -2,9 +2,7 @@
 
 #include <array>
 
-#include <lowletorfeats/base/stdllf.hpp>
-
-#include "Document.hpp"
+#include "base/Document.hpp"
 
 
 namespace lowletorfeats
@@ -65,14 +63,14 @@ public:
      *
      * @param fName The feature to collect.
      */
-    void collectFeatures(base::FeatureNames fName);
+    void collectFeatures(base::FeatureKey const & fKey);
 
     /**
      * @brief Collect the named features for every document.
      *
      * @param fNameVect The features to collect
      */
-    void collectFeatures(std::vector<base::FeatureNames> fNameVect);
+    void collectFeatures(std::vector<base::FeatureKey> const & fKeyVect);
 
     /* Getter methods */
     uint const getNumDocs() const
@@ -81,16 +79,16 @@ public:
 
 private:
     /* Private member variables */
-    std::vector<base::FeatureNames> const PRESET_FEATURES =
+    std::vector<base::FeatureKey> const PRESET_FEATURES =
     {
-        base::FeatureNames::dl,
-        base::FeatureNames::tfdoublenorm,
-        base::FeatureNames::idfdefault,
-        base::FeatureNames::tfidf,
-        base::FeatureNames::bm25,
-        base::FeatureNames::abs,
-        base::FeatureNames::dir,
-        base::FeatureNames::jm
+        base::FeatureKey("other", "dl", "full"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
+        base::FeatureKey("tfidf", "idfdefault", "full"),
+        base::FeatureKey("tfidf", "tfidf", "full"),
+        base::FeatureKey("okapi", "bm25", "full"),
+        base::FeatureKey("lmir", "abs", "full"),
+        base::FeatureKey("lmir", "dir", "full"),
+        base::FeatureKey("lmir", "jm", "full")
     };
 
     uint numDocs;

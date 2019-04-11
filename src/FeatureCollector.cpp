@@ -1,6 +1,5 @@
-#include <lowletorfeats/base/utillf.hpp>
-
 #include <lowletorfeats/FeatureCollector.hpp>
+#include <lowletorfeats/base/Utillf.hpp>
 
 #include <lowletorfeats/Tfidf.hpp>
 #include <lowletorfeats/Okapi.hpp>
@@ -127,8 +126,8 @@ void FeatureCollector::collectPresetFeatures()
 void FeatureCollector::reCollectFeatures()
 {
     // Get vector of keys
-    std::vector<base::FeatureNames> keyVect =
-        this->docVect.at(0).getFeatureNames();
+    std::vector<base::FeatureKey> keyVect =
+        this->docVect.at(0).getFeatureKeys();
 
     // Clear all feature maps
     this->clearFeatureMaps();
@@ -138,184 +137,48 @@ void FeatureCollector::reCollectFeatures()
 }
 
 
-void FeatureCollector::collectFeatures(base::FeatureNames fName)
+void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 {
-    switch (fName)
+    if (fKey.fType == "other")
     {
-        /* Other */
-
-        case base::FeatureNames::dl:
+        if (fKey.fName == "dl")
         {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
 
-                doc.updateFeature(fName, val);
-            }
-            break;
         }
-
-        /* TF/IDF */
-
-        case base::FeatureNames::tflognorm:
+    }
+    else if (fKey.fType == "tfidf")
+    {
+        if (fKey.fName == "tflognorm")
         {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
 
-                doc.updateFeature(fName, val);
-            }
-            break;
         }
-
-        case base::FeatureNames::tfdoublenorm:
+        else if (fKey.fName == "tfdoublenorm")
         {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
+            /* code */
         }
-
-        case base::FeatureNames::idfdefault:
+        else if (fKey.fName == "idfdefault")
         {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
+            /* code */
         }
+        // ...
+    }
+    else if (fKey.fType == "okapi")
+    {
 
-        case base::FeatureNames::idfsmooth:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::idfmax:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::idfprob:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::idfnorm:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::tfidf:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        /* Okapi */
-
-        case base::FeatureNames::bm25:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::bm25plus:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        /* LMIR */
-
-        case base::FeatureNames::abs:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::dir:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        case base::FeatureNames::jm:
-        {
-            for (auto & doc : docVect)
-            {
-                double const val = 0;
-
-                doc.updateFeature(fName, val);
-            }
-            break;
-        }
-
-        default:  // Do nothing or feature not supported
-            break;
+    }
+    else if (fKey.fType == "lmir")
+    {
+        /* code */
     }
 }
 
 
 void FeatureCollector::collectFeatures(
-    std::vector<base::FeatureNames> fNameVect
+    std::vector<base::FeatureKey> const & fKeyVect
 )
 {
-    for (auto const & fName : fNameVect)
-        this->collectFeatures(fName);
+    for (auto const & fKey : fKeyVect)
+        this->collectFeatures(fKey);
 }
 
 /* Private class methods */

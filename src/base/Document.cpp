@@ -1,4 +1,6 @@
-#include "Document.hpp"
+#include <lowletorfeats/base/Document.hpp>
+
+#include <lowletorfeats/base/Utillf.hpp>
 
 
 namespace lowletorfeats
@@ -59,7 +61,7 @@ StructuredDocument::StructuredDocument(
     this->docLenMaps["full"] = docLen;
     this->termFrequencyMaps["full"] = fullTermFrequencyMap;
     this->maxTermMaps["full"] =
-        utillf::findMaxValuePair(fullTermFrequencyMap).second;
+        base::Utillf::findMaxValuePair(fullTermFrequencyMap).second;
 }
 
 
@@ -81,7 +83,7 @@ StructuredDocument::StructuredDocument(
 
     // Fill maxTermMap
     for (auto const & [section, tfMap]: this->termFrequencyMaps)
-        this->maxTermMaps[section] = utillf::findMaxValuePair(tfMap).second;
+        this->maxTermMaps[section] = base::Utillf::findMaxValuePair(tfMap).second;
 
     // Ensure "full" exists, else populate
     try
@@ -142,17 +144,17 @@ void StructuredDocument::fillFullFromOthers()
     this->clearSection("full");
 
     // Calculate `docLenMap["full"]`
-    this->docLenMaps["full"] = utillf::mapValueSum(this->docLenMaps);
+    this->docLenMaps["full"] = base::Utillf::mapValueSum(this->docLenMaps);
 
     // Calculate `termFrequencyMap["full"]`
     base::StrUintMap fullTermFreqMap;
     for (auto const & [section, tfMap] : this->termFrequencyMaps)
-        utillf::additiveMergeInplace(fullTermFreqMap, tfMap);
+        base::Utillf::additiveMergeInplace(fullTermFreqMap, tfMap);
     this->termFrequencyMaps["full"] = fullTermFreqMap;
 
     // Calculate `maxTermMap["full"]`
     this->maxTermMaps["full"] =
-        utillf::findMaxValuePair(fullTermFreqMap).second;
+        base::Utillf::findMaxValuePair(fullTermFreqMap).second;
 }
 
 }

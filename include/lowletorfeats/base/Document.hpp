@@ -1,4 +1,7 @@
-#include <lowletorfeats/base/utillf.hpp>
+#pragma once
+
+#include "stdllf.hpp"
+#include "Utillf.hpp"
 
 
 namespace lowletorfeats
@@ -88,7 +91,7 @@ public:
      *
      * @return base::DocFeatureMap const&
      */
-    base::DocFeatureMap const & getFeatureMap() const
+    base::FeatureMap const & getFeatureMap() const
     { return this->featureMap; }
 
     /**
@@ -96,8 +99,8 @@ public:
      *
      * @return std::vector<base::FeatureNames> const&
      */
-    std::vector<base::FeatureNames> const getFeatureNames() const
-    { return utillf::getKeyVect(this->featureMap); }
+    std::vector<base::FeatureKey> getFeatureKeys() const
+    { return base::Utillf::getKeyVect(this->featureMap); }
 
     /**
      * @brief Get the value of the given feature.
@@ -105,7 +108,7 @@ public:
      * @param fName
      * @return double const&
      */
-    double const & getFeatureValue(base::FeatureNames const & fName) const
+    double const & getFeatureValue(base::FeatureKey const & fName) const
     { return this->featureMap.at(fName); }
 
     /**
@@ -114,7 +117,7 @@ public:
      * @param fName
      * @param fValue
      */
-    void updateFeature(base::FeatureNames const & fName, double const & fValue)
+    void updateFeature(base::FeatureKey const & fName, double const & fValue)
     { this->featureMap[fName] = fValue; }
 
 private:
@@ -124,7 +127,7 @@ private:
     base::StructuredTermFrequencyMap termFrequencyMaps;
     base::StrUintMap maxTermMaps;
 
-    base::DocFeatureMap featureMap;
+    base::FeatureMap featureMap;
 
     /* Private class methods */
     void clear();
