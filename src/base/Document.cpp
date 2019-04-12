@@ -17,14 +17,28 @@ namespace lowletorfeats
  */
 StructuredDocument::StructuredDocument(
     uint const & docLen,
-    base::StrUintMap const & fullTermFrequencyMap
+    base::StrUintMap const & fullTermFrequencyMap,
+    std::string const & sectionKey
 )
 {
-    this->docLenMaps["full"] = docLen;
-    this->termFrequencyMaps["full"] = fullTermFrequencyMap;
-    this->maxTermMaps["full"] =
+    this->docLenMaps[sectionKey] = docLen;
+    this->termFrequencyMaps[sectionKey] = fullTermFrequencyMap;
+    this->maxTermMaps[sectionKey] =
         base::Utillf::findMaxValuePair(fullTermFrequencyMap).second;
 }
+
+
+/**
+ * @brief Construct a new Structured Document object using a preanalyzed
+ *  document length and `TermFrequencyMap` for the full document text.
+ *
+ * @param docLen The full document's length.
+ * @param fullTermFrequencyMap Preanalyzed `TermFrequencyMap` for the full doc.
+ */
+StructuredDocument::StructuredDocument(
+    uint const & docLen,
+    base::StrUintMap const & fullTermFrequencyMap
+) : StructuredDocument::StructuredDocument(docLen, fullTermFrequencyMap, "full") {}
 
 
 /**
@@ -44,8 +58,8 @@ StructuredDocument::StructuredDocument(
     this->termFrequencyMaps = structuredTermFrequencyMap;
 
     // Fill maxTermMap
-    for (auto const & [section, tfMap]: this->termFrequencyMaps)
-        this->maxTermMaps[section] = base::Utillf::findMaxValuePair(tfMap).second;
+    for (auto const & [sectionKey, tfMap]: this->termFrequencyMaps)
+        this->maxTermMaps[sectionKey] = base::Utillf::findMaxValuePair(tfMap).second;
 
     // Ensure "full" exists, else populate
     try

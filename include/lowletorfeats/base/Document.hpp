@@ -15,6 +15,11 @@ public:
     /* Constructors */
 
     // Preanalyzed
+    StructuredDocument(  // The indicated section only
+        uint const & docLen,
+        base::StrUintMap const & fullTermFrequencyMap,
+        std::string const & sectionKey
+    );
     StructuredDocument(  // `"full"` section only
         uint const & docLen,
         base::StrUintMap const & fullTermFrequencyMap
