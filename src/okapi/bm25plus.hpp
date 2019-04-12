@@ -3,7 +3,7 @@
 #include <cassert>
 
 #include <lowletorfeats/Okapi.hpp>
-#include "lowletorfeats/tfidf/idf.hpp"
+#include <lowletorfeats/Tfidf.hpp>
 
 
 namespace lowletorfeats
@@ -28,7 +28,7 @@ double Okapi::bm25plus(
     float const & b, float const & k1, float const & delta
 )
 {
-    double const idf = tfidf::idfNorm(numDocs, numDocsWithTerm);
+    double const idf = Tfidf::idfNorm(numDocs, numDocsWithTerm);
 
     double const numer = docTermFrequency * (k1 + 1);
     double const denom = docTermFrequency
@@ -75,14 +75,14 @@ double Okapi::bm25plus(
  * @param numDocs Number of documents in the collection.
  * @param docsWithTermFreqMap Number of documents containing each term.
  * @param avgDocLen Average document length of the collection.
- * @param queryTermFreqMap `TermFrequencyMap` for the query.
+ * @param queryTermFreqMap `StrUintMap` for the query.
  * @return double
  */
 double Okapi::queryBm25plus(
-    base::TermFrequencyMap const & docTermFreqMap,
-    uint const & numDocs, base::TermFrequencyMap const & docsWithTermFreqMap,
+    base::StrUintMap const & docTermFreqMap,
+    uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
     uint const & avgDocLen,
-    base::TermFrequencyMap const & queryTermFreqMap
+    base::StrUintMap const & queryTermFreqMap
 )
 {
     // Ensure the number of terms is the same

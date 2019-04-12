@@ -16,9 +16,6 @@ public:
         float const & k);
     static double tfDoubleNorm(
         uint const & docTermFrequency, uint const & docMaxTermFrequency);
-    static double queryTf(
-        base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency
-    );
     static double sumTfLogNorm(
         base::StrUintMap const & docTermFreqMap
     );
