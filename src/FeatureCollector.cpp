@@ -211,7 +211,95 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                         double const fVal = Tfidf::sumTfLogNorm(
                             doc.getTermFrequencyMap(fKey.getFSection())
                         );
-                    }
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::tfdoublenorm:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::sumTfDoubleNorm(
+                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            doc.getMaxTF()
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::idfdefault:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::idfDefault(
+                            this->numDocs,
+                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::idfsmooth:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::idfSmooth(
+                            this->numDocs,
+                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::idfmax:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::idfMax(
+                            base::Utillf::mapValueSum(this->docsWithTermMap),
+                            doc.getMaxTF()
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::idfprob:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::idfProb(
+                            this->numDocs,
+                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::idfnorm:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::idfNorm(
+                            this->numDocs,
+                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
+                }
+
+                case VNames::tfidf:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::queryTfidf(
+                            doc.getTermFrequencyMap(fKey.getFSection),
+                            doc.getMaxTF(),
+                            this->numDocs,
+                            this->docsWithTermMap,
+                            this->queryTfMap
+                        );
+                        doc.updateFeature(fKey, fVal);
+                    } break;
                 }
 
                 default:
@@ -225,11 +313,20 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
             switch (fKey.getVName())
             {
                 case VNames::bm25:
-                    /* code */
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+
+                    } break;
+                }
 
                 case VNames::bm25plus:
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+
+                    } break;
+                }
 
                 default:
                     break;
@@ -242,16 +339,28 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
             switch (fKey.getVName())
             {
                 case VNames::abs:
-                    /* code */
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+
+                    } break;
+                }
 
                 case VNames::dir:
-                    /* code */
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+
+                    } break;
+                }
 
                 case VNames::jm:
-                    /* code */
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+
+                    } break;
+                }
 
                 default:
                     break;
