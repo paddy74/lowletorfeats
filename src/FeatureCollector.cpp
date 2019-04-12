@@ -13,7 +13,7 @@ namespace lowletorfeats
 /**
  * @brief Construct a new Feature Collector from raw full text documents.
  *
- * @param docTextMapVect
+ * @param docTextMapVect Multiple structured documents of raw text.
  * @param queryText
  */
 FeatureCollector::FeatureCollector(
@@ -21,22 +21,42 @@ FeatureCollector::FeatureCollector(
     std::string const & queryText
 )
 {
+    // Query text
+    base::StrUintMap queryTfMap;
+    //queryTfMap = Analyzer::fullAnalyzeToTfMap(queryText);
+
+    // Number of documents
     this->numDocs = docTextMapVect.size();
 
-    // Initialize every document
+    // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
-    for (int i = 0; i < this->numDocs; ++i)
+    for (auto const & docTextMap : docTextMapVect)
     {
-        StructuredDocument newDoc(docTextMapVect.at(i));
+        base::StrUintMap docLenMap;
+        base::StructuredTermFrequencyMap StructDocTfMap;
+        for (auto const & [sectionKey, sectionText] : docTextMap)
+        {
+            // Analyze text for this document
+            base::StrUintMap sectionTfMap;
+            //auto pair = Analyzer::fullAnalyzeToTfMap(sectionText, true)  // TODO:
+            //sectionTfMap = pair.first;
+            //docLenMap[sectionKey] = pair.second;
+
+            // Filter for query tokens only
+            sectionTfMap = base::Utillf::getIntersection(sectionTfMap, queryTfMap);
+
+            // Add to `StructDocTfMap`
+            StructDocTfMap[sectionKey] = sectionTfMap;
+        }
+
+        // Create a new document
+        StructuredDocument newDoc(docLenMap, StructDocTfMap);
         docVect.push_back(newDoc);
     }
 
     // Additional info
     calcAvgDocLengths();
     createDocsWithTermMap();
-
-    // Query text
-    //Analyzer::fullAnalyzeToTfMap(queryText);
 
     // Ensure everything was done right
     this->assertProperties();
@@ -47,8 +67,8 @@ FeatureCollector::FeatureCollector(
  * @brief Construct a new Feature Collector from raw full text documents with
  *  a query id.
  *
- * @param docTextMapVect
- * @param queryText
+ * @param docTextMapVect Multiple structured documents of raw text.
+ * @param queryText Raw unanalyzed query string.
  * @param queryId
  */
 FeatureCollector::FeatureCollector(
@@ -63,9 +83,11 @@ FeatureCollector::FeatureCollector(
 /**
  * @brief Construct a new Feature Collector from preanalyzed structured docs.
  *
- * @param docLenMapVect
- * @param docTfMapVect
- * @param queryText
+ * @param docLenMapVect Multiple structured documents with their length for
+ *  each section.
+ * @param docTfMapVect Multiple structured documents with analyzed tokens for
+ *  each section.
+ * @param queryText Raw unanalyzed query string.
  */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrUintMap> const & docLenMapVect,
@@ -73,22 +95,35 @@ FeatureCollector::FeatureCollector(
     std::string const & queryText
 )
 {
+    // Query text
+    base::StrUintMap queryTfMap;
+    //queryTfMap = Analyzer::fullAnalyzeToTfMap(queryText);
+
+    // Number of document
     this->numDocs = docTfMapVect.size();
 
-    // Initialize every document
+    // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
     for (int i = 0; i < this->numDocs; ++i)
     {
-        StructuredDocument newDoc(docLenMapVect.at(i), docTfMapVect.at(i));
+        auto const & docLenMap = docLenMapVect.at(i);
+        auto docTfMap = docTfMapVect.at(i);
+
+        for (auto & [sectionKey, sectionTfMap] : docTfMap)
+        {
+            docTfMap[sectionKey] = base::Utillf::getIntersection(
+                sectionTfMap, queryTfMap
+            );
+        }
+
+        // Create a new document
+        StructuredDocument newDoc(docLenMap, docTfMap);
         docVect.push_back(newDoc);
     }
 
     // Additional info
     calcAvgDocLengths();
     createDocsWithTermMap();
-
-    // Query text
-    //Analyzer::fullAnalyzeToTfMap(queryText);
 
     // Ensure everything was done right
     this->assertProperties();
@@ -99,9 +134,11 @@ FeatureCollector::FeatureCollector(
  * @brief Construct a new Feature Collector from preanalyzed structured docs
  *  with a query id.
  *
- * @param docLenMapVect
- * @param docTfMapVect
- * @param queryText
+ * @param docLenMapVect Multiple structured documents with their length for
+ *  each section.
+ * @param docTfMapVect Multiple structured documents with analyzed tokens for
+ *  each section.
+ * @param queryText Raw unanalyzed query string.
  * @param queryId
  */
 FeatureCollector::FeatureCollector(
@@ -149,8 +186,13 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
             switch (fKey.getVName())
             {
                 case VNames::dl:
-
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        doc.updateFeature(
+                            fKey, doc.getDocLen(fKey.getFSection()));
+                    }
+                }
 
                 default:
                     break;
@@ -163,8 +205,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
             switch (fKey.getVName())
             {
                 case VNames::tflognorm:
-                    /* code */
-                    break;
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        double const fVal = Tfidf::sumTfLogNorm(
+                            doc.getTermFrequencyMap(fKey.getFSection())
+                        );
+                    }
+                }
 
                 default:
                     break;
