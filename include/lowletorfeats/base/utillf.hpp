@@ -81,7 +81,7 @@ public:
 
 
     /**
-     * @brief Split a string on a delimiter. TODO: Better performance (vector bad)
+     * @brief Split a string on a delimiter.
      *
      * @param str
      * @param delim
@@ -89,18 +89,24 @@ public:
      */
     static std::vector<std::string> strSplit(std::string const & str, char const & delim)
     {
-        std::vector<std::string> outVect;
+        std::vector<std::string> tokens;
 
-        size_t start;
-        size_t end = 0;
+        // Skip delimiters at the beginning
+        std::string::size_type lastPos = str.find_first_not_of(delim, 0);
+        // Find first non-delimiter
+        std::string::size_type pos = str.find_first_of(delim, lastPos);
 
-        while ( (start = str.find_first_not_of(delim, end)) != std::string::npos)
+        while ((std::string::npos != pos || std::string::npos != lastPos))
         {
-            end = str.find(delim, start);
-            outVect.push_back(str.substr(start, end - start));
+            // Found token, add to the token vector
+            tokens.push_back(str.substr(lastPos, pos-lastPos));
+            // Skip delimiters
+            lastPos = str.find_first_not_of(delim, pos);
+            // Find next non-delimiter
+            pos = str.find_first_of(delim, lastPos);
         }
 
-        return outVect;
+        return tokens;
     }
 
 
@@ -143,6 +149,33 @@ public:
             outVect.push_back(imap.second);
 
         return outVect;
+    }
+
+
+    /**
+     * @brief Get the intersection of two unorderd_maps
+     *
+     * @tparam KEY_T
+     * @tparam VALUE_T
+     * @param x
+     * @param filterMap
+     * @return std::unordered_map<KEY_T, VALUE_T>
+     */
+    template<typename KEY_T, typename VALUE_T>
+    static std::unordered_map<KEY_T, VALUE_T> getIntersection(
+        std::unordered_map<KEY_T, VALUE_T> const & a,
+        std::unordered_map<KEY_T, VALUE_T> const & b
+    )
+    {
+        std::unordered_map<KEY_T, VALUE_T> interMap;
+
+        for (auto const & pair : a)
+        {
+            if (b.find(pair.first) != b.end())
+                result.insert(pair);
+        }
+
+        return interMap;
     }
 
 private:
