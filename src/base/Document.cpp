@@ -9,44 +9,6 @@ namespace lowletorfeats
 /* Constructors */
 
 /**
- * @brief Construct a new Structured Document object using the raw text of the
- *  full document.
- *  Assigns docLenMap["full"], termFrequencyMap["full"], maxTermMap["full"]
- *
- * @param fullText The raw text string for the full document.
- */
-StructuredDocument::StructuredDocument(std::string const & fullText)
-{
-    //std::vector<std::string> textTokens = tokenize(fullText);
-    //this->docLen["full"] = textTokens.size();
-
-    // N-grams, word embeddings, etc.
-    //analyze(textTokens);
-
-    // Token vector to map
-    //mapTermFreq(textTokens);
-
-    // Assign to map
-}
-
-
-/**
- * @brief Construct a new Structured Document object using the raw text of each
- *  structured section of the document.
- *  Assigns docLenMap, termFrequencyMap, maxTermMap
- *
- * @param textMap Raw text for each structured section of the document.
- */
-StructuredDocument::StructuredDocument(base::StrStrMap const & textMap)
-{
-    for (auto const & [key, text] : textMap)
-    {
-        //this->termFrequencyMap[key] =
-    }
-}
-
-
-/**
  * @brief Construct a new Structured Document object using a preanalyzed
  *  document length and `TermFrequencyMap` for the full document text.
  *

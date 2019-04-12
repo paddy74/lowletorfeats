@@ -13,13 +13,13 @@ public:
     /* Public member variables */
 
     /* Constructors */
-    StructuredDocument(std::string const & fullText);
-    StructuredDocument(base::StrStrMap const & textMap);
-    StructuredDocument(
+
+    // Preanalyzed
+    StructuredDocument(  // `"full"` section only
         uint const & docLen,
         base::StrUintMap const & fullTermFrequencyMap
     );
-    StructuredDocument(
+    StructuredDocument(  // One or more sections
         base::StrUintMap const & docLenMap,
         base::StructuredTermFrequencyMap const & structuredTermFrequencyMap
     );
@@ -111,14 +111,17 @@ public:
     double const & getFeatureValue(base::FeatureKey const & fName) const
     { return this->featureMap.at(fName); }
 
+
+    /* Setters */
+
     /**
      * @brief Create or update a feature in the `featureMap`.
      *
-     * @param fName
+     * @param fKey
      * @param fValue
      */
-    void updateFeature(base::FeatureKey const & fName, double const & fValue)
-    { this->featureMap[fName] = fValue; }
+    void updateFeature(base::FeatureKey const & fKey, double const & fValue)
+    { this->featureMap[fKey] = fValue; }
 
 private:
     /* Private member variables */
