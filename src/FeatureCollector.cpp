@@ -316,7 +316,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-
+                        double const fVal = Okapi::queryBm25(
+                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            this->numDocs,
+                            this->docsWithTermMap,
+                            this->avgDocLenMap[fKey.getFSection()],
+                            this->queryTfMap
+                        );
+                        doc.updateFeature(fKey, fVal);
                     } break;
                 }
 
@@ -324,8 +331,57 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-
+                        double const fVal = Okapi::queryBm25plus(
+                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            this->numDocs,
+                            this->docsWithTermMap,
+                            this->avgDocLenMap[fKey.getFSection()],
+                            this->queryTfMap
+                        );
+                        doc.updateFeature(fKey, fVal);
                     } break;
+                }
+
+                case VNames::bm25f:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        for (auto const & [sectionKey, sectionTfMap]
+                            : doc.getStructuredTermFrequencyMap())
+                        {
+                            double const fVal = Okapi::queryBm25(
+                                sectionTfMap,
+                                this->numDocs,
+                                this->docsWithTermMap,
+                                this->avgDocLenMap[sectionKey],
+                                this->queryTfMap
+                            );
+                            doc.updateFeature(fKey, fVal);
+                        }
+
+                        // TODO: weighted BM25F
+                    }
+                }
+
+                case VNames::bm25fplus:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        for (auto const & [sectionKey, sectionTfMap]
+                            : doc.getStructuredTermFrequencyMap())
+                        {
+                            double const fVal = Okapi::queryBm25plus(
+                                sectionTfMap,
+                                this->numDocs,
+                                this->docsWithTermMap,
+                                this->avgDocLenMap[sectionKey],
+                                this->queryTfMap
+                            );
+                            doc.updateFeature(fKey, fVal);
+                        }
+
+                        // TODO: weighted BM25F+
+                    }
                 }
 
                 default:
@@ -342,7 +398,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-
+                        // TODO:
                     } break;
                 }
 
@@ -350,7 +406,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-
+                        // TODO:
                     } break;
                 }
 
@@ -358,7 +414,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-
+                        // TODO:
                     } break;
                 }
 

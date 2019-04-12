@@ -26,7 +26,7 @@ public:
         tfidf,
 
         // Okapi
-        bm25, bm25plus,
+        bm25, bm25plus, bm25f, bm25fplus,
 
         // LMIR
         abs, dir, jm
