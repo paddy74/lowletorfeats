@@ -77,6 +77,11 @@ public:
     { return this->numDocs; };
     uint const getNumFeatures() const;
 
+    /* Setter methods */
+    void setSectionWeights(
+        std::unordered_map<std::string, double> const & sectionWeights)
+    { this->sectionWeights = sectionWeights; }
+
 private:
     /* Private member variables */
     std::vector<base::FeatureKey> const PRESET_FEATURES =
