@@ -97,7 +97,7 @@ FeatureCollector::FeatureCollector(
 {
     // Query text
     base::StrUintMap queryTfMap;
-    //queryTfMap = Analyzer::fullAnalyzeToTfMap(queryText);
+    //queryTfMap = Analyzer::fullAnalyzeToTfMap(queryText);  // TODO:
 
     // Number of document
     this->numDocs = docTfMapVect.size();
@@ -292,7 +292,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         double const fVal = Tfidf::queryTfidf(
-                            doc.getTermFrequencyMap(fKey.getFSection),
+                            doc.getTermFrequencyMap(fKey.getFSection()),
                             doc.getMaxTF(),
                             this->numDocs,
                             this->docsWithTermMap,

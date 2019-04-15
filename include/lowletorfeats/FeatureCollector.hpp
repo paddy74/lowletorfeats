@@ -91,6 +91,15 @@ private:
         base::FeatureKey("lmir", "jm", "full")
     };
 
+    std::unordered_map<std::string, double> sectionWeights =
+    {
+        {"full", 1},
+        {"title", 1},
+        {"body", 1},
+        {"anchor", 1},
+        {"url", 1}
+    };
+
     uint numDocs;
     base::StrUintMap avgDocLenMap;
 
