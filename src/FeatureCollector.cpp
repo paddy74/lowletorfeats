@@ -179,6 +179,12 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
     typedef base::FeatureKey::ValidNames VNames;
     typedef base::FeatureKey::ValidSections VSections;
 
+    std::string const & fSection = fKey.getFSection();
+    auto const & docsWithTermMap = this->structDocsWithTermMap.at(fSection);
+    uint const & avgDocLen = this->avgDocLenMap.at(fSection);
+    uint const & totalTerms = this->totalTermsMap.at(fSection);
+
+
     switch (fKey.getVType())
     {
         case VTypes::other:
@@ -208,9 +214,10 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Tfidf::sumTfLogNorm(
-                            doc.getTermFrequencyMap(fKey.getFSection())
-                        );
+                        auto const & tfMap =
+                            doc.getTermFrequencyMap(fKey.getFSection());
+
+                        double const fVal = Tfidf::sumTfLogNorm(tfMap);
                         doc.updateFeature(fKey, fVal);
                     } break;
                 }
@@ -219,8 +226,11 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
+                        auto const & tfMap =
+                            doc.getTermFrequencyMap(fKey.getFSection());
+
                         double const fVal = Tfidf::sumTfDoubleNorm(
-                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            tfMap,
                             doc.getMaxTF()
                         );
                         doc.updateFeature(fKey, fVal);
@@ -233,7 +243,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     {
                         double const fVal = Tfidf::idfDefault(
                             this->numDocs,
-                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                            totalTerms
                         );
                         doc.updateFeature(fKey, fVal);
                     } break;
@@ -245,7 +255,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     {
                         double const fVal = Tfidf::idfSmooth(
                             this->numDocs,
-                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                            totalTerms
                         );
                         doc.updateFeature(fKey, fVal);
                     } break;
@@ -256,7 +266,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         double const fVal = Tfidf::idfMax(
-                            base::Utillf::mapValueSum(this->docsWithTermMap),
+                            totalTerms,
                             doc.getMaxTF()
                         );
                         doc.updateFeature(fKey, fVal);
@@ -269,7 +279,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     {
                         double const fVal = Tfidf::idfProb(
                             this->numDocs,
-                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                            totalTerms
                         );
                         doc.updateFeature(fKey, fVal);
                     } break;
@@ -281,7 +291,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     {
                         double const fVal = Tfidf::idfNorm(
                             this->numDocs,
-                            base::Utillf::mapValueSum(this->docsWithTermMap)
+                            totalTerms
                         );
                         doc.updateFeature(fKey, fVal);
                     } break;
@@ -291,11 +301,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
+                        auto const & tfMap =
+                            doc.getTermFrequencyMap(fKey.getFSection());
+
                         double const fVal = Tfidf::queryTfidf(
-                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            tfMap,
                             doc.getMaxTF(),
                             this->numDocs,
-                            this->docsWithTermMap,
+                            docsWithTermMap,
                             this->queryTfMap
                         );
                         doc.updateFeature(fKey, fVal);
@@ -316,11 +329,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
+                        auto const & tfMap =
+                            doc.getTermFrequencyMap(fKey.getFSection());
+
                         double const fVal = Okapi::queryBm25(
-                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            tfMap,
                             this->numDocs,
-                            this->docsWithTermMap,
-                            this->avgDocLenMap[fKey.getFSection()],
+                            docsWithTermMap,
+                            avgDocLen,
                             this->queryTfMap
                         );
                         doc.updateFeature(fKey, fVal);
@@ -331,11 +347,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
+                        auto const & tfMap =
+                            doc.getTermFrequencyMap(fKey.getFSection());
+
                         double const fVal = Okapi::queryBm25plus(
-                            doc.getTermFrequencyMap(fKey.getFSection()),
+                            tfMap,
                             this->numDocs,
-                            this->docsWithTermMap,
-                            this->avgDocLenMap[fKey.getFSection()],
+                            docsWithTermMap,
+                            avgDocLen,
                             this->queryTfMap
                         );
                         doc.updateFeature(fKey, fVal);
@@ -346,20 +365,15 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        for (auto const & [sectionKey, sectionTfMap]
-                            : doc.getStructuredTermFrequencyMap())
-                        {
-                            double const fVal = Okapi::queryBm25(
-                                sectionTfMap,
-                                this->numDocs,
-                                this->docsWithTermMap,
-                                this->avgDocLenMap[sectionKey],
-                                this->queryTfMap
-                            );
-                            doc.updateFeature(fKey, fVal);
-                        }
-
-                        // TODO: weighted BM25F
+                        double const fVal = Okapi::queryBm25f(
+                            doc.getStructuredTermFrequencyMap(),
+                            this->numDocs,
+                            this->structDocsWithTermMap,
+                            this->avgDocLenMap,
+                            this->queryTfMap,
+                            this->sectionWeights
+                        );
+                        doc.updateFeature(fKey, fVal);
                     }
                 }
 
@@ -367,20 +381,15 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        for (auto const & [sectionKey, sectionTfMap]
-                            : doc.getStructuredTermFrequencyMap())
-                        {
-                            double const fVal = Okapi::queryBm25plus(
-                                sectionTfMap,
-                                this->numDocs,
-                                this->docsWithTermMap,
-                                this->avgDocLenMap[sectionKey],
-                                this->queryTfMap
-                            );
-                            doc.updateFeature(fKey, fVal);
-                        }
-
-                        // TODO: weighted BM25F+
+                        double const fVal = Okapi::queryBm25fplus(
+                            doc.getStructuredTermFrequencyMap(),
+                            this->numDocs,
+                            this->structDocsWithTermMap,
+                            this->avgDocLenMap,
+                            this->queryTfMap,
+                            this->sectionWeights
+                        );
+                        doc.updateFeature(fKey, fVal);
                     }
                 }
 
@@ -438,6 +447,34 @@ void FeatureCollector::collectFeatures(
         this->collectFeatures(fKey);
 }
 
+
 /* Private class methods */
+
+/**
+ * @brief Calculate the average document length for each section.
+ *
+ */
+void FeatureCollector::calcAvgDocLengths()
+{
+    // TODO:
+}
+
+
+/**
+ * @brief Calculate the number of documents containing each term and the total
+ *  terms map.
+ *
+ */
+void FeatureCollector::createDocsWithTermMap()
+{
+    // TODO:
+
+    // Fill the `totalTermsMap`
+    for (auto const & [sectionKey, sectionValue] : this->structDocsWithTermMap)
+    {
+        this->totalTermsMap[sectionKey] =
+            base::Utillf::mapValueSum(sectionValue);
+    }
+}
 
 }

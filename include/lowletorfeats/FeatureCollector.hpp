@@ -112,7 +112,8 @@ private:
     std::vector<StructuredDocument> docVect;
 
     // Number of documents containing a term for every term
-    base::StrUintMap docsWithTermMap;
+    base::StructuredTermFrequencyMap structDocsWithTermMap;
+    base::StrUintMap totalTermsMap;
 
     // `TermFrequencyMap` for the query string
     base::StrUintMap queryTfMap;

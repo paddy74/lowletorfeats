@@ -47,6 +47,26 @@ public:
         base::StrUintMap const & queryTermFreqMap
     );
 
+    /* BM25f */
+    static double queryBm25f(
+        base::StructuredTermFrequencyMap const & structDocTermFreqMap,
+        uint const & numDocs,
+        base::StructuredTermFrequencyMap structDocsWithTermFreqMap,
+        base::StrUintMap const & avgDocLenMap,
+        base::StrUintMap const & queryTermFreqMap,
+        std::unordered_map<std::string, double> structWeights
+    );
+
+    /* BM25f+ */
+    static double queryBm25fplus(
+        base::StructuredTermFrequencyMap const & structDocTermFreqMap,
+        uint const & numDocs,
+        base::StructuredTermFrequencyMap structDocsWithTermFreqMap,
+        base::StrUintMap const & avgDocLenMap,
+        base::StrUintMap const & queryTermFreqMap,
+        std::unordered_map<std::string, double> structWeights
+    );
+
 private:
     Okapi() {}
 };

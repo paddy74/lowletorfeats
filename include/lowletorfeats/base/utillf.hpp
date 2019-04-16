@@ -172,7 +172,7 @@ public:
         for (auto const & pair : a)
         {
             if (b.find(pair.first) != b.end())
-                result.insert(pair);
+                interMap.insert(pair);
         }
 
         return interMap;

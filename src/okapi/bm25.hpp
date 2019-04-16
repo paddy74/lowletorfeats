@@ -55,7 +55,7 @@ double Okapi::bm25(
     float const k1 = 1.2;
     float const b = 0.74;
 
-    return bm25(
+    return Okapi::bm25(
         docTermFrequency,
         numDocs, numDocsWithTerm,
         avgDocLen,
@@ -95,7 +95,7 @@ double Okapi::queryBm25(
             uint const docTermFrequency = docTermFreqMap.at(term);
             uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
-            score += bm25(
+            score += Okapi::bm25(
                 docTermFrequency,
                 numDocs, numDocsWithTerm,
                 avgDocLen

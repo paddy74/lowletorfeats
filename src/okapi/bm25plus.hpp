@@ -97,7 +97,7 @@ double Okapi::queryBm25plus(
             uint const docTermFrequency = docTermFreqMap.at(term);
             uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
-            score += bm25plus(
+            score += Okapi::bm25plus(
                 docTermFrequency,
                 numDocs, numDocsWithTerm,
                 avgDocLen
