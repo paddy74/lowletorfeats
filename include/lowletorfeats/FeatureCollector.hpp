@@ -2,7 +2,7 @@
 
 #include <functional>  // function
 
-#include "base/Document.hpp"
+#include "base/Document.hpp"  // StructuredDocument
 
 
 namespace lowletorfeats

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>  // string, stoi
-#include <functional>  // hash
-#include <vector>  // vector
+#include <string>  // string
+#include <unordered_map>  // unordered_map
 
 
 namespace lowletorfeats::base

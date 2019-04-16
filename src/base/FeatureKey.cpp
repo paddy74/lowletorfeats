@@ -1,9 +1,6 @@
 #include <lowletorfeats/base/FeatureKey.hpp>
 #include <lowletorfeats/base/Utillf.hpp>
 
-#include <cassert>
-#include <algorithm>
-
 
 namespace lowletorfeats::base
 {

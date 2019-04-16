@@ -2,7 +2,6 @@
 
 #include <vector>  // vector
 #include <unordered_map>  // unordered_map
-
 #include <numeric>  // accumulate
 #include <algorithm>  // max_element
 
