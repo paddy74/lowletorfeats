@@ -23,17 +23,17 @@ FeatureCollector::FeatureCollector(
 {
     // Query text
     base::StrUintMap queryTfMap;
-    queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
+    this->queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
 
     // Number of documents
     this->numDocs = docTextMapVect.size();
 
     // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
-    for (auto const & docTextMap : docTextMapVect)
+    for (auto const & docTextMap : docTextMapVect) // for each document
     {
         base::StrUintMap docLenMap;
-        base::StructuredTermFrequencyMap StructDocTfMap;
+        base::StructuredTermFrequencyMap structDocTfMap;
         for (auto const & [sectionKey, sectionText] : docTextMap)
         {
             // Analyze text for this document
@@ -44,20 +44,30 @@ FeatureCollector::FeatureCollector(
             docLenMap[sectionKey] = pair.second;
 
             // Filter for query tokens only
-            sectionTfMap = base::Utillf::getIntersection(sectionTfMap, queryTfMap);
+            sectionTfMap = base::Utillf::getIntersection(
+                sectionTfMap, queryTfMap);
 
             // Add to `StructDocTfMap`
-            StructDocTfMap[sectionKey] = sectionTfMap;
+            structDocTfMap[sectionKey] = sectionTfMap;
+
+            // Sum in avgDocLengths
+            this->avgDocLenMap[sectionKey] += pair.second;
+
+            // `structDocsWithTermMap`
+            for (auto const & [term, tf] : sectionTfMap)
+                this->structDocsWithTermMap[sectionKey][term]++;
         }
 
         // Create a new document
-        StructuredDocument newDoc(docLenMap, StructDocTfMap);
-        docVect.push_back(newDoc);
+        StructuredDocument newDoc(docLenMap, structDocTfMap);
+        this->docVect.push_back(newDoc);
     }
 
-    // Additional info
-    calcAvgDocLengths();
-    createDocsWithTermMap();
+    // Calculate avgDocLengths
+    for (auto const & [sectionKey, sectionValue] : this->avgDocLenMap)
+        this->avgDocLenMap.at(sectionKey) = sectionValue / this->numDocs;
+
+    this->sumTotalTermsPerSection();
 
     // Ensure everything was done right
     this->assertProperties();
@@ -96,35 +106,44 @@ FeatureCollector::FeatureCollector(
     std::string const & queryText
 )
 {
-    // Query text
-    base::StrUintMap queryTfMap;
-    queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
+    // Analyze query text
+    this->queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
 
-    // Number of document
+    // Set the number of documents
     this->numDocs = docTfMapVect.size();
 
     // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
-    for (int i = 0; i < this->numDocs; ++i)
-    {
-        auto const & docLenMap = docLenMapVect.at(i);
-        auto docTfMap = docTfMapVect.at(i);
+    for (int i = 0; i < this->numDocs; ++i)  // for each document
+    {  // TODO: Iterate
+        base::StrUintMap const & docLenMap = docLenMapVect.at(i);
+        base::StructuredTermFrequencyMap docTfMap = docTfMapVect.at(i);
 
-        for (auto & [sectionKey, sectionTfMap] : docTfMap)
+        for (auto const & [sectionKey, sectionTfMap] : docTfMap)  // for each section
         {
-            docTfMap[sectionKey] = base::Utillf::getIntersection(
+            // Filter for query tokens only
+            docTfMap.at(sectionKey) = base::Utillf::getIntersection(
                 sectionTfMap, queryTfMap
             );
+
+            // Sum in avgDocLengths
+            this->avgDocLenMap[sectionKey] += docLenMap.at(sectionKey);
+
+            // `structDocsWithTermMap`
+            for (auto const & [term, tf] : sectionTfMap)
+                this->structDocsWithTermMap[sectionKey][term]++;
         }
 
         // Create a new document
         StructuredDocument newDoc(docLenMap, docTfMap);
-        docVect.push_back(newDoc);
+        this->docVect.push_back(newDoc);
     }
 
-    // Additional info
-    calcAvgDocLengths();
-    createDocsWithTermMap();
+    // Calculate avgDocLengths
+    for (auto const & [sectionKey, sectionValue] : this->avgDocLenMap)
+        this->avgDocLenMap.at(sectionKey) = sectionValue / this->numDocs;
+
+    this->sumTotalTermsPerSection();
 
     // Ensure everything was done right
     this->assertProperties();
@@ -452,30 +471,27 @@ void FeatureCollector::collectFeatures(
 /* Private class methods */
 
 /**
- * @brief Calculate the average document length for each section.
+ * @brief Calculate the total number of terms per section.
  *
  */
-void FeatureCollector::calcAvgDocLengths()
+void FeatureCollector::sumTotalTermsPerSection()
 {
-    // TODO:
-}
-
-
-/**
- * @brief Calculate the number of documents containing each term and the total
- *  terms map.
- *
- */
-void FeatureCollector::createDocsWithTermMap()
-{
-    // TODO:
-
     // Fill the `totalTermsMap`
     for (auto const & [sectionKey, sectionValue] : this->structDocsWithTermMap)
     {
         this->totalTermsMap[sectionKey] =
             base::Utillf::mapValueSum(sectionValue);
     }
+}
+
+void FeatureCollector::clearFeatureMaps()
+{
+    // TODO:
+}
+
+void FeatureCollector::assertProperties()
+{
+    // TODO:
 }
 
 }

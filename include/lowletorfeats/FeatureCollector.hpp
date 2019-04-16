@@ -145,8 +145,7 @@ private:
     }
 
     /* Private class methods */
-    void calcAvgDocLengths();
-    void createDocsWithTermMap();
+    void sumTotalTermsPerSection();
     void clearFeatureMaps();
     void assertProperties();
 };
