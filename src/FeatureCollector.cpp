@@ -30,7 +30,7 @@ FeatureCollector::FeatureCollector(
 
     // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
-    for (auto const & docTextMap : docTextMapVect) // for each document
+    for (auto const & docTextMap : docTextMapVect)  // for each document
     {
         base::StrUintMap docLenMap;
         base::StructuredTermFrequencyMap structDocTfMap;
@@ -497,7 +497,21 @@ void FeatureCollector::clearFeatureMaps()
 
 void FeatureCollector::assertProperties()
 {
-    // TODO:
+    // Assert same sections present in:
+    //  `avgDocLenMap`, `structDocsWithTermMap`, `totalTermsMap`
+    auto fullKeyVector =
+        base::Utillf::getKeyVect(this->avgDocLenMap);
+    fullKeyVector = base::Utillf::getIntersection(
+        fullKeyVector, base::Utillf::getKeyVect(this->structDocsWithTermMap));
+    fullKeyVector = base::Utillf::getIntersection(
+        fullKeyVector, base::Utillf::getKeyVect(this->totalTermsMap));
+
+    for (auto const & sectionKey : fullKeyVector)
+    {
+        avgDocLenMap.at(sectionKey);
+        structDocsWithTermMap.at(sectionKey);
+        totalTermsMap.at(sectionKey);
+    }
 }
 
 }
