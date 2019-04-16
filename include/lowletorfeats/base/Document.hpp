@@ -31,6 +31,11 @@ public:
 
     /* Public class methods */
 
+    void clear();
+    void clearSection(std::string const & section);
+    void clearFeatureMap();
+
+
     /* Getter methods */
 
     /**
@@ -130,6 +135,7 @@ public:
 
 private:
     /* Private member variables */
+
     base::StrUintMap docLenMaps;
 
     base::StructuredTermFrequencyMap termFrequencyMaps;
@@ -137,10 +143,9 @@ private:
 
     base::FeatureMap featureMap;
 
+
     /* Private class methods */
-    void clear();
-    void clearSection(std::string const & section);
-    void clearFeatureMap();
+
     void fillFullFromOthers();
 };
 

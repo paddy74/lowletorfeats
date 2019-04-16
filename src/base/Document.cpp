@@ -73,7 +73,7 @@ StructuredDocument::StructuredDocument(
 }
 
 
-/* Private class methods */
+/* Public class methods */
 
 /**
  * @brief Clear all sections from the document.
@@ -108,6 +108,8 @@ void StructuredDocument::clearFeatureMap()
     this->featureMap.clear();
 }
 
+
+/* Private class methods */
 
 /**
  * @brief Fill the "full" sections based on other existing sections.

@@ -484,9 +484,15 @@ void FeatureCollector::sumTotalTermsPerSection()
     }
 }
 
+
+/**
+ * @brief Clear the feature maps of every document.
+ *
+ */
 void FeatureCollector::clearFeatureMaps()
 {
-    // TODO:
+    for (auto & doc : this->docVect)
+        doc.clearFeatureMap();
 }
 
 void FeatureCollector::assertProperties()
