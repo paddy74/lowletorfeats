@@ -1,10 +1,6 @@
-#pragma once
-
 #include <cassert>
 
 #include <lowletorfeats/Tfidf.hpp>
-#include "tf.hpp"
-#include "idf.hpp"
 
 
 namespace lowletorfeats

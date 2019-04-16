@@ -40,6 +40,19 @@ endif()
 set(libsrc
     src/base/FeatureKey.cpp
     src/base/Document.cpp
+
+    src/tfidf/tf.cpp
+    src/tfidf/idf.cpp
+    src/tfidf/tfidf.cpp
+
+    src/okapi/bm25.cpp
+    src/okapi/bm25plus.cpp
+    src/okapi/bm25f.cpp
+
+    src/lmir/abs.cpp
+    src/lmir/dir.cpp
+    src/lmir/jm.cpp
+
     src/FeatureCollector.cpp
 )
 

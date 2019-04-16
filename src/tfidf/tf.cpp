@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cmath>  // log
 
 #include <lowletorfeats/Tfidf.hpp>

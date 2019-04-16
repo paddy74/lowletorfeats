@@ -1,5 +1,3 @@
-#pragma once
-
 #include <cassert>
 
 #include <lowletorfeats/Okapi.hpp>
@@ -10,7 +8,7 @@ namespace lowletorfeats
 {
 
 /**
- * @brief Calculate Okapi Best Match 25 plus (BM25+) for a single term.
+ * @brief Calculate Okapi Best Match 25 (BM25) for a single term.
  *
  * @param docTermFrequency The term's term frequency in the given document.
  * @param numDocs Number of documents in the collection.
@@ -18,14 +16,13 @@ namespace lowletorfeats
  * @param avgDocLen Average document length of the collection.
  * @param b
  * @param k1
- * @param delta
  * @return double
  */
-double Okapi::bm25plus(
+double Okapi::bm25(
     uint const & docTermFrequency,
-    uint const & numDocs, uint numDocsWithTerm,
+    uint const & numDocs, uint const & numDocsWithTerm,
     uint const & avgDocLen,
-    float const & b, float const & k1, float const & delta
+    float const & b, float const & k1
 )
 {
     double const idf = Tfidf::idfNorm(numDocs, numDocsWithTerm);
@@ -34,12 +31,12 @@ double Okapi::bm25plus(
     double const denom = docTermFrequency
         + (k1 * (1 - b + (b * (numDocs / avgDocLen))));
 
-    return idf * ((numer / denom) + delta);
+    return idf * (numer / denom);
 }
 
 
 /**
- * @brief Calculate Okapi Best Match 25 plus (BM25+) for a single term.
+ * @brief Calculate Okapi Best Match 25 (BM25) for a single term.
  *
  * @param docTermFrequency The term's term frequency in the given document.
  * @param numDocs Number of documents in the collection.
@@ -47,7 +44,7 @@ double Okapi::bm25plus(
  * @param avgDocLen Average document length of the collection.
  * @return double
  */
-double Okapi::bm25plus(
+double Okapi::bm25(
     uint const & docTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm,
     uint const & avgDocLen
@@ -55,30 +52,29 @@ double Okapi::bm25plus(
 {
     float const k1 = 1.2;
     float const b = 0.74;
-    float const delta = 1.0;
 
-    return bm25plus(
+    return Okapi::bm25(
         docTermFrequency,
         numDocs, numDocsWithTerm,
         avgDocLen,
-        b, k1, delta
+        b, k1
     );
 }
 
 
 /**
- * @brief Calculate the BM25+ of a document for a group of terms (query).
- *  To calculate the BM25+ for an entire document (no query) the
+ * @brief Calculate the BM25 of a document for a group of terms (query).
+ *  To calculate the BM25 for an entire document (no query) the
  *  `queryTermFreqMap` should be the document's token vector.
  *
  * @param docTermFreqMap `TermFrequencyMap` for the document.
  * @param numDocs Number of documents in the collection.
  * @param docsWithTermFreqMap Number of documents containing each term.
  * @param avgDocLen Average document length of the collection.
- * @param queryTermFreqMap `StrUintMap` for the query.
+ * @param queryTermFreqMap `TermFrequencyMap` for the query.
  * @return double
  */
-double Okapi::queryBm25plus(
+double Okapi::queryBm25(
     base::StrUintMap const & docTermFreqMap,
     uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
     uint const & avgDocLen,
@@ -97,7 +93,7 @@ double Okapi::queryBm25plus(
             uint const docTermFrequency = docTermFreqMap.at(term);
             uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
-            score += Okapi::bm25plus(
+            score += Okapi::bm25(
                 docTermFrequency,
                 numDocs, numDocsWithTerm,
                 avgDocLen
