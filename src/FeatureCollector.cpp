@@ -23,7 +23,7 @@ FeatureCollector::FeatureCollector(
 {
     // Query text
     base::StrUintMap queryTfMap;
-    //queryTfMap = Analyzer::fullAnalyzeToTfMap(queryText);
+    queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
 
     // Number of documents
     this->numDocs = docTextMapVect.size();
@@ -38,9 +38,10 @@ FeatureCollector::FeatureCollector(
         {
             // Analyze text for this document
             base::StrUintMap sectionTfMap;
-            //auto pair = Analyzer::fullAnalyzeToTfMap(sectionText, true)  // TODO:
-            //sectionTfMap = pair.first;
-            //docLenMap[sectionKey] = pair.second;
+            auto const & pair =
+                FeatureCollector::anlyzToTfMapLenPair(sectionText);
+            sectionTfMap = pair.first;
+            docLenMap[sectionKey] = pair.second;
 
             // Filter for query tokens only
             sectionTfMap = base::Utillf::getIntersection(sectionTfMap, queryTfMap);
@@ -97,7 +98,7 @@ FeatureCollector::FeatureCollector(
 {
     // Query text
     base::StrUintMap queryTfMap;
-    //queryTfMap = Analyzer::fullAnalyzeToTfMap(queryText);  // TODO:
+    queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
 
     // Number of document
     this->numDocs = docTfMapVect.size();

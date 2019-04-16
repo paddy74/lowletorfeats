@@ -1,6 +1,6 @@
 #pragma once
 
-#include <array>
+#include <functional>  // function
 
 #include "base/Document.hpp"
 
@@ -82,6 +82,15 @@ public:
         std::unordered_map<std::string, double> const & sectionWeights)
     { this->sectionWeights = sectionWeights; }
 
+    /* Static setter methods */
+    static void setAnalyzerFunction(
+        std::function<
+            std::pair<base::StrUintMap, uint>
+            (std::string)
+        > analyzerFunction
+    )
+    { FeatureCollector::anlyzToTfMapLenPair = analyzerFunction; }
+
 private:
     /* Private member variables */
     std::vector<base::FeatureKey> const PRESET_FEATURES =
@@ -120,6 +129,20 @@ private:
     // The query id for the `queryTfMap`
     std::string queryId = "-1";
 
+
+    /* Static private member variables */
+
+    static std::function<
+        std::pair<base::StrUintMap, uint>
+        (std::string)
+    > anlyzToTfMapLenPair;  // TODO: default
+
+    static base::StrUintMap anlyzToTfMap(std::string inputText)
+    {
+        auto const & tfMapPair =
+            FeatureCollector::anlyzToTfMapLenPair(inputText);
+        return tfMapPair.first;
+    }
 
     /* Private class methods */
     void calcAvgDocLengths();
