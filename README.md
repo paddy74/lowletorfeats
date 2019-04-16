@@ -20,7 +20,7 @@ The following categories of low-level features are collected using this library:
 
 ### Adding to your project
 
-The reccommended way to add this library to you project is by including the following to your CMakeLists.txt:
+The recommended way to add this library to you project is by including the following to your CMakeLists.txt:
 
 ```cmake
 cmake_minimum_required(VERSION 3.13)
