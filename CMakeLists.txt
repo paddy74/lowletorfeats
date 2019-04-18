@@ -20,7 +20,7 @@ set(CMAKE_COLOR_MAKEFILE ON)
 
 include_directories("${CMAKE_SOURCE_DIR}")
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -79,6 +79,20 @@ target_include_directories(${PROJECT_NAME_L}
 )
 
 target_compile_features(${PROJECT_NAME_L} PRIVATE cxx_auto_type)
+
+# Include external libs
+# ---------------------
+target_include_directories(${PROJECT_NAME_L}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/textalyzer
+)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/textalyzer)
+
+# Link
+target_link_libraries(${PROJECT_NAME_L}
+    textalyzer
+)
 
 # -----------------------------------------------------------------------------
 # Installation instructions

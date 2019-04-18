@@ -1,0 +1,3 @@
+[submodule "libs/textalyzer"]
+	path = libs/textalyzer
+	url = https://github.com/paddy74/textalyzer.git
