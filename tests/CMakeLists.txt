@@ -1,6 +1,6 @@
-add_executable(MainTest src/main.cpp)
+add_executable(lowletorfeats.test_main src/main.cpp)
 
-target_link_libraries(MainTest lowletorfeats)
+target_link_libraries(lowletorfeats.test_main lowletorfeats)
 
 enable_testing()
-add_test(test_main MainTest)
+add_test(test_main lowletorfeats.test_main)
