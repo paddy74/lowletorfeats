@@ -7,7 +7,7 @@
 
 namespace lowletorfeats::base
 {
-    typedef std::unordered_map<std::string, uint> StrUintMap;
+    typedef std::unordered_map<std::string, std::size_t> StrUintMap;
     typedef std::unordered_map<std::string, std::string> StrStrMap;
     typedef std::unordered_map<std::string, base::StrUintMap>
         StructuredTermFrequencyMap;
