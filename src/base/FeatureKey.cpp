@@ -1,5 +1,5 @@
-#include <lowletorfeats/base/FeatureKey.hpp>
 #include <lowletorfeats/base/Utillf.hpp>
+#include <lowletorfeats/base/FeatureKey.hpp>
 
 
 namespace lowletorfeats::base
@@ -24,8 +24,8 @@ FeatureKey::FeatureKey(std::string const & fKey)
     }
 
     this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
-    this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
-    this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
+    //this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
+    //this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
 }
 
 
@@ -79,7 +79,7 @@ std::unordered_map<FeatureKey::ValidTypes, std::string>
 };
 
 std::unordered_map<std::string, FeatureKey::ValidTypes>
-    const inverseValidTypeMap
+    const FeatureKey::inverseValidTypeMap
 {
     { "other", FeatureKey::ValidTypes::other },
     { "tfidf", FeatureKey::ValidTypes::tfidf },
@@ -149,7 +149,7 @@ std::unordered_map<FeatureKey::ValidSections, std::string>
 };
 
 std::unordered_map<std::string, FeatureKey::ValidSections>
-    const inverseValidSectionMap
+    const FeatureKey::inverseValidSectionMap
 {
     { "full", FeatureKey::ValidSections::full },
     { "body", FeatureKey::ValidSections::body },

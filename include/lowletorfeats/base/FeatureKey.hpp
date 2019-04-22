@@ -12,6 +12,7 @@ class FeatureKey
 {
 public:
     /* Public type definitions */
+
     enum class ValidTypes { other, tfidf, okapi,  lmir };
 
     enum class ValidNames
@@ -33,15 +34,15 @@ public:
 
     enum class ValidSections { full, body, anchor, title, url };
 
-    /* Public member variables */
-
     /* Constructors */
+
     FeatureKey(std::string const & fKey);
     FeatureKey(
         std::string const & fType,
         std::string const & fName,
         std::string const & fSection
     );
+
 
     /* Public class methods */
     std::string toString() const;
@@ -103,8 +104,6 @@ private:
         static const inverseValidNameMap;
     std::unordered_map<std::string, ValidSections>
         static const inverseValidSectionMap;
-
-    /* Private class methods */
 };
 
 }

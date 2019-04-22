@@ -4,7 +4,7 @@
 #include <lowletorfeats/Okapi.hpp>
 #include <lowletorfeats/LMIR.hpp>
 
-#include<textalyzer/Analyzer.hpp>
+#include <textalyzer/Analyzer.hpp>
 
 
 namespace lowletorfeats
@@ -25,7 +25,7 @@ FeatureCollector::FeatureCollector(
 {
     // Query text
     this->queryTfMap =
-        textalyzer::Analyzer::toFrequencyMap(
+        base::Utillf::asFrequencyMap(
             FeatureCollector::analyzerFun(queryText).first
         );
 
@@ -44,8 +44,7 @@ FeatureCollector::FeatureCollector(
             base::StrUintMap sectionTfMap;
             auto const & pair =
                 FeatureCollector::analyzerFun(queryText);
-            sectionTfMap =
-                textalyzer::Analyzer::toFrequencyMap(pair.first);
+            sectionTfMap = base::Utillf::asFrequencyMap(pair.first);
             docLenMap[sectionKey] = pair.second;
 
             // Filter for query tokens only
@@ -113,7 +112,7 @@ FeatureCollector::FeatureCollector(
 {
     // Analyze query text
     this->queryTfMap =
-        textalyzer::Analyzer::toFrequencyMap(
+        base::Utillf::asFrequencyMap(
             FeatureCollector::analyzerFun(queryText).first
         );
 
