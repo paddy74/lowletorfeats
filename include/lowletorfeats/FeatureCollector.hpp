@@ -85,25 +85,13 @@ public:
     /* Static setter methods */
     static void setAnalyzerFunction(
         std::function<
-            std::pair<base::StrUintMap, uint>
-            (std::string)
+            std::pair<std::vector<std::string>, std::size_t>(std::string)
         > analyzerFunction
     )
-    { FeatureCollector::anlyzToTfMapLenPair = analyzerFunction; }
+    { FeatureCollector::analyzerFun = analyzerFunction; }
 
 private:
     /* Private member variables */
-    std::vector<base::FeatureKey> const PRESET_FEATURES =
-    {
-        base::FeatureKey("other", "dl", "full"),
-        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
-        base::FeatureKey("tfidf", "idfdefault", "full"),
-        base::FeatureKey("tfidf", "tfidf", "full"),
-        base::FeatureKey("okapi", "bm25", "full"),
-        base::FeatureKey("lmir", "abs", "full"),
-        base::FeatureKey("lmir", "dir", "full"),
-        base::FeatureKey("lmir", "jm", "full")
-    };
 
     std::unordered_map<std::string, double> sectionWeights =
     {
@@ -132,17 +120,12 @@ private:
 
     /* Static private member variables */
 
-    static std::function<
-        std::pair<base::StrUintMap, uint>
-        (std::string)
-    > anlyzToTfMapLenPair;  // TODO: default
+    std::vector<base::FeatureKey> static const PRESET_FEATURES;
 
-    static base::StrUintMap anlyzToTfMap(std::string inputText)
-    {
-        auto const & tfMapPair =
-            FeatureCollector::anlyzToTfMapLenPair(inputText);
-        return tfMapPair.first;
-    }
+    static std::function<
+        std::pair<std::vector<std::string>, std::size_t>(std::string)
+    > analyzerFun;
+
 
     /* Private class methods */
     void sumTotalTermsPerSection();

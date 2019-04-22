@@ -4,6 +4,8 @@
 #include <lowletorfeats/Okapi.hpp>
 #include <lowletorfeats/LMIR.hpp>
 
+#include<textalyzer/Analyzer.hpp>
+
 
 namespace lowletorfeats
 {
@@ -22,8 +24,10 @@ FeatureCollector::FeatureCollector(
 )
 {
     // Query text
-    base::StrUintMap queryTfMap;
-    this->queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
+    this->queryTfMap =
+        textalyzer::Analyzer::toFrequencyMap(
+            FeatureCollector::analyzerFun(queryText).first
+        );
 
     // Number of documents
     this->numDocs = docTextMapVect.size();
@@ -39,13 +43,14 @@ FeatureCollector::FeatureCollector(
             // Analyze text for this document
             base::StrUintMap sectionTfMap;
             auto const & pair =
-                FeatureCollector::anlyzToTfMapLenPair(sectionText);
-            sectionTfMap = pair.first;
+                FeatureCollector::analyzerFun(queryText);
+            sectionTfMap =
+                textalyzer::Analyzer::toFrequencyMap(pair.first);
             docLenMap[sectionKey] = pair.second;
 
             // Filter for query tokens only
             sectionTfMap = base::Utillf::getIntersection(
-                sectionTfMap, queryTfMap);
+                sectionTfMap, this->queryTfMap);
 
             // Add to `StructDocTfMap`
             structDocTfMap[sectionKey] = sectionTfMap;
@@ -107,7 +112,10 @@ FeatureCollector::FeatureCollector(
 )
 {
     // Analyze query text
-    this->queryTfMap = FeatureCollector::anlyzToTfMap(queryText);
+    this->queryTfMap =
+        textalyzer::Analyzer::toFrequencyMap(
+            FeatureCollector::analyzerFun(queryText).first
+        );
 
     // Set the number of documents
     this->numDocs = docTfMapVect.size();
@@ -466,6 +474,29 @@ void FeatureCollector::collectFeatures(
     for (auto const & fKey : fKeyVect)
         this->collectFeatures(fKey);
 }
+
+
+/* Private member variables */
+
+std::vector<base::FeatureKey> const FeatureCollector::PRESET_FEATURES =
+{
+    base::FeatureKey("other", "dl", "full"),
+    base::FeatureKey("tfidf", "tfdoublenorm", "full"),
+    base::FeatureKey("tfidf", "idfdefault", "full"),
+    base::FeatureKey("tfidf", "tfidf", "full"),
+    base::FeatureKey("okapi", "bm25", "full"),
+    base::FeatureKey("lmir", "abs", "full"),
+    base::FeatureKey("lmir", "dir", "full"),
+    base::FeatureKey("lmir", "jm", "full")
+};
+
+
+/**
+ * @brief Analyzer method for a string of text into pair<tokenStrVect, docLen>.
+ *
+ */
+std::function<std::pair<std::vector<std::string>, std::size_t>(std::string)>
+    FeatureCollector::analyzerFun = textalyzer::Analyzer::simpleAnalyze;
 
 
 /* Private class methods */
