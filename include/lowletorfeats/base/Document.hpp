@@ -41,12 +41,18 @@ public:
     /**
      * @brief Get the document length for the full document.
      *
-     * @return uint const&
+     * @return std::size_t
      */
-    uint const & getDocLen() const
+    std::size_t getDocLen() const
     { return this->docLenMaps.at("full"); }
 
-    uint const & getDocLen(std::string const & section) const
+    /**
+     * @brief Get the document length for the full document.
+     *
+     * @param section
+     * @return std::size_t const&
+     */
+    std::size_t getDocLen(std::string const & section) const
     { return this->docLenMaps.at(section); }
 
     /**
@@ -80,18 +86,18 @@ public:
     /**
      * @brief Get the max term frequency for the full document.
      *
-     * @return uint const&
+     * @return std::size_t
      */
-    uint const & getMaxTF() const
+    std::size_t getMaxTF() const
     { return this->maxTermMaps.at("full"); }
 
     /**
      * @brief Get the max term frequency for the given section.
      *
      * @param section
-     * @return uint const&
+     * @return std::size_t
      */
-    uint const & getMaxTF(
+    std::size_t getMaxTF(
         std::string const & section
     ) const
     { return this->maxTermMaps.at(section); }
@@ -109,7 +115,7 @@ public:
      *
      * @return std::vector<base::FeatureNames> const&
      */
-    std::vector<base::FeatureKey> getFeatureKeys() const
+    std::vector<base::FeatureKey> getFeatureKeys() const &
     { return base::Utillf::getKeyVect(this->featureMap); }
 
     /**
