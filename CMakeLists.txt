@@ -91,7 +91,8 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/textalyzer)
 
 # Link
 target_link_libraries(${PROJECT_NAME_L}
-    textalyzer
+    PUBLIC
+        textalyzer
 )
 
 # -----------------------------------------------------------------------------
