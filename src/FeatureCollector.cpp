@@ -388,6 +388,8 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
         {
             switch (fKey.getVName())
             {
+                case VNames::invalid:
+                    break;  // do nothing
                 case VNames::bm25:
                 {
                     for (auto & doc : this->docVect)

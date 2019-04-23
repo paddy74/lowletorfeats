@@ -13,10 +13,12 @@ class FeatureKey
 public:
     /* Public type definitions */
 
-    enum class ValidTypes { other, tfidf, okapi,  lmir };
+    enum class ValidTypes { invalid, other, tfidf, okapi,  lmir };
 
     enum class ValidNames
     {
+        invalid,
+
         // Other
         dl,
 
@@ -32,7 +34,7 @@ public:
         abs, dir, jm
     };
 
-    enum class ValidSections { full, body, anchor, title, url };
+    enum class ValidSections { invalid, full, body, anchor, title, url };
 
     /* Constructors */
 
@@ -104,6 +106,11 @@ private:
         static const inverseValidNameMap;
     std::unordered_map<std::string, ValidSections>
         static const inverseValidSectionMap;
+
+
+    /* Private class methods */
+
+    void initVKeys();
 };
 
 }

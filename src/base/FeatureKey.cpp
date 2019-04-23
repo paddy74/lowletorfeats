@@ -23,9 +23,7 @@ FeatureKey::FeatureKey(std::string const & fKey)
         this->fSection = "full";
     }
 
-    this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
-    this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
-    this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
+    this->initVKeys();
 }
 
 
@@ -39,7 +37,7 @@ FeatureKey::FeatureKey(
     this->fName = fName;
     this->fSection = fSection;
 
-    auto _ = FeatureKey::inverseValidNameMap.at("other");
+    this->initVKeys();
 }
 
 
@@ -75,7 +73,7 @@ bool operator!= (FeatureKey const & fKey1, FeatureKey const & fKey2)
 std::unordered_map<FeatureKey::ValidTypes, std::string>
     const FeatureKey::validTypeMap
 {
-    { FeatureKey::ValidTypes::other, "tfidf" },
+    { FeatureKey::ValidTypes::other, "other" },
     { FeatureKey::ValidTypes::tfidf, "tfidf" },
     { FeatureKey::ValidTypes::okapi, "okapi" },
     { FeatureKey::ValidTypes::lmir, "lmir" }
@@ -159,5 +157,26 @@ std::unordered_map<std::string, FeatureKey::ValidSections>
     { "anchor", FeatureKey::ValidSections::anchor },
     { "url", FeatureKey::ValidSections::url }
 };
+
+
+/* Private class methods */
+
+void FeatureKey::initVKeys()
+{
+    try
+    {
+        this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
+        this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
+        this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
+    }
+    catch(std::out_of_range const & e)
+    {
+        this->fType = "invalid";
+        this->fName = "invalid";
+        this->fSection = "invalid";
+
+        this->initVKeys();
+    }
+}
 
 }
