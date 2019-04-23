@@ -26,9 +26,9 @@ public:
 
     FeatureCollector(
         std::vector<base::StrStrMap> const & docTextMapVect,
-        std::string const & queryText,
-        std::string const & queryId
+        base::StrUintMap const & queryTfMap
     );
+
 
     FeatureCollector(
         std::vector<base::StrUintMap> const & docLenMapVect,
@@ -39,8 +39,7 @@ public:
     FeatureCollector(
         std::vector<base::StrUintMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
-        std::string const & queryText,
-        std::string const & queryId
+        base::StrUintMap const & queryTfMap
     );
 
 
@@ -127,8 +126,6 @@ private:
 
     // `TermFrequencyMap` for the query string
     base::StrUintMap queryTfMap;
-    // The query id for the `queryTfMap`
-    std::string queryId = "-1";
 
 
     /* Static private member variables */
@@ -141,6 +138,12 @@ private:
 
 
     /* Private class methods */
+    void initDocs(std::vector<base::StrStrMap> const & docTextMapVect);
+    void initDocs(
+        std::vector<base::StrUintMap> const & docLenMapVect,
+        std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect
+    );
+
     void sumTotalTermsPerSection();
     void clearFeatureMaps();
     void assertProperties();
