@@ -38,7 +38,8 @@ StructuredDocument::StructuredDocument(
 StructuredDocument::StructuredDocument(
     uint const & docLen,
     base::StrUintMap const & fullTermFrequencyMap
-) : StructuredDocument::StructuredDocument(docLen, fullTermFrequencyMap, "full") {}
+) : StructuredDocument::StructuredDocument(
+        docLen, fullTermFrequencyMap, "full") {}
 
 
 /**
@@ -59,12 +60,15 @@ StructuredDocument::StructuredDocument(
 
     // Fill maxTermMap
     for (auto const & [sectionKey, tfMap]: this->termFrequencyMaps)
-        this->maxTermMaps[sectionKey] = base::Utillf::findMaxValuePair(tfMap).second;
+    {
+        this->maxTermMaps[sectionKey] =
+            base::Utillf::findMaxValuePair(tfMap).second;
+    }
 
     // Ensure "full" exists, else populate
     try
     {
-        this->termFrequencyMaps.at("full");
+        auto const & _ = this->termFrequencyMaps.at("full");
     }
     catch(std::out_of_range const & e)
     {
@@ -74,6 +78,37 @@ StructuredDocument::StructuredDocument(
 
 
 /* Public class methods */
+
+/**
+ * @brief Get a string representation of the `StructuredDocument`.
+ *  This is not intended to be optimized.
+ *
+ * @return std::string
+ */
+std::string StructuredDocument::toString() const
+{
+    std::string outStr = "";
+
+    outStr += "Document Section Lengths:";
+    for (auto const & [sectionKey, sectionVal] : this->docLenMaps)
+        outStr += "\n\t" + sectionKey + ":" + std::to_string(sectionVal);
+
+    outStr += "\nMax Section Terms:";
+    for (auto const & [sectionKey, sectionVal] : this->maxTermMaps)
+        outStr += "\n\t" + sectionKey + ":" + std::to_string(sectionVal);
+
+    outStr += "\nFeature Map:";
+    for (auto const & [fKey, fVal] : this->featureMap)
+    {
+        outStr += "\n\t" + fKey.getFType()
+            + "\t" + fKey.getFName()
+            + "\t" + fKey.getFSection()
+            + "\t: " + std::to_string(fVal);
+    }
+
+    outStr += '\n';
+    return outStr;
+}
 
 /**
  * @brief Clear all sections from the document.

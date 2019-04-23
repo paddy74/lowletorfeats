@@ -24,8 +24,8 @@ FeatureKey::FeatureKey(std::string const & fKey)
     }
 
     this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
-    //this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
-    //this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
+    this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
+    this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
 }
 
 
@@ -38,6 +38,8 @@ FeatureKey::FeatureKey(
     this->fType = fType;
     this->fName = fName;
     this->fSection = fSection;
+
+    auto _ = FeatureKey::inverseValidNameMap.at("other");
 }
 
 
@@ -67,6 +69,7 @@ bool operator== (FeatureKey const & fKey1, FeatureKey const & fKey2)
 bool operator!= (FeatureKey const & fKey1, FeatureKey const & fKey2)
 { return !(fKey1 == fKey2); }
 
+
 /* Private member variables */
 
 std::unordered_map<FeatureKey::ValidTypes, std::string>
@@ -84,7 +87,7 @@ std::unordered_map<std::string, FeatureKey::ValidTypes>
     { "other", FeatureKey::ValidTypes::other },
     { "tfidf", FeatureKey::ValidTypes::tfidf },
     { "okapi", FeatureKey::ValidTypes::okapi },
-    { "lmir", FeatureKey::ValidTypes::lmir}
+    { "lmir", FeatureKey::ValidTypes::lmir }
 };
 
 
@@ -92,7 +95,7 @@ std::unordered_map<FeatureKey::ValidNames, std::string>
     const FeatureKey::validNameMap
 {
     // Other
-    { FeatureKey::ValidNames::dl, "dl"},
+    { FeatureKey::ValidNames::dl, "dl" },
 
     // TF/IDF
     { FeatureKey::ValidNames::tflognorm, "tflognorm" },

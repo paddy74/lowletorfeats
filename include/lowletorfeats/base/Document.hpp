@@ -29,7 +29,10 @@ public:
         base::StructuredTermFrequencyMap const & structuredTermFrequencyMap
     );
 
+
     /* Public class methods */
+
+    std::string toString() const;
 
     void clear();
     void clearSection(std::string const & section);

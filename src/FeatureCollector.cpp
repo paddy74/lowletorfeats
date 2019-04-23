@@ -44,7 +44,7 @@ FeatureCollector::FeatureCollector(
             // Analyze text for this document
             base::StrUintMap sectionTfMap;
             auto const & pair =
-                FeatureCollector::analyzerFun(queryText);
+                FeatureCollector::analyzerFun(sectionText);
             sectionTfMap = textalyzer::asFrequencyMap(pair.first);
             docLenMap[sectionKey] = pair.second;
 
@@ -181,8 +181,44 @@ FeatureCollector::FeatureCollector(
 
 /* Public class methods */
 
+/**
+ * @brief Get a string representation of the `FeatureCollector`.
+ *  This is not intended to be optimized.
+ *
+ * @return std::string
+ */
+std::string FeatureCollector::toString() const
+{
+    std::string outStr = "";
+
+    outStr += "----------------\n";
+    outStr += "FeatureCollector\n";
+    outStr += "----------------\n";
+    outStr += "Number of Documents: " + std::to_string(this->numDocs) + '\n';
+
+    outStr += "Avg Section Lengths:";
+    for (auto const & [sectionKey, sectionVal] : this->avgDocLenMap)
+        outStr += "\n\t" + sectionKey + ":" + std::to_string(sectionVal);
+    outStr += '\n';
+
+    outStr += "Total Section Terms:";
+    for (auto const & [sectionKey, sectionVal] : this->totalTermsMap)
+        outStr += "\n\t" + sectionKey + ":" + std::to_string(sectionVal);
+    outStr += '\n';
+
+    outStr += '\n';
+    outStr += "Document Feature Maps:\n";
+    outStr += "----------------------\n";
+    for (auto const & doc : this->docVect)
+        outStr += doc.toString() + '\n';
+
+    return outStr;
+}
+
+
 void FeatureCollector::collectPresetFeatures()
 {
+    this->clearFeatureMaps();
     this->collectFeatures(this->PRESET_FEATURES);
 }
 
@@ -211,7 +247,6 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
     auto const & docsWithTermMap = this->structDocsWithTermMap.at(fSection);
     uint const & avgDocLen = this->avgDocLenMap.at(fSection);
     uint const & totalTerms = this->totalTermsMap.at(fSection);
-
 
     switch (fKey.getVType())
     {
@@ -472,7 +507,9 @@ void FeatureCollector::collectFeatures(
 )
 {
     for (auto const & fKey : fKeyVect)
+    {
         this->collectFeatures(fKey);
+    }
 }
 
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <functional>  // function
-
 #include "base/Document.hpp"  // StructuredDocument
+
+#include <functional>  // function
 
 
 namespace lowletorfeats
@@ -43,7 +43,10 @@ public:
         std::string const & queryId
     );
 
+
     /* Public class methods */
+
+    std::string toString() const;
 
     /**
      * @brief Collect the predetermined feature set.
@@ -55,6 +58,7 @@ public:
     /**
      * @brief Recollect the existing feature set.
      *  Recollect the features for the existing keys in the `featureMapVect`.
+     *  Will delete the existing values of `featureMapVect`.
      */
     void reCollectFeatures();
 
@@ -72,17 +76,26 @@ public:
      */
     void collectFeatures(std::vector<base::FeatureKey> const & fKeyVect);
 
+
     /* Getter methods */
-    uint const getNumDocs() const
+
+    std::size_t const getNumDocs() const
     { return this->numDocs; };
-    uint const getNumFeatures() const;
+    std::size_t const getNumFeatures() const;
+
+    std::vector<StructuredDocument> const & getDocVect() const
+    { return this->docVect; }
+
 
     /* Setter methods */
+
     void setSectionWeights(
         std::unordered_map<std::string, double> const & sectionWeights)
     { this->sectionWeights = sectionWeights; }
 
+
     /* Static setter methods */
+
     static void setAnalyzerFunction(
         std::function<
             std::pair<std::vector<std::string>, std::size_t>(std::string)
@@ -102,7 +115,7 @@ private:
         {"url", 1}
     };
 
-    uint numDocs;
+    std::size_t numDocs;
     base::StrUintMap avgDocLenMap;
 
     // Vector of term frequencies of structured documents
