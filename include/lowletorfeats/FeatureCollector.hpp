@@ -2,6 +2,8 @@
 
 #include "base/Document.hpp"  // StructuredDocument
 
+#include <textalyzer/Analyzer.hpp>
+
 #include <functional>  // function
 
 
@@ -96,9 +98,7 @@ public:
     /* Static setter methods */
 
     static void setAnalyzerFunction(
-        std::function<
-            std::pair<std::vector<std::string>, std::size_t>(std::string)
-        > analyzerFunction
+        textalyzer::AnlyzerFunType<std::string> analyzerFunction
     )
     { FeatureCollector::analyzerFun = analyzerFunction; }
 
@@ -132,9 +132,8 @@ private:
 
     std::vector<base::FeatureKey> static const PRESET_FEATURES;
 
-    static std::function<
-        std::pair<std::vector<std::string>, std::size_t>(std::string)
-    > analyzerFun;
+    static textalyzer::AnlyzerFunType<std::string> analyzerFun;
+    uint8_t static const DEFAULT_NGRAMS;
 
 
     /* Private class methods */

@@ -4,7 +4,6 @@
 #include <lowletorfeats/Okapi.hpp>
 #include <lowletorfeats/LMIR.hpp>
 
-#include <textalyzer/Analyzer.hpp>
 #include <textalyzer/utils.hpp>
 
 
@@ -26,7 +25,9 @@ FeatureCollector::FeatureCollector(
 {
     // Query text
     this->queryTfMap = textalyzer::asFrequencyMap(
-        FeatureCollector::analyzerFun(queryText).first);
+        FeatureCollector::analyzerFun(
+            queryText, FeatureCollector::DEFAULT_NGRAMS).first
+        );
     // Initialize documents
     this->initDocs(docTextMapVect);
 }
@@ -61,7 +62,8 @@ FeatureCollector::FeatureCollector(
     // Analyze query text
     this->queryTfMap =
         textalyzer::asFrequencyMap(
-            FeatureCollector::analyzerFun(queryText).first
+            FeatureCollector::analyzerFun(
+                queryText, FeatureCollector::DEFAULT_NGRAMS).first
         );
     // Initialize documents
     this->initDocs(docLenMapVect, docTfMapVect);
@@ -435,8 +437,10 @@ std::vector<base::FeatureKey> const FeatureCollector::PRESET_FEATURES =
  * @brief Analyzer method for a string of text into pair<tokenStrVect, docLen>.
  *
  */
-std::function<std::pair<std::vector<std::string>, std::size_t>(std::string)>
-    FeatureCollector::analyzerFun = textalyzer::Analyzer::simpleAnalyze;
+textalyzer::AnlyzerFunType<std::string>
+    FeatureCollector::analyzerFun = textalyzer::Analyzer::medAnalyze;
+
+uint8_t const FeatureCollector::DEFAULT_NGRAMS = 2;
 
 
 /* Private class methods */
@@ -458,7 +462,8 @@ void FeatureCollector::initDocs(
             // Analyze text for this document
             base::StrUintMap sectionTfMap;
             auto const & pair =
-                FeatureCollector::analyzerFun(sectionText);
+                FeatureCollector::analyzerFun(
+                    sectionText, FeatureCollector::DEFAULT_NGRAMS);
             sectionTfMap = textalyzer::asFrequencyMap(pair.first);
             docLenMap[sectionKey] = pair.second;
 
