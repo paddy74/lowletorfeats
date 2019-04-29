@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>  // vector
+#include <map>
 #include <unordered_map>  // unordered_map
 #include <numeric>  // accumulate
 #include <algorithm>  // max_element
@@ -119,6 +120,27 @@ public:
      */
     template<typename KEY_T, typename VALUE_T>
     static std::vector<KEY_T> getKeyVect(std::unordered_map<KEY_T, VALUE_T> x)
+    {
+        std::vector<KEY_T> outVect;
+        outVect.reserve(x.size());
+
+        for (auto const & imap : x)
+            outVect.push_back(imap.first);
+
+        return outVect;
+    }
+
+
+    /**
+     * @brief Get a vector of the map's keys
+     *
+     * @tparam KEY_T
+     * @tparam VALUE_T
+     * @param x
+     * @return std::vector<KEY_T>
+     */
+    template<typename KEY_T, typename VALUE_T>
+    static std::vector<KEY_T> getKeyVect(std::map<KEY_T, VALUE_T> x)
     {
         std::vector<KEY_T> outVect;
         outVect.reserve(x.size());
