@@ -13,6 +13,12 @@ namespace lowletorfeats
 /* Constructors */
 
 /**
+ * @brief Construct an empty Feature Collector.
+ *
+ */
+FeatureCollector::FeatureCollector() {}
+
+/**
  * @brief Construct a new Feature Collector from raw full text documents.
  *
  * @param docTextMapVect Multiple structured documents of raw text.

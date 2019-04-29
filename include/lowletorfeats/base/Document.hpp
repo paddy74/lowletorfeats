@@ -14,6 +14,8 @@ public:
 
     /* Constructors */
 
+    StructuredDocument();
+
     // Preanalyzed
     StructuredDocument(  // The indicated section only
         uint const & docLen,

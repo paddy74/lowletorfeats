@@ -8,6 +8,9 @@ namespace lowletorfeats
 
 /* Constructors */
 
+StructuredDocument::StructuredDocument() {}
+
+
 /**
  * @brief Construct a new Structured Document object using a preanalyzed
  *  document length and `TermFrequencyMap` for the full document text.

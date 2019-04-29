@@ -21,6 +21,9 @@ public:
 
     /* Constructors */
 
+    FeatureCollector();
+
+
     FeatureCollector(
         std::vector<base::StrStrMap> const & docTextMapVect,
         std::string const & queryText
@@ -107,11 +110,12 @@ private:
 
     std::unordered_map<std::string, double> sectionWeights =
     {
-        {"full", 1},
+        {"full", 0.3},
         {"title", 1},
-        {"body", 1},
-        {"anchor", 1},
-        {"url", 1}
+        {"body", 0.4},
+        {"author", 0.9},
+        {"anchor", 0.5},
+        {"url", 0.7}
     };
 
     std::size_t numDocs;
