@@ -86,14 +86,12 @@ double Tfidf::queryTfidf(
     base::StrUintMap const & queryTermFreqMap
 )
 {
-    // Ensure the number of terms is the same
-    assert(queryTermFreqMap.size() == docsWithTermFreqMap.size());
-
     // Sum the scores for each term
     double score = 0;
     for (auto const & [term, tf] : queryTermFreqMap)
     {
-        try
+        if (!(docTermFreqMap.count(term) == 0
+            || docsWithTermFreqMap.count(term) == 0))
         {
             uint const docTermFrequency = docTermFreqMap.at(term);
             uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
@@ -101,10 +99,6 @@ double Tfidf::queryTfidf(
             score += tfidf(
                 docTermFrequency, docMaxTermFrequency,
                 numDocs, numDocsWithTerm);
-        }
-        catch (std::out_of_range const & e)
-        {
-            continue;  // score += 0
         }
     }
 

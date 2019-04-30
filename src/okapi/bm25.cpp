@@ -86,8 +86,8 @@ double Okapi::queryBm25(
         if (!(docTermFreqMap.count(term) == 0
             || docsWithTermFreqMap.count(term) == 0))
         {
-            uint const docTermFrequency = docTermFreqMap.at(term);
-            uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
+            auto const docTermFrequency = docTermFreqMap.at(term);
+            auto const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
             score += Okapi::bm25(
                 docTermFrequency,
