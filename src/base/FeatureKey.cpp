@@ -26,30 +26,38 @@ FeatureKey::FeatureKey()
 /**
  * @brief Construct a new Feature Key from a string "type.name.section".
  *
- * @param fKey
+ * @param fKey A string representation of the `FeatureKey` in the form
+ *  "type.name.section".
  */
 FeatureKey::FeatureKey(std::string const & fKey)
 {
-    auto const & fDelim = base::Utillf::strSplit(fKey, '.');
+    std::vector<std::string> const & fDelim =
+        base::Utillf::strSplit(fKey, '.');
 
-    this->fType = fDelim.at(0);
+    switch (fDelim.size())
+    {
+        case 2:
+        {
+            this->fType = fDelim.at(0);
+            this->fName = fDelim.at(1);
+            this->fSection = "full";
+            break;
+        }
 
-    try
-    {
-        this->fName = fDelim.at(1);
-    }
-    catch(std::out_of_range const & e)
-    {
-        this->fName = "invalid";  // TODO: Some custom error
-    }
+        case 3:
+        {
+            this->fType = fDelim.at(0);
+            this->fName = fDelim.at(1);
+            this->fSection = fDelim.at(2);
+            break;
+        }
 
-    try
-    {
-        this->fSection = fDelim.at(3);
-    }
-    catch(std::out_of_range const & e)
-    {
-        this->fSection = "full";
+        default:
+        {
+            this->fType = "invalid";
+            this->fName = "invalid";
+            this->fSection = "invalid";
+        }
     }
 
     this->initVKeys();
@@ -231,7 +239,7 @@ void FeatureKey::initVKeys()
         this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
         this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
     }
-    catch(std::out_of_range const & e)
+    catch(std::out_of_range const & e)  // Invalid key name
     {
         this->fType = "invalid";
         this->fName = "invalid";
