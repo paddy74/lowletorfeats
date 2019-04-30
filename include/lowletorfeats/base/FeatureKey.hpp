@@ -7,7 +7,6 @@
 namespace lowletorfeats::base
 {
 
-
 class FeatureKey
 {
 public:
@@ -36,7 +35,10 @@ public:
 
     enum class ValidSections { invalid, full, body, anchor, title, url };
 
+
     /* Constructors */
+
+    FeatureKey();
 
     FeatureKey(std::string const & fKey);
     FeatureKey(
@@ -44,6 +46,8 @@ public:
         std::string const & fName,
         std::string const & fSection
     );
+
+    FeatureKey(FeatureKey const & other);
 
 
     /* Public class methods */
@@ -90,6 +94,9 @@ private:
     ValidTypes vType;
     ValidNames vName;
     ValidSections vSection;
+
+
+    /* Private static member variables */
 
     // Valid type maps
     std::unordered_map<ValidTypes, std::string>

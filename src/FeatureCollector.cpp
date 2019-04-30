@@ -424,20 +424,7 @@ void FeatureCollector::collectFeatures(
 }
 
 
-/* Private member variables */
-
-std::vector<base::FeatureKey> const FeatureCollector::PRESET_FEATURES =
-{
-    base::FeatureKey("other", "dl", "full"),
-    base::FeatureKey("tfidf", "tfdoublenorm", "full"),
-    base::FeatureKey("tfidf", "idfdefault", "full"),
-    base::FeatureKey("tfidf", "tfidf", "full"),
-    base::FeatureKey("okapi", "bm25", "full"),
-    base::FeatureKey("lmir", "abs", "full"),
-    base::FeatureKey("lmir", "dir", "full"),
-    base::FeatureKey("lmir", "jm", "full")
-};
-
+/* Private static member variables */
 
 /**
  * @brief Analyzer method for a string of text into pair<tokenStrVect, docLen>.
@@ -574,6 +561,7 @@ void FeatureCollector::clearFeatureMaps()
     for (auto & doc : this->docVect)
         doc.clearFeatureMap();
 }
+
 
 void FeatureCollector::assertProperties()
 {

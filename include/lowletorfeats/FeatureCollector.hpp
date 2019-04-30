@@ -132,15 +132,25 @@ private:
     base::StrUintMap queryTfMap;
 
 
-    /* Static private member variables */
+    /* Private static member variables */
 
-    std::vector<base::FeatureKey> static const PRESET_FEATURES;
+    std::vector<base::FeatureKey> const PRESET_FEATURES = {
+        base::FeatureKey("other", "dl", "full"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
+        base::FeatureKey("tfidf", "idfdefault", "full"),
+        base::FeatureKey("tfidf", "tfidf", "full"),
+        base::FeatureKey("okapi", "bm25", "full"),
+        base::FeatureKey("lmir", "abs", "full"),
+        base::FeatureKey("lmir", "dir", "full"),
+        base::FeatureKey("lmir", "jm", "full")
+    };  // TODO: somehow static const?
 
-    static textalyzer::AnlyzerFunType<std::string> analyzerFun;
+    textalyzer::AnlyzerFunType<std::string> static analyzerFun;
     uint8_t static const DEFAULT_NGRAMS;
 
 
     /* Private class methods */
+
     void initDocs(std::vector<base::StrStrMap> const & docTextMapVect);
     void initDocs(
         std::vector<base::StrUintMap> const & docLenMapVect,
