@@ -34,17 +34,22 @@ double Okapi::queryBm25f(
     double totalBm25 = 0;
     for (auto const & [sectionKey, tfMap] : structDocTermFreqMap)
     {
-        auto const & docsWithTermFreqMap =
-            structDocsWithTermFreqMap.at(sectionKey);
-        auto const & weight = structWeights.at(sectionKey);
-        auto const & avgDocLen = avgDocLenMap.at(sectionKey);
+        if (!(structDocsWithTermFreqMap.count(sectionKey) == 0
+            || structWeights.count(sectionKey) == 0)
+            || avgDocLenMap.count(sectionKey) == 0)
+        {
+            auto const & docsWithTermFreqMap =
+                structDocsWithTermFreqMap.at(sectionKey);
+            auto const & weight = structWeights.at(sectionKey);
+            auto const & avgDocLen = avgDocLenMap.at(sectionKey);
 
-        double bm25 = Okapi::queryBm25(
-            tfMap, numDocs, docsWithTermFreqMap, avgDocLen, queryTermFreqMap
-        );
-        bm25 *= weight;
+            double bm25 = Okapi::queryBm25(
+                tfMap, numDocs, docsWithTermFreqMap, avgDocLen, queryTermFreqMap
+            );
+            bm25 *= weight;
 
-        totalBm25 += bm25;
+            totalBm25 += bm25;
+        }
     }
 
     // Calculate BM25f
@@ -83,17 +88,22 @@ double Okapi::queryBm25fplus(
     double totalBm25plus = 0;
     for (auto const & [sectionKey, tfMap] : structDocTermFreqMap)
     {
-        auto const & docsWithTermFreqMap =
-            structDocsWithTermFreqMap.at(sectionKey);
-        auto const & weight = structWeights.at(sectionKey);
-        auto const & avgDocLen = avgDocLenMap.at(sectionKey);
+        if (!(structDocsWithTermFreqMap.count(sectionKey) == 0
+            || structWeights.count(sectionKey) == 0)
+            || avgDocLenMap.count(sectionKey) == 0)
+        {
+            auto const & docsWithTermFreqMap =
+                structDocsWithTermFreqMap.at(sectionKey);
+            auto const & weight = structWeights.at(sectionKey);
+            auto const & avgDocLen = avgDocLenMap.at(sectionKey);
 
-        double bm25plus = Okapi::queryBm25plus(
-            tfMap, numDocs, docsWithTermFreqMap, avgDocLen, queryTermFreqMap
-        );
-        bm25plus *= weight;
+            double bm25plus = Okapi::queryBm25plus(
+                tfMap, numDocs, docsWithTermFreqMap, avgDocLen, queryTermFreqMap
+            );
+            bm25plus *= weight;
 
-        totalBm25plus += bm25plus;
+            totalBm25plus += bm25plus;
+        }
     }
 
     // Calculate BM25f

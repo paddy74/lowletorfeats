@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include <lowletorfeats/Okapi.hpp>
 #include <lowletorfeats/Tfidf.hpp>
 
@@ -81,14 +79,12 @@ double Okapi::queryBm25(
     base::StrUintMap const & queryTermFreqMap
 )
 {
-    // Ensure the number of terms is the same
-    assert(queryTermFreqMap.size() == docsWithTermFreqMap.size());
-
     // Sum the scores for each term
     double score = 0;
     for (auto const & [term, tf] : queryTermFreqMap)
     {
-        try
+        if (!(docTermFreqMap.count(term) == 0
+            || docsWithTermFreqMap.count(term) == 0))
         {
             uint const docTermFrequency = docTermFreqMap.at(term);
             uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
@@ -98,10 +94,6 @@ double Okapi::queryBm25(
                 numDocs, numDocsWithTerm,
                 avgDocLen
             );
-        }
-        catch (std::out_of_range const & e)
-        {
-            continue;  // score += 0
         }
     }
 
