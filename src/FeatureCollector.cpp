@@ -4,6 +4,8 @@
 #include <lowletorfeats/Okapi.hpp>
 #include <lowletorfeats/LMIR.hpp>
 
+#include <lowletorfeats/utils.hpp>
+
 #include <textalyzer/utils.hpp>
 
 #include <cassert>
@@ -24,7 +26,7 @@ FeatureCollector::FeatureCollector() {}
  * @brief Construct a new Feature Collector from raw full text documents.
  *
  * @param docTextMapVect Multiple structured documents of raw text.
- * @param queryText
+ * @param queryText Raw unanalyzed query string.
  */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrStrMap> const & docTextMapVect,
@@ -40,6 +42,12 @@ FeatureCollector::FeatureCollector(
     this->initDocs(docTextMapVect);
 }
 
+/**
+ * @brief Construct a new Feature Collector from raw full text documents.
+ *
+ * @param docTextMapVect Multiple structured documents of raw text.
+ * @param queryTfMap Preanalyzed query string.
+ */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrStrMap> const & docTextMapVect,
     base::StrUintMap const & queryTfMap
@@ -77,6 +85,15 @@ FeatureCollector::FeatureCollector(
     this->initDocs(docLenMapVect, docTfMapVect);
 }
 
+/**
+ * @brief Construct a new Feature Collector from preanalyzed structured docs.
+ *
+ * @param docLenMapVect Multiple structured documents with their length for
+ *  each section.
+ * @param docTfMapVect Multiple structured documentds with analyzed tokens for
+ *  each section.
+ * @param queryTfMap Preanalyzed query string.
+ */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrUintMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
@@ -491,7 +508,7 @@ void FeatureCollector::initDocs(
             docLenMap[sectionKey] = pair.second;
 
             // Filter for query tokens only
-            sectionTfMap = base::Utillf::getIntersection(
+            sectionTfMap = utils::getIntersection(
                 sectionTfMap, this->queryTfMap);
 
             // Add to `StructDocTfMap`
@@ -538,14 +555,14 @@ void FeatureCollector::initDocs(
     // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
     for (int i = 0; i < this->numDocs; ++i)  // for each document
-    {  // TODO: Iterate
+    {
         base::StrUintMap const & docLenMap = docLenMapVect.at(i);
         base::StructuredTermFrequencyMap docTfMap = docTfMapVect.at(i);
 
         for (auto const & [sectionKey, sectionTfMap] : docTfMap)  // for each section
         {
             // Filter for query tokens only
-            docTfMap.at(sectionKey) = base::Utillf::getIntersection(
+            docTfMap.at(sectionKey) = utils::getIntersection(
                 sectionTfMap, queryTfMap
             );
 
@@ -583,7 +600,7 @@ void FeatureCollector::sumTotalTermsPerSection()
     for (auto const & [sectionKey, sectionValue] : this->structDocsWithTermMap)
     {
         this->totalTermsMap[sectionKey] =
-            base::Utillf::mapValueSum(sectionValue);
+            utils::mapValueSum(sectionValue);
     }
 }
 
@@ -609,10 +626,10 @@ void FeatureCollector::assertProperties()
     // Assert same sections present in:
     //  `avgDocLenMap`, `structDocsWithTermMap`, `totalTermsMap`
     auto sectionKeys =
-        base::Utillf::getKeyVect(this->avgDocLenMap);
+        utils::getKeyVect(this->avgDocLenMap);
     assert(sectionKeys ==
-        base::Utillf::getKeyVect(this->structDocsWithTermMap));
-    assert(sectionKeys == base::Utillf::getKeyVect(this->totalTermsMap));
+        utils::getKeyVect(this->structDocsWithTermMap));
+    assert(sectionKeys == utils::getKeyVect(this->totalTermsMap));
 }
 
 }

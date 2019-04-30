@@ -2,7 +2,7 @@
 
 #include <lowletorfeats/Tfidf.hpp>
 
-#include <iostream>
+
 namespace lowletorfeats
 {
 

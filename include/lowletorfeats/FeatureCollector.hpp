@@ -1,10 +1,8 @@
 #pragma once
 
-#include "base/Document.hpp"  // StructuredDocument
+#include <lowletorfeats/base/Document.hpp>
 
 #include <textalyzer/Analyzer.hpp>
-
-#include <functional>  // function
 
 
 namespace lowletorfeats

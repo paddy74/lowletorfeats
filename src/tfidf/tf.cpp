@@ -1,7 +1,7 @@
 #include <cmath>  // log
 
 #include <lowletorfeats/Tfidf.hpp>
-#include <lowletorfeats/base/Utillf.hpp>
+#include <lowletorfeats/utils.hpp>
 
 namespace lowletorfeats
 {
@@ -56,7 +56,7 @@ base::FValType Tfidf::tfDoubleNorm(
 
 base::FValType Tfidf::sumTfLogNorm(base::StrUintMap const & docTermFreqMap)
 {
-    return Tfidf::tfLogNorm(base::Utillf::mapValueSum(docTermFreqMap));;
+    return Tfidf::tfLogNorm(utils::mapValueSum(docTermFreqMap));;
 }
 
 
@@ -65,7 +65,7 @@ base::FValType Tfidf::sumTfDoubleNorm(
     uint const & docMaxTermFrequency
 )
 {
-    return tfDoubleNorm(base::Utillf::mapValueSum(docTermFreqMap), docMaxTermFrequency);
+    return tfDoubleNorm(utils::mapValueSum(docTermFreqMap), docMaxTermFrequency);
 }
 
 }

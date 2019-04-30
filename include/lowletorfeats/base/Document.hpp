@@ -1,7 +1,8 @@
 #pragma once
 
-#include "stdDef.hpp"
-#include "Utillf.hpp"
+#include <lowletorfeats/base/stdDef.hpp>
+
+#include <vector>
 
 
 namespace lowletorfeats
@@ -17,6 +18,7 @@ public:
     StructuredDocument();
 
     // Preanalyzed
+
     StructuredDocument(  // The indicated section only
         uint const & docLen,
         base::StrUintMap const & fullTermFrequencyMap,
@@ -31,6 +33,10 @@ public:
         base::StructuredTermFrequencyMap const & structuredTermFrequencyMap
     );
 
+    // Copy constructor
+
+    StructuredDocument(StructuredDocument const & other);
+
 
     /* Public class methods */
 
@@ -43,107 +49,37 @@ public:
 
     /* Getter methods */
 
-    /**
-     * @brief Get the document length for the full document.
-     *
-     * @return std::size_t
-     */
-    std::size_t getDocLen() const
-    { return this->docLenMaps.at("full"); }
 
-    /**
-     * @brief Get the document length for the full document.
-     *
-     * @param section
-     * @return std::size_t const&
-     */
-    std::size_t getDocLen(std::string const & section) const
-    { return this->docLenMaps.at(section); }
+    std::size_t getDocLen() const;
+    std::size_t getDocLen(std::string const & section) const;
 
-    /**
-     * @brief Get the entire structured term frequency map.
-     *
-     * @return std::unordered_map<std::string, base::TermFrequencyMap> const&
-     */
     base::StructuredTermFrequencyMap const &
-        getStructuredTermFrequencyMap() const
-    { return this->termFrequencyMaps; }
+        getStructuredTermFrequencyMap() const;
 
-    /**
-     * @brief Get the `TermFrequencyMap` for the full document.
-     *
-     * @return base::TermFrequencyMap const&
-     */
-    base::StrUintMap const & getTermFrequencyMap() const
-    { return this->termFrequencyMaps.at("full"); }
+    base::StrUintMap const & getTermFrequencyMap() const;
 
-    /**
-     * @brief Get the `TermFrequencyMap` for the given section.
-     *
-     * @param section
-     * @return base::TermFrequencyMap const&
-     */
     base::StrUintMap const & getTermFrequencyMap(
         std::string const & section
-    ) const
-    { return this->termFrequencyMaps.at(section); }
+    ) const;
 
-    /**
-     * @brief Get the max term frequency for the full document.
-     *
-     * @return std::size_t
-     */
-    std::size_t getMaxTF() const
-    { return this->maxTermMaps.at("full"); }
+    std::size_t getMaxTF() const;
 
-    /**
-     * @brief Get the max term frequency for the given section.
-     *
-     * @param section
-     * @return std::size_t
-     */
     std::size_t getMaxTF(
         std::string const & section
-    ) const
-    { return this->maxTermMaps.at(section); }
+    ) const;
 
-    /**
-     * @brief Get the entire feature map
-     *
-     * @return base::DocFeatureMap const&
-     */
-    base::FeatureMap const & getFeatureMap() const
-    { return this->featureMap; }
+    base::FeatureMap const & getFeatureMap() const;
 
-    /**
-     * @brief Get a vector of `featureMap.keys`.
-     *
-     * @return std::vector<base::FeatureNames> const&
-     */
-    std::vector<base::FeatureKey> getFeatureKeys() const &
-    { return base::Utillf::getKeyVect(this->featureMap); }
+    std::vector<base::FeatureKey> getFeatureKeys() const &;
 
-    /**
-     * @brief Get the value of the given feature.
-     *
-     * @param fName
-     * @return FValType const&
-     */
-    base::FValType const & getFeatureValue(base::FeatureKey const & fName) const
-    { return this->featureMap.at(fName); }
+    base::FValType const &
+        getFeatureValue(base::FeatureKey const & fName) const;
 
 
     /* Setters */
 
-    /**
-     * @brief Create or update a feature in the `featureMap`.
-     *
-     * @param fKey
-     * @param fValue
-     */
     void updateFeature(
-        base::FeatureKey const & fKey, base::FValType const & fValue)
-    { this->featureMap[fKey] = fValue; }
+        base::FeatureKey const & fKey, base::FValType const & fValue);
 
 private:
     /* Private member variables */

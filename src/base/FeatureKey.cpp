@@ -1,7 +1,9 @@
-#include <lowletorfeats/base/Utillf.hpp>
 #include <lowletorfeats/base/FeatureKey.hpp>
+#include <lowletorfeats/utils.hpp>
 
-#include <iostream>
+#include <vector>
+
+
 namespace lowletorfeats::base
 {
 
@@ -31,8 +33,7 @@ FeatureKey::FeatureKey()
  */
 FeatureKey::FeatureKey(std::string const & fKey)
 {
-    std::vector<std::string> const & fDelim =
-        base::Utillf::strSplit(fKey, '.');
+    std::vector<std::string> const  & fDelim = utils::strSplit(fKey, '.');
 
     switch (fDelim.size())
     {
