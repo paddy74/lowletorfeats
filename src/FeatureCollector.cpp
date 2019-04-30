@@ -156,6 +156,11 @@ void FeatureCollector::reCollectFeatures()
 }
 
 
+/**
+ * @brief Conduct feature collection for the given feature.
+ *
+ * @param fKey
+ */
 void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 {
     // QOL typedefs
@@ -430,14 +435,17 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 }
 
 
+/**
+ * @brief Collect each feature of the given feature key vector.
+ *
+ * @param fKeyVect
+ */
 void FeatureCollector::collectFeatures(
     std::vector<base::FeatureKey> const & fKeyVect
 )
 {
     for (auto const & fKey : fKeyVect)
-    {
         this->collectFeatures(fKey);
-    }
 }
 
 
@@ -448,13 +456,18 @@ void FeatureCollector::collectFeatures(
  *
  */
 textalyzer::AnlyzerFunType<std::string>
-    FeatureCollector::analyzerFun = textalyzer::Analyzer::medAnalyze;
+    FeatureCollector::analyzerFun = textalyzer::Analyzer::lowAnalyze;
 
 uint8_t const FeatureCollector::DEFAULT_NGRAMS = 2;
 
 
 /* Private class methods */
 
+/**
+ * @brief Initialize unanalyzed structured documents.
+ *
+ * @param docTextMapVect
+ */
 void FeatureCollector::initDocs(
     std::vector<base::StrStrMap> const & docTextMapVect)
 {
@@ -508,6 +521,12 @@ void FeatureCollector::initDocs(
 }
 
 
+/**
+ * @brief Initialize preanalyzed structured documents.
+ *
+ * @param docLenMapVect
+ * @param docTfMapVect
+ */
 void FeatureCollector::initDocs(
     std::vector<base::StrUintMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect
@@ -580,6 +599,11 @@ void FeatureCollector::clearFeatureMaps()
 }
 
 
+/**
+ * @brief Assert required properties of the feature collector to ensure
+ *  acceptable operations.
+ *
+ */
 void FeatureCollector::assertProperties()
 {
     // Assert same sections present in:
