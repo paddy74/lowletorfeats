@@ -6,6 +6,8 @@
 
 #include <textalyzer/utils.hpp>
 
+#include <cassert>
+
 
 namespace lowletorfeats
 {
@@ -134,28 +136,34 @@ void FeatureCollector::collectPresetFeatures()
 
 void FeatureCollector::reCollectFeatures()
 {
-    // Get vector of keys
-    std::vector<base::FeatureKey> keyVect =
-        this->docVect.at(0).getFeatureKeys();
+    try
+    {
+        // Get vector of keys
+        std::vector<base::FeatureKey> keyVect =
+            this->docVect.at(0).getFeatureKeys();
 
-    // Clear all feature maps
-    this->clearFeatureMaps();
+        if (keyVect.size() <= 0)
+            return;  // No features to collect
 
-    // Collect featuers from key vector
-    this->collectFeatures(keyVect);
+        // Clear all feature maps
+        this->clearFeatureMaps();
+
+        // Collect featuers from key vector
+        this->collectFeatures(keyVect);
+    }
+    catch(std::out_of_range const & e)  // docVect.size() == 0
+    { }  // Do nothing (no features to collect)
 }
 
 
 void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 {
+    // QOL typedefs
     typedef base::FeatureKey::ValidTypes VTypes;
     typedef base::FeatureKey::ValidNames VNames;
     typedef base::FeatureKey::ValidSections VSections;
 
     std::string const & fSection = fKey.getFSection();
-    auto const & docsWithTermMap = this->structDocsWithTermMap.at(fSection);
-    uint const & avgDocLen = this->avgDocLenMap.at(fSection);
-    uint const & totalTerms = this->totalTermsMap.at(fSection);
 
     switch (fKey.getVType())
     {
@@ -168,7 +176,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         doc.updateFeature(
-                            fKey, doc.getDocLen(fKey.getFSection()));
+                            fKey, doc.getDocLen(fSection));
                     }
                 }
 
@@ -180,6 +188,8 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
         case VTypes::tfidf:
         {
+            auto const & totalTerms = this->totalTermsMap.at(fSection);
+
             switch (fKey.getVName())
             {
                 case VNames::tflognorm:
@@ -187,7 +197,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         auto const & tfMap =
-                            doc.getTermFrequencyMap(fKey.getFSection());
+                            doc.getTermFrequencyMap(fSection);
 
                         double const fVal = Tfidf::sumTfLogNorm(tfMap);
                         doc.updateFeature(fKey, fVal);
@@ -199,7 +209,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         auto const & tfMap =
-                            doc.getTermFrequencyMap(fKey.getFSection());
+                            doc.getTermFrequencyMap(fSection);
 
                         double const fVal = Tfidf::sumTfDoubleNorm(
                             tfMap,
@@ -271,10 +281,13 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
                 case VNames::tfidf:
                 {
+                    base::StrUintMap const & docsWithTermMap =
+                        this->structDocsWithTermMap.at(fSection);
+
                     for (auto & doc : this->docVect)
                     {
                         auto const & tfMap =
-                            doc.getTermFrequencyMap(fKey.getFSection());
+                            doc.getTermFrequencyMap(fSection);
 
                         double const fVal = Tfidf::queryTfidf(
                             tfMap,
@@ -295,6 +308,10 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
         case VTypes::okapi:
         {
+            base::StrUintMap const & docsWithTermMap =
+                this->structDocsWithTermMap.at(fSection);
+            auto const & avgDocLen = this->avgDocLenMap.at(fSection);
+
             switch (fKey.getVName())
             {
                 case VNames::invalid:
@@ -304,7 +321,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         auto const & tfMap =
-                            doc.getTermFrequencyMap(fKey.getFSection());
+                            doc.getTermFrequencyMap(fSection);
 
                         double const fVal = Okapi::queryBm25(
                             tfMap,
@@ -322,7 +339,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     for (auto & doc : this->docVect)
                     {
                         auto const & tfMap =
-                            doc.getTermFrequencyMap(fKey.getFSection());
+                            doc.getTermFrequencyMap(fSection);
 
                         double const fVal = Okapi::queryBm25plus(
                             tfMap,
@@ -567,19 +584,11 @@ void FeatureCollector::assertProperties()
 {
     // Assert same sections present in:
     //  `avgDocLenMap`, `structDocsWithTermMap`, `totalTermsMap`
-    auto fullKeyVector =
+    auto sectionKeys =
         base::Utillf::getKeyVect(this->avgDocLenMap);
-    fullKeyVector = base::Utillf::getIntersection(
-        fullKeyVector, base::Utillf::getKeyVect(this->structDocsWithTermMap));
-    fullKeyVector = base::Utillf::getIntersection(
-        fullKeyVector, base::Utillf::getKeyVect(this->totalTermsMap));
-
-    for (auto const & sectionKey : fullKeyVector)
-    {
-        avgDocLenMap.at(sectionKey);
-        structDocsWithTermMap.at(sectionKey);
-        totalTermsMap.at(sectionKey);
-    }
+    assert(sectionKeys ==
+        base::Utillf::getKeyVect(this->structDocsWithTermMap));
+    assert(sectionKeys == base::Utillf::getKeyVect(this->totalTermsMap));
 }
 
 }
