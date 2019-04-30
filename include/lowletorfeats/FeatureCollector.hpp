@@ -93,8 +93,8 @@ public:
 
     /* Setter methods */
 
-    void setSectionWeights(
-        std::unordered_map<std::string, double> const & sectionWeights)
+    void setSectionWeights(std::unordered_map<std::string, base::WeightType>
+        const & sectionWeights)
     { this->sectionWeights = sectionWeights; }
 
 
@@ -108,7 +108,7 @@ public:
 private:
     /* Private member variables */
 
-    std::unordered_map<std::string, double> sectionWeights =
+    std::unordered_map<std::string, base::WeightType> sectionWeights =
     {
         {"full", 0.3},
         {"title", 1},

@@ -2,7 +2,7 @@
 
 #include <lowletorfeats/Tfidf.hpp>
 
-
+#include <iostream>
 namespace lowletorfeats
 {
 
@@ -11,11 +11,15 @@ namespace lowletorfeats
  *
  * @param numDocs
  * @param numDocsWithTerm
- * @return double
+ * @return base::FValType
  */
-double Tfidf::idfDefault(uint const & numDocs, uint const & numDocsWithTerm)
+base::FValType Tfidf::idfDefault(
+    uint const & numDocs, uint const & numDocsWithTerm)
 {
-    return log(numDocs / numDocsWithTerm);
+    return log(
+        (base::FValType)numDocs
+        / (base::FValType)numDocsWithTerm
+    );
 }
 
 
@@ -24,11 +28,15 @@ double Tfidf::idfDefault(uint const & numDocs, uint const & numDocsWithTerm)
  *
  * @param numDocs
  * @param numDocsWithTerm
- * @return double
+ * @return base::FValType
  */
-double Tfidf::idfSmooth(uint const & numDocs, uint const & numDocsWithTerm)
+base::FValType Tfidf::idfSmooth(
+    uint const & numDocs, uint const & numDocsWithTerm)
 {
-    return log(numDocs / (1 + numDocsWithTerm));
+    return log(
+        (base::FValType)numDocs
+        / (base::FValType)(1 + numDocsWithTerm)
+    );
 }
 
 
@@ -37,12 +45,15 @@ double Tfidf::idfSmooth(uint const & numDocs, uint const & numDocsWithTerm)
  *
  * @param numDocsWithTerm
  * @param docMaxTermFrequency
- * @return double
+ * @return base::FValType
  */
-double Tfidf::idfMax(uint const & numDocsWithTerm, uint const & docMaxTermFrequency)
+base::FValType Tfidf::idfMax(
+    uint const & numDocsWithTerm, uint const & docMaxTermFrequency)
 {
-    return log((docMaxTermFrequency * numDocsWithTerm)
-        / (1 + numDocsWithTerm));
+    return log(
+        ((base::FValType)docMaxTermFrequency * (base::FValType)numDocsWithTerm)
+        / (base::FValType)(1 + numDocsWithTerm)
+    );
 }
 
 
@@ -51,11 +62,15 @@ double Tfidf::idfMax(uint const & numDocsWithTerm, uint const & docMaxTermFreque
  *
  * @param numDocs
  * @param numDocsWithTerm
- * @return double
+ * @return base::FValType
  */
-double Tfidf::idfProb(uint const & numDocs, uint const & numDocsWithTerm)
+base::FValType Tfidf::idfProb(
+    uint const & numDocs, uint const & numDocsWithTerm)
 {
-    return log((numDocs - numDocsWithTerm) / numDocsWithTerm);
+    return log(
+        ((base::FValType)numDocs - (base::FValType)numDocsWithTerm)
+        / (base::FValType)numDocsWithTerm
+    );
 }
 
 
@@ -64,12 +79,16 @@ double Tfidf::idfProb(uint const & numDocs, uint const & numDocsWithTerm)
  *
  * @param numDocs
  * @param numDocsWithTerm
- * @return double
+ * @return base::FValType
  */
-double Tfidf::idfNorm(uint const & numDocs, uint const & numDocsWithTerm)
+base::FValType Tfidf::idfNorm(
+    uint const & numDocs, uint const & numDocsWithTerm)
 {
-    uint const numDocsWithoutTerm = numDocs - numDocsWithTerm;
-    return log((numDocsWithoutTerm + 0.5) / (numDocsWithTerm + 0.5));
+    base::FValType const numDocsWithoutTerm = numDocs - numDocsWithTerm;
+    return log(
+        (numDocsWithoutTerm + 0.5)
+        / ((base::FValType)numDocsWithTerm + 0.5)
+    );
 }
 
 }

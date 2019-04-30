@@ -127,9 +127,9 @@ public:
      * @brief Get the value of the given feature.
      *
      * @param fName
-     * @return double const&
+     * @return FValType const&
      */
-    double const & getFeatureValue(base::FeatureKey const & fName) const
+    base::FValType const & getFeatureValue(base::FeatureKey const & fName) const
     { return this->featureMap.at(fName); }
 
 
@@ -141,7 +141,8 @@ public:
      * @param fKey
      * @param fValue
      */
-    void updateFeature(base::FeatureKey const & fKey, double const & fValue)
+    void updateFeature(
+        base::FeatureKey const & fKey, base::FValType const & fValue)
     { this->featureMap[fKey] = fValue; }
 
 private:

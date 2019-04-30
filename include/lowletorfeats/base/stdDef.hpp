@@ -12,5 +12,7 @@ namespace lowletorfeats::base
     typedef std::unordered_map<std::string, base::StrUintMap>
         StructuredTermFrequencyMap;
 
-    typedef std::unordered_map<FeatureKey, double> FeatureMap;
+    typedef long double FValType;
+    typedef float WeightType;
+    typedef std::unordered_map<FeatureKey, FValType> FeatureMap;
 }

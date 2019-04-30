@@ -10,11 +10,11 @@ namespace lowletorfeats
  * @brief Log normalized term frequency.
  *
  * @param docTermFrequency The term's frequency.
- * @return double
+ * @return base::FValType
  */
-double Tfidf::tfLogNorm(uint const & docTermFrequency)
+base::FValType Tfidf::tfLogNorm(uint const & docTermFrequency)
 {
-    return log(1 + docTermFrequency);
+    return log(1 + (base::FValType)docTermFrequency);
 }
 
 
@@ -25,14 +25,17 @@ double Tfidf::tfLogNorm(uint const & docTermFrequency)
  * @param docTermFrequency The term's frequency.
  * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
  * @param k
- * @return double
+ * @return base::FValType
  */
-double Tfidf::tfDoubleNorm(
+base::FValType Tfidf::tfDoubleNorm(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     float const & k)
 {
     return k + ((1 - k)
-        * (docTermFrequency / (docMaxTermFrequency + docTermFrequency)));
+        * ((base::FValType)docTermFrequency
+            / (base::FValType)(docMaxTermFrequency + docTermFrequency)
+        )
+    );
 }
 
 
@@ -42,22 +45,22 @@ double Tfidf::tfDoubleNorm(
  *
  * @param docTermFrequency The term's frequency.
  * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
- * @return double
+ * @return base::FValType
  */
-double Tfidf::tfDoubleNorm(
+base::FValType Tfidf::tfDoubleNorm(
     uint const & docTermFrequency, uint const & docMaxTermFrequency)
 {
     return tfDoubleNorm(docTermFrequency, docMaxTermFrequency, 0.5);
 }
 
 
-double Tfidf::sumTfLogNorm(base::StrUintMap const & docTermFreqMap)
+base::FValType Tfidf::sumTfLogNorm(base::StrUintMap const & docTermFreqMap)
 {
     return Tfidf::tfLogNorm(base::Utillf::mapValueSum(docTermFreqMap));;
 }
 
 
-double Tfidf::sumTfDoubleNorm(
+base::FValType Tfidf::sumTfDoubleNorm(
     base::StrUintMap const & docTermFreqMap,
     uint const & docMaxTermFrequency
 )

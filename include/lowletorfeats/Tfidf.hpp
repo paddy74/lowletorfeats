@@ -10,46 +10,57 @@ class Tfidf
 {
 public:
     /* Term frequency */
-    static double tfLogNorm(uint const & docTermFrequency);
-    static double tfDoubleNorm(
+    static base::FValType tfLogNorm(uint const & docTermFrequency);
+    static base::FValType tfDoubleNorm(
         uint const & docTermFrequency, uint const & docMaxTermFrequency,
         float const & k);
-    static double tfDoubleNorm(
+    static base::FValType tfDoubleNorm(
         uint const & docTermFrequency, uint const & docMaxTermFrequency);
-    static double sumTfLogNorm(
+    static base::FValType sumTfLogNorm(
         base::StrUintMap const & docTermFreqMap
     );
-    static double sumTfDoubleNorm(
-        base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency
+    static base::FValType sumTfDoubleNorm(
+        base::StrUintMap const & docTermFreqMap,
+        uint const & docMaxTermFrequency
     );
 
     /* IDF */
-    double static idfDefault(uint const & numDocs, uint const & numDocsWithTerm);
-    double static idfSmooth(uint const & numDocs, uint const & numDocsWithTerm);
-    double static idfMax(uint const & numDocsWithTerm, uint const & docMaxTermFrequency);
-    double static idfProb(uint const & numDocs, uint const & numDocsWithTerm);
-    double static idfNorm(uint const & numDocs, uint const & numDocsWithTerm);
+    base::FValType static idfDefault(
+        uint const & numDocs, uint const & numDocsWithTerm);
+    base::FValType static idfSmooth(
+        uint const & numDocs, uint const & numDocsWithTerm);
+    base::FValType static idfMax(
+        uint const & numDocsWithTerm, uint const & docMaxTermFrequency);
+    base::FValType static idfProb(
+        uint const & numDocs, uint const & numDocsWithTerm);
+    base::FValType static idfNorm(
+        uint const & numDocs, uint const & numDocsWithTerm);
 
     /* TF/IDF */
-    double static tfidf(
+    base::FValType static tfidf(
         uint const & docTermFrequency, uint const & docMaxTermFrequency,
         uint const & numDocs, uint const & numDocsWithTerm
     );
-    double static tfidf(
-        double (*tfFunction)(uint const &),
-        double (*idfFunction)(uint const &, uint const &),
+    base::FValType static tfidf(
+        base::FValType (*tfFunction)(uint const &),
+        base::FValType (*idfFunction)(uint const &, uint const &),
         uint const & docTermFrequency,
-        uint const & numDocs, uint const & numDocsWithTerm
+        uint const & numDocs,
+        uint const & numDocsWithTerm
     );
-    double static tfidf(
-        double (*tfFunction)(uint, uint),
-        double (*idfFunction)(uint, uint),
-        uint const & docTermFrequency, uint const & docMaxTermFrequency,
-        uint const & numDocs, uint const & numDocsWithTerm
+    base::FValType static tfidf(
+        base::FValType (*tfFunction)(uint, uint),
+        base::FValType (*idfFunction)(uint, uint),
+        uint const & docTermFrequency,
+        uint const & docMaxTermFrequency,
+        uint const & numDocs,
+        uint const & numDocsWithTerm
     );
-    double static queryTfidf(
-        base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency,
-        uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
+    base::FValType static queryTfidf(
+        base::StrUintMap const & docTermFreqMap,
+        uint const & docMaxTermFrequency,
+        uint const & numDocs,
+        base::StrUintMap const & docsWithTermFreqMap,
         base::StrUintMap const & queryTermFreqMap
     );
 

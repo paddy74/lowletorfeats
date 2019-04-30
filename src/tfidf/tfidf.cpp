@@ -16,7 +16,7 @@ namespace lowletorfeats
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-double Tfidf::tfidf(
+base::FValType Tfidf::tfidf(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm
 )
@@ -34,9 +34,9 @@ double Tfidf::tfidf(
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-double Tfidf::tfidf(
-    double (*tfFunction)(uint const &),
-    double (*idfFunction)(uint const &, uint const &),
+base::FValType Tfidf::tfidf(
+    base::FValType (*tfFunction)(uint const &),
+    base::FValType (*idfFunction)(uint const &, uint const &),
     uint const & docTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm
 )
@@ -55,9 +55,9 @@ double Tfidf::tfidf(
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
-double Tfidf::tfidf(
-    double (*tfFunction)(uint, uint),
-    double (*idfFunction)(uint, uint),
+base::FValType Tfidf::tfidf(
+    base::FValType (*tfFunction)(uint, uint),
+    base::FValType (*idfFunction)(uint, uint),
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm
 )
@@ -80,14 +80,14 @@ double Tfidf::tfidf(
  * @param queryTermFreqMap `TermFrequencyMap` for the query.
  * @return double
  */
-double Tfidf::queryTfidf(
+base::FValType Tfidf::queryTfidf(
     base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency,
     uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
     base::StrUintMap const & queryTermFreqMap
 )
 {
     // Sum the scores for each term
-    double score = 0;
+    base::FValType score = 0;
     for (auto const & [term, tf] : queryTermFreqMap)
     {
         if (!(docTermFreqMap.count(term) == 0

@@ -13,37 +13,37 @@ namespace lowletorfeats
  * @param structDocsWithTermFreqMap
  * @param avgDocLen
  * @param queryTermFreqMap
- * @param structWeights
- * @return double
+ * @param sectionWeights
+ * @return base::FValType
  */
-double Okapi::queryBm25f(
-    std::unordered_map<std::string, base::StrUintMap>
-        const & structDocTermFreqMap,
+base::FValType Okapi::queryBm25f(
+    base::StructuredTermFrequencyMap const & structDocTermFreqMap,
     uint const & numDocs,
-    std::unordered_map<std::string, base::StrUintMap>
-        structDocsWithTermFreqMap,
+    base::StructuredTermFrequencyMap const & structDocsWithTermFreqMap,
     base::StrUintMap const & avgDocLenMap,
     base::StrUintMap const & queryTermFreqMap,
-    std::unordered_map<std::string, double> structWeights
+    std::unordered_map<std::string, base::WeightType> const & sectionWeights
 )
 {
     // Calculate full idf
-    double const fullIdf = 0;
+    base::FValType fullIdf = 0;
+    for (auto const & [term, tf] : structDocsWithTermFreqMap.at("full"))
+        fullIdf += Tfidf::idfNorm(numDocs, tf);
 
     // Calculate BM25 for each field
-    double totalBm25 = 0;
+    base::FValType totalBm25 = 0;
     for (auto const & [sectionKey, tfMap] : structDocTermFreqMap)
     {
         if (!(structDocsWithTermFreqMap.count(sectionKey) == 0
-            || structWeights.count(sectionKey) == 0)
+            || sectionWeights.count(sectionKey) == 0)
             || avgDocLenMap.count(sectionKey) == 0)
         {
             auto const & docsWithTermFreqMap =
                 structDocsWithTermFreqMap.at(sectionKey);
-            auto const & weight = structWeights.at(sectionKey);
+            auto const & weight = sectionWeights.at(sectionKey);
             auto const & avgDocLen = avgDocLenMap.at(sectionKey);
 
-            double bm25 = Okapi::queryBm25(
+            base::FValType bm25 = Okapi::queryBm25(
                 tfMap, numDocs, docsWithTermFreqMap, avgDocLen, queryTermFreqMap
             );
             bm25 *= weight;
@@ -65,39 +65,37 @@ double Okapi::queryBm25f(
  * @param structDocsWithTermFreqMap
  * @param avgDocLen
  * @param queryTermFreqMap
- * @param structWeights
- * @return double
+ * @param sectionWeights
+ * @return base::FValType
  */
-double Okapi::queryBm25fplus(
-    std::unordered_map<std::string, base::StrUintMap>
-        const & structDocTermFreqMap,
+base::FValType Okapi::queryBm25fplus(
+    base::StructuredTermFrequencyMap const & structDocTermFreqMap,
     uint const & numDocs,
-    std::unordered_map<std::string, base::StrUintMap>
-        structDocsWithTermFreqMap,
+    base::StructuredTermFrequencyMap const & structDocsWithTermFreqMap,
     base::StrUintMap const & avgDocLenMap,
     base::StrUintMap const & queryTermFreqMap,
-    std::unordered_map<std::string, double> structWeights
+    std::unordered_map<std::string, base::WeightType> const & sectionWeights
 )
 {
     // Calculate full idf
-    double fullIdf = 0;
-    for (auto const & [term, tf] : structDocsWithTermFreqMap["full"])
+    base::FValType fullIdf = 0;
+    for (auto const & [term, tf] : structDocsWithTermFreqMap.at("full"))
         fullIdf += Tfidf::idfNorm(numDocs, tf);
 
     // Calculate BM25 for each field
-    double totalBm25plus = 0;
+    base::FValType totalBm25plus = 0;
     for (auto const & [sectionKey, tfMap] : structDocTermFreqMap)
     {
         if (!(structDocsWithTermFreqMap.count(sectionKey) == 0
-            || structWeights.count(sectionKey) == 0)
+            || sectionWeights.count(sectionKey) == 0)
             || avgDocLenMap.count(sectionKey) == 0)
         {
             auto const & docsWithTermFreqMap =
                 structDocsWithTermFreqMap.at(sectionKey);
-            auto const & weight = structWeights.at(sectionKey);
+            auto const & weight = sectionWeights.at(sectionKey);
             auto const & avgDocLen = avgDocLenMap.at(sectionKey);
 
-            double bm25plus = Okapi::queryBm25plus(
+            base::FValType bm25plus = Okapi::queryBm25plus(
                 tfMap, numDocs, docsWithTermFreqMap, avgDocLen, queryTermFreqMap
             );
             bm25plus *= weight;

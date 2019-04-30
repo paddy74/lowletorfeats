@@ -17,18 +17,20 @@ namespace lowletorfeats
  * @param delta
  * @return double
  */
-double Okapi::bm25plus(
+base::FValType Okapi::bm25plus(
     uint const & docTermFrequency,
     uint const & numDocs, uint numDocsWithTerm,
     uint const & avgDocLen,
     float const & b, float const & k1, float const & delta
 )
 {
-    double const idf = Tfidf::idfNorm(numDocs, numDocsWithTerm);
+    base::FValType const idf = Tfidf::idfNorm(numDocs, numDocsWithTerm);
 
-    double const numer = docTermFrequency * (k1 + 1);
-    double const denom = docTermFrequency
-        + (k1 * (1 - b + (b * (numDocs / avgDocLen))));
+    base::FValType const numer = docTermFrequency * (k1 + 1);
+    base::FValType const denom =
+        docTermFrequency
+        + (k1 * (1 - b + (b * ((base::FValType)numDocs
+            / (base::FValType)avgDocLen))));
 
     return idf * ((numer / denom) + delta);
 }
@@ -43,7 +45,7 @@ double Okapi::bm25plus(
  * @param avgDocLen Average document length of the collection.
  * @return double
  */
-double Okapi::bm25plus(
+base::FValType Okapi::bm25plus(
     uint const & docTermFrequency,
     uint const & numDocs, uint const & numDocsWithTerm,
     uint const & avgDocLen
@@ -74,7 +76,7 @@ double Okapi::bm25plus(
  * @param queryTermFreqMap `StrUintMap` for the query.
  * @return double
  */
-double Okapi::queryBm25plus(
+base::FValType Okapi::queryBm25plus(
     base::StrUintMap const & docTermFreqMap,
     uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
     uint const & avgDocLen,
@@ -82,7 +84,7 @@ double Okapi::queryBm25plus(
 )
 {
     // Sum the scores for each term
-    double score = 0;
+    base::FValType score = 0;
     for (auto const & [term, tf] : queryTermFreqMap)
     {
         if (!(docTermFreqMap.count(term) == 0

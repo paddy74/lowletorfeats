@@ -204,7 +204,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                         auto const & tfMap =
                             doc.getTermFrequencyMap(fSection);
 
-                        double const fVal = Tfidf::sumTfLogNorm(tfMap);
+                        base::FValType const fVal = Tfidf::sumTfLogNorm(tfMap);
                         doc.updateFeature(fKey, fVal);
                     } break;
                 }
@@ -216,7 +216,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                         auto const & tfMap =
                             doc.getTermFrequencyMap(fSection);
 
-                        double const fVal = Tfidf::sumTfDoubleNorm(
+                        base::FValType const fVal = Tfidf::sumTfDoubleNorm(
                             tfMap,
                             doc.getMaxTF()
                         );
@@ -228,7 +228,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Tfidf::idfDefault(
+                        base::FValType const fVal = Tfidf::idfDefault(
                             this->numDocs,
                             totalTerms
                         );
@@ -240,7 +240,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Tfidf::idfSmooth(
+                        base::FValType const fVal = Tfidf::idfSmooth(
                             this->numDocs,
                             totalTerms
                         );
@@ -252,7 +252,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Tfidf::idfMax(
+                        base::FValType const fVal = Tfidf::idfMax(
                             totalTerms,
                             doc.getMaxTF()
                         );
@@ -264,7 +264,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Tfidf::idfProb(
+                        base::FValType const fVal = Tfidf::idfProb(
                             this->numDocs,
                             totalTerms
                         );
@@ -276,7 +276,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Tfidf::idfNorm(
+                        base::FValType const fVal = Tfidf::idfNorm(
                             this->numDocs,
                             totalTerms
                         );
@@ -294,7 +294,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                         auto const & tfMap =
                             doc.getTermFrequencyMap(fSection);
 
-                        double const fVal = Tfidf::queryTfidf(
+                        base::FValType const fVal = Tfidf::queryTfidf(
                             tfMap,
                             doc.getMaxTF(),
                             this->numDocs,
@@ -328,7 +328,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                         auto const & tfMap =
                             doc.getTermFrequencyMap(fSection);
 
-                        double const fVal = Okapi::queryBm25(
+                        base::FValType const fVal = Okapi::queryBm25(
                             tfMap,
                             this->numDocs,
                             docsWithTermMap,
@@ -346,7 +346,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                         auto const & tfMap =
                             doc.getTermFrequencyMap(fSection);
 
-                        double const fVal = Okapi::queryBm25plus(
+                        base::FValType const fVal = Okapi::queryBm25plus(
                             tfMap,
                             this->numDocs,
                             docsWithTermMap,
@@ -361,7 +361,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Okapi::queryBm25f(
+                        base::FValType const fVal = Okapi::queryBm25f(
                             doc.getStructuredTermFrequencyMap(),
                             this->numDocs,
                             this->structDocsWithTermMap,
@@ -377,7 +377,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 {
                     for (auto & doc : this->docVect)
                     {
-                        double const fVal = Okapi::queryBm25fplus(
+                        base::FValType const fVal = Okapi::queryBm25fplus(
                             doc.getStructuredTermFrequencyMap(),
                             this->numDocs,
                             this->structDocsWithTermMap,
