@@ -1,6 +1,15 @@
-add_executable(lowletorfeats.test_main src/main.cpp)
+add_executable(lowletorfeats.test_main src/test_main.cpp)
+add_executable(lowletorfeats.test_FeatureKey src/test_FeatureKey.cpp)
+add_executable(lowletorfeats.test_Document src/test_Document.cpp)
+add_executable(lowletorfeats.test_FC src/test_FC.cpp)
 
 target_link_libraries(lowletorfeats.test_main lowletorfeats)
+target_link_libraries(lowletorfeats.test_FeatureKey lowletorfeats)
+target_link_libraries(lowletorfeats.test_Document lowletorfeats)
+target_link_libraries(lowletorfeats.test_FC lowletorfeats)
 
 enable_testing()
 add_test(test_main lowletorfeats.test_main)
+add_test(test_FeatureKey lowletorfeats.test_FeatureKey)
+add_test(test_Document lowletorfeats.test_Document)
+add_test(test_FC lowletorfeats.test_FC)
