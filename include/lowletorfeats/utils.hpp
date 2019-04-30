@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
-#include <vector>  // vector
-#include <map>  // map
-#include <unordered_map>  // unordered_map
-#include <numeric>  // accumulate
+#include <vector>
+#include <map>
+#include <unordered_map>
+
 #include <algorithm>  // max_element
+#include <numeric>  // accumulate
 
 
 namespace lowletorfeats::utils
@@ -181,7 +181,8 @@ std::vector<KEY_T> getValueVect(std::unordered_map<KEY_T, VALUE_T> x)
  * @return std::list<T>
  */
 template<typename T>
-std::vector<T> getIntersection(std::vector<T> const & a, std::vector<T> const & b)
+std::vector<T> getIntersection(
+    std::vector<T> const & a, std::vector<T> const & b)
 {
     std::vector<T> interLst;
 
