@@ -13,7 +13,7 @@ std::pair<
 {
     typedef lowletorfeats::base::StrStrMap StrStrMap;
 
-    std::string const queryString = "time to query hello word";
+    std::string const queryString = "This query submission attempts to query.";
 
     std::vector<StrStrMap> structDocTextVector
     {
