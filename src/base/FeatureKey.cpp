@@ -33,7 +33,7 @@ FeatureKey::FeatureKey()
  */
 FeatureKey::FeatureKey(std::string const & fKey)
 {
-    std::vector<std::string> const  & fDelim = utils::strSplit(fKey, '.');
+    std::vector<std::string> const & fDelim = utils::strSplit(fKey, '.');
 
     switch (fDelim.size())
     {

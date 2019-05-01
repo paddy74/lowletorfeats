@@ -69,14 +69,8 @@ StructuredDocument::StructuredDocument(
     }
 
     // Ensure "full" exists, else populate
-    try
-    {
-        auto const & _ = this->termFrequencyMaps.at("full");
-    }
-    catch(std::out_of_range const & e)
-    {
+    if (!(this->termFrequencyMaps.count("full")))
         this->fillFullFromOthers();
-    }
 }
 
 
@@ -293,8 +287,8 @@ void StructuredDocument::fillFullFromOthers()
 
     // Calculate `termFrequencyMap["full"]`
     base::StrUintMap fullTermFreqMap;
-    for (auto const & [section, tfMap] : this->termFrequencyMaps)
-        utils::additiveMergeInplace(fullTermFreqMap, tfMap);
+    for (auto const & mapPair : this->termFrequencyMaps)
+        utils::additiveMergeInplace(fullTermFreqMap, mapPair.second);
     this->termFrequencyMaps["full"] = fullTermFreqMap;
 
     // Calculate `maxTermMap["full"]`

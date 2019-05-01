@@ -183,7 +183,6 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
     // QOL typedefs
     typedef base::FeatureKey::ValidTypes VTypes;
     typedef base::FeatureKey::ValidNames VNames;
-    typedef base::FeatureKey::ValidSections VSections;
 
     std::string const & fSection = fKey.getFSection();
 
@@ -204,8 +203,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
                 default:
                     break;
-            }
-            break;
+            } break;
         }
 
         case VTypes::tfidf:
@@ -324,8 +322,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
                 default:
                     break;
-            }
-            break;
+            } break;
         }
 
         case VTypes::okapi:
@@ -387,7 +384,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                             this->sectionWeights
                         );
                         doc.updateFeature(fKey, fVal);
-                    }
+                    } break;
                 }
 
                 case VNames::bm25fplus:
@@ -403,13 +400,12 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                             this->sectionWeights
                         );
                         doc.updateFeature(fKey, fVal);
-                    }
+                    } break;
                 }
 
                 default:
                     break;
-            }
-            break;
+            } break;
         }
 
         case VTypes::lmir:
@@ -418,7 +414,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
             {
                 case VNames::abs:
                 {
-                    for (auto & doc : this->docVect)
+                    //for (auto & doc : this->docVect)
                     {
                         // TODO:
                     } break;
@@ -426,7 +422,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
                 case VNames::dir:
                 {
-                    for (auto & doc : this->docVect)
+                    //for (auto & doc : this->docVect)
                     {
                         // TODO:
                     } break;
@@ -434,7 +430,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
                 case VNames::jm:
                 {
-                    for (auto & doc : this->docVect)
+                    //for (auto & doc : this->docVect)
                     {
                         // TODO:
                     } break;
@@ -518,8 +514,8 @@ void FeatureCollector::initDocs(
             this->avgDocLenMap[sectionKey] += pair.second;
 
             // `structDocsWithTermMap`
-            for (auto const & [term, tf] : sectionTfMap)
-                this->structDocsWithTermMap[sectionKey][term]++;
+            for (auto const & mapPair : sectionTfMap)
+                this->structDocsWithTermMap[sectionKey][mapPair.first]++;
         }
 
         // Create a new document
@@ -554,7 +550,7 @@ void FeatureCollector::initDocs(
 
     // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
-    for (int i = 0; i < this->numDocs; ++i)  // for each document
+    for (std::size_t i = 0; i < this->numDocs; ++i)  // for each document
     {
         base::StrUintMap const & docLenMap = docLenMapVect.at(i);
         base::StructuredTermFrequencyMap docTfMap = docTfMapVect.at(i);
@@ -570,8 +566,8 @@ void FeatureCollector::initDocs(
             this->avgDocLenMap[sectionKey] += docLenMap.at(sectionKey);
 
             // `structDocsWithTermMap`
-            for (auto const & [term, tf] : sectionTfMap)
-                this->structDocsWithTermMap[sectionKey][term]++;
+            for (auto const & mapPair : sectionTfMap)
+                this->structDocsWithTermMap[sectionKey][mapPair.first]++;
         }
 
         // Create a new document

@@ -88,8 +88,10 @@ base::FValType Tfidf::queryTfidf(
 {
     // Sum the scores for each term
     base::FValType score = 0;
-    for (auto const & [term, tf] : queryTermFreqMap)
+    for (auto const & mapPair : queryTermFreqMap)
     {
+        auto const & term = mapPair.first;
+
         if (!(docTermFreqMap.count(term) == 0
             || docsWithTermFreqMap.count(term) == 0))
         {

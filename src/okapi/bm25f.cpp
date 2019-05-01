@@ -27,8 +27,8 @@ base::FValType Okapi::queryBm25f(
 {
     // Calculate full idf
     base::FValType fullIdf = 0;
-    for (auto const & [term, tf] : structDocsWithTermFreqMap.at("full"))
-        fullIdf += Tfidf::idfNorm(numDocs, tf);
+    for (auto const & mapPair : structDocsWithTermFreqMap.at("full"))
+        fullIdf += Tfidf::idfNorm(numDocs, mapPair.second);
 
     // Calculate BM25 for each field
     base::FValType totalBm25 = 0;
@@ -79,8 +79,8 @@ base::FValType Okapi::queryBm25fplus(
 {
     // Calculate full idf
     base::FValType fullIdf = 0;
-    for (auto const & [term, tf] : structDocsWithTermFreqMap.at("full"))
-        fullIdf += Tfidf::idfNorm(numDocs, tf);
+    for (auto const & mapPair : structDocsWithTermFreqMap.at("full"))
+        fullIdf += Tfidf::idfNorm(numDocs, mapPair.second);
 
     // Calculate BM25 for each field
     base::FValType totalBm25plus = 0;
