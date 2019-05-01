@@ -99,7 +99,7 @@ public:
     /* Static setter methods */
 
     static void setAnalyzerFunction(
-        textalyzer::AnlyzerFunType<std::string> analyzerFunction
+        textalyzer::AnlyzerFunType<std::string> const & analyzerFunction
     )
     { FeatureCollector::analyzerFun = analyzerFunction; }
 
