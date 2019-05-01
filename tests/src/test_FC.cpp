@@ -5,7 +5,7 @@
 #include <iostream>
 
 
-int main(int argc, const char * argv[])
+int main()
 {
     auto const testData = getTestData();
     auto const queryStr = testData.first;
