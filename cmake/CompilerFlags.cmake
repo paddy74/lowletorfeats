@@ -1,6 +1,6 @@
 if(UNIX)
     include(CheckCXXCompilerFlag)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wshadow -Wextra")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wextra")
 elseif(WIN32)
     if (MSVC)
         set(CMAKE_CXX_FLAGS_STD_CPP)
