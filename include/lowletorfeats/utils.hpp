@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
+
 namespace lowletorfeats::utils
 {
 /**
@@ -43,24 +44,25 @@ void additiveMergeInplace(
 }
 
 /**
- * @brief Find the maximum key-value pair in an `unorderd_map`.
- *  Based on: https://stackoverflow.com/a/34937216/7706917
+ * @brief Find the maximum key-value pair in std::pair value_type container.
  *
  * @tparam KEY_T
  * @tparam VALUE_T
  * @param x
  * @return std::pair<KEY_T, VALUE_T>
  */
-template <typename KEY_T, typename VALUE_T>
-std::pair<KEY_T, VALUE_T> findMaxValuePair(
-    std::unordered_map<KEY_T, VALUE_T> const & x)
+template <class Container>
+auto findMaxValuePair(Container const & x) -> typename Container::value_type
 {
-    using pairtype = std::pair<KEY_T, VALUE_T>;
+    using value_t = typename Container::value_type;
 
-    return *std::max_element(
-        x.begin(), x.end(), [](const pairtype & p1, const pairtype & p2) {
-            return p1.second < p2.second;
-        });
+    if (x.size() == 0) return value_t();
+    if (x.size() == 1) return *x.begin();
+
+    const auto compare = [](value_t const & p1, value_t const & p2) {
+        return p1.second < p2.second;
+    };
+    return *std::max_element(x.begin(), x.end(), compare);
 }
 
 /**
