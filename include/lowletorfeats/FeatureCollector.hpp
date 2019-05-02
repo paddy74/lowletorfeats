@@ -1,13 +1,10 @@
 #pragma once
 
 #include <lowletorfeats/base/Document.hpp>
-
 #include <textalyzer/Analyzer.hpp>
-
 
 namespace lowletorfeats
 {
-
 /**
  * @brief Conduct feature collection for a collection of documents.
  *
@@ -21,30 +18,23 @@ public:
 
     FeatureCollector();
 
+    FeatureCollector(
+        std::vector<base::StrStrMap> const & docTextMapVect,
+        std::string const & queryText);
 
     FeatureCollector(
         std::vector<base::StrStrMap> const & docTextMapVect,
-        std::string const & queryText
-    );
-
-    FeatureCollector(
-        std::vector<base::StrStrMap> const & docTextMapVect,
-        base::StrUintMap const & queryTfMap
-    );
-
+        base::StrUintMap const & queryTfMap);
 
     FeatureCollector(
         std::vector<base::StrUintMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
-        std::string const & queryText
-    );
+        std::string const & queryText);
 
     FeatureCollector(
         std::vector<base::StrUintMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
-        base::StrUintMap const & queryTfMap
-    );
-
+        base::StrUintMap const & queryTfMap);
 
     /* Public class methods */
 
@@ -78,43 +68,39 @@ public:
      */
     void collectFeatures(std::vector<base::FeatureKey> const & fKeyVect);
 
-
     /* Getter methods */
 
-    std::size_t getNumDocs() const
-    { return this->numDocs; };
+    std::size_t getNumDocs() const { return this->numDocs; };
     std::size_t getNumFeatures() const;
 
     std::vector<StructuredDocument> const & getDocVect() const
-    { return this->docVect; }
-
+    {
+        return this->docVect;
+    }
 
     /* Setter methods */
 
-    void setSectionWeights(std::unordered_map<std::string, base::WeightType>
-        const & sectionWeights)
-    { this->sectionWeights = sectionWeights; }
-
+    void setSectionWeights(
+        std::unordered_map<std::string, base::WeightType> const &
+            sectionWeights)
+    {
+        this->sectionWeights = sectionWeights;
+    }
 
     /* Static setter methods */
 
     static void setAnalyzerFunction(
-        textalyzer::AnlyzerFunType<std::string> const & analyzerFunction
-    )
-    { FeatureCollector::analyzerFun = analyzerFunction; }
+        textalyzer::AnlyzerFunType<std::string> const & analyzerFunction)
+    {
+        FeatureCollector::analyzerFun = analyzerFunction;
+    }
 
 private:
     /* Private member variables */
 
-    std::unordered_map<std::string, base::WeightType> sectionWeights =
-    {
-        {"full", 0.3},
-        {"title", 1},
-        {"body", 0.4},
-        {"author", 0.9},
-        {"anchor", 0.5},
-        {"url", 0.7}
-    };
+    std::unordered_map<std::string, base::WeightType> sectionWeights = {
+        {"full", 0.3},   {"title", 1},    {"body", 0.4},
+        {"author", 0.9}, {"anchor", 0.5}, {"url", 0.7}};
 
     std::size_t numDocs;
     base::StrUintMap avgDocLenMap;
@@ -129,7 +115,6 @@ private:
     // `TermFrequencyMap` for the query string
     base::StrUintMap queryTfMap;
 
-
     /* Private static member variables */
 
     std::vector<base::FeatureKey> const PRESET_FEATURES = {
@@ -140,24 +125,22 @@ private:
         base::FeatureKey("okapi", "bm25", "full"),
         base::FeatureKey("lmir", "abs", "full"),
         base::FeatureKey("lmir", "dir", "full"),
-        base::FeatureKey("lmir", "jm", "full")
-    };  // TODO: somehow static const?
+        base::FeatureKey(
+            "lmir", "jm", "full")};  // TODO: somehow static const?
 
     textalyzer::AnlyzerFunType<std::string> static analyzerFun;
     uint8_t static const DEFAULT_NGRAMS;
-
 
     /* Private class methods */
 
     void initDocs(std::vector<base::StrStrMap> const & docTextMapVect);
     void initDocs(
         std::vector<base::StrUintMap> const & docLenMapVect,
-        std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect
-    );
+        std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect);
 
     void sumTotalTermsPerSection();
     void clearFeatureMaps();
     void assertProperties();
 };
 
-}
+}  // namespace lowletorfeats

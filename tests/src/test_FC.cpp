@@ -1,9 +1,7 @@
+#include <iostream>
 #include <lowletorfeats/FeatureCollector.hpp>
 
 #include "testData.hpp"
-
-#include <iostream>
-
 
 int main()
 {

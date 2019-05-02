@@ -1,15 +1,11 @@
 #include <lowletorfeats/base/Document.hpp>
-
 #include <lowletorfeats/utils.hpp>
-
 
 namespace lowletorfeats
 {
-
 /* Constructors */
 
 StructuredDocument::StructuredDocument() {}
-
 
 /**
  * @brief Construct a new Structured Document object using a preanalyzed
@@ -19,10 +15,8 @@ StructuredDocument::StructuredDocument() {}
  * @param fullTermFrequencyMap Preanalyzed `TermFrequencyMap` for the full doc.
  */
 StructuredDocument::StructuredDocument(
-    uint const & docLen,
-    base::StrUintMap const & fullTermFrequencyMap,
-    std::string const & sectionKey
-)
+    uint const & docLen, base::StrUintMap const & fullTermFrequencyMap,
+    std::string const & sectionKey)
 {
     this->docLenMaps[sectionKey] = docLen;
     this->termFrequencyMaps[sectionKey] = fullTermFrequencyMap;
@@ -30,7 +24,6 @@ StructuredDocument::StructuredDocument(
         utils::findMaxValuePair(fullTermFrequencyMap).second;
 }
 
-
 /**
  * @brief Construct a new Structured Document object using a preanalyzed
  *  document length and `TermFrequencyMap` for the full document text.
@@ -39,11 +32,11 @@ StructuredDocument::StructuredDocument(
  * @param fullTermFrequencyMap Preanalyzed `TermFrequencyMap` for the full doc.
  */
 StructuredDocument::StructuredDocument(
-    uint const & docLen,
-    base::StrUintMap const & fullTermFrequencyMap
-) : StructuredDocument::StructuredDocument(
-        docLen, fullTermFrequencyMap, "full") {}
-
+    uint const & docLen, base::StrUintMap const & fullTermFrequencyMap)
+    : StructuredDocument::StructuredDocument(
+          docLen, fullTermFrequencyMap, "full")
+{
+}
 
 /**
  * @brief Construct a new Structured Document object using a preanalyzed
@@ -55,24 +48,21 @@ StructuredDocument::StructuredDocument(
  */
 StructuredDocument::StructuredDocument(
     base::StrUintMap const & docLenMap,
-    base::StructuredTermFrequencyMap const & structuredTermFrequencyMap
-)
+    base::StructuredTermFrequencyMap const & structuredTermFrequencyMap)
 {
     this->docLenMaps = docLenMap;
     this->termFrequencyMaps = structuredTermFrequencyMap;
 
     // Fill maxTermMap
-    for (auto const & [sectionKey, tfMap]: this->termFrequencyMaps)
-    {
-        this->maxTermMaps[sectionKey] =
-            utils::findMaxValuePair(tfMap).second;
-    }
+    for (auto const & [sectionKey, tfMap] : this->termFrequencyMaps)
+        {
+            this->maxTermMaps[sectionKey] =
+                utils::findMaxValuePair(tfMap).second;
+        }
 
     // Ensure "full" exists, else populate
-    if (!(this->termFrequencyMaps.count("full")))
-        this->fillFullFromOthers();
+    if (!(this->termFrequencyMaps.count("full"))) this->fillFullFromOthers();
 }
-
 
 /**
  * @brief Copy constructor.
@@ -86,7 +76,6 @@ StructuredDocument::StructuredDocument(StructuredDocument const & other)
     this->maxTermMaps = other.maxTermMaps;
     this->featureMap = other.featureMap;
 }
-
 
 /* Public class methods */
 
@@ -110,12 +99,11 @@ std::string StructuredDocument::toString() const
 
     outStr += "\nFeature Map:";
     for (auto const & [fKey, fVal] : this->featureMap)
-    {
-        outStr += "\n\t" + fKey.getFType()
-            + "\t" + fKey.getFName()
-            + "\t" + fKey.getFSection()
-            + "\t: " + std::to_string(fVal);
-    }
+        {
+            outStr += "\n\t" + fKey.getFType() + "\t" + fKey.getFName() +
+                      "\t" + fKey.getFSection() +
+                      "\t: " + std::to_string(fVal);
+        }
 
     outStr += '\n';
     return outStr;
@@ -144,16 +132,11 @@ void StructuredDocument::clearSection(std::string const & section)
     this->maxTermMaps.erase(section);
 }
 
-
 /**
  * @brief Clear the document's feature map.
  *
  */
-void StructuredDocument::clearFeatureMap()
-{
-    this->featureMap.clear();
-}
-
+void StructuredDocument::clearFeatureMap() { this->featureMap.clear(); }
 
 /* Getter methods */
 
@@ -163,8 +146,9 @@ void StructuredDocument::clearFeatureMap()
  * @return std::size_t
  */
 std::size_t StructuredDocument::getDocLen() const
-{ return this->docLenMaps.at("full"); }
-
+{
+    return this->docLenMaps.at("full");
+}
 
 /**
  * @brief Get the document length for the document.
@@ -173,8 +157,9 @@ std::size_t StructuredDocument::getDocLen() const
  * @return std::size_t const&
  */
 std::size_t StructuredDocument::getDocLen(std::string const & section) const
-{ return this->docLenMaps.at(section); }
-
+{
+    return this->docLenMaps.at(section);
+}
 
 /**
  * @brief Get the entire structured term frequency map.
@@ -183,8 +168,9 @@ std::size_t StructuredDocument::getDocLen(std::string const & section) const
  */
 base::StructuredTermFrequencyMap const &
     StructuredDocument::getStructuredTermFrequencyMap() const
-{ return this->termFrequencyMaps; }
-
+{
+    return this->termFrequencyMaps;
+}
 
 /**
  * @brief Get the `TermFrequencyMap` for the full document.
@@ -192,8 +178,9 @@ base::StructuredTermFrequencyMap const &
  * @return base::TermFrequencyMap const&
  */
 base::StrUintMap const & StructuredDocument::getTermFrequencyMap() const
-{ return this->termFrequencyMaps.at("full"); }
-
+{
+    return this->termFrequencyMaps.at("full");
+}
 
 /**
  * @brief Get the `TermFrequencyMap` for the given section.
@@ -202,10 +189,10 @@ base::StrUintMap const & StructuredDocument::getTermFrequencyMap() const
  * @return base::TermFrequencyMap const&
  */
 base::StrUintMap const & StructuredDocument::getTermFrequencyMap(
-    std::string const & section
-) const
-{ return this->termFrequencyMaps.at(section); }
-
+    std::string const & section) const
+{
+    return this->termFrequencyMaps.at(section);
+}
 
 /**
  * @brief Get the max term frequency for the full document.
@@ -213,8 +200,9 @@ base::StrUintMap const & StructuredDocument::getTermFrequencyMap(
  * @return std::size_t
  */
 std::size_t StructuredDocument::getMaxTF() const
-{ return this->maxTermMaps.at("full"); }
-
+{
+    return this->maxTermMaps.at("full");
+}
 
 /**
  * @brief Get the max term frequency for the given section.
@@ -222,11 +210,10 @@ std::size_t StructuredDocument::getMaxTF() const
  * @param section
  * @return std::size_t
  */
-std::size_t StructuredDocument::getMaxTF(
-    std::string const & section
-) const
-{ return this->maxTermMaps.at(section); }
-
+std::size_t StructuredDocument::getMaxTF(std::string const & section) const
+{
+    return this->maxTermMaps.at(section);
+}
 
 /**
  * @brief Get the entire feature map
@@ -234,8 +221,9 @@ std::size_t StructuredDocument::getMaxTF(
  * @return base::DocFeatureMap const&
  */
 base::FeatureMap const & StructuredDocument::getFeatureMap() const
-{ return this->featureMap; }
-
+{
+    return this->featureMap;
+}
 
 /**
  * @brief Get a vector of `featureMap.keys`.
@@ -243,8 +231,9 @@ base::FeatureMap const & StructuredDocument::getFeatureMap() const
  * @return std::vector<base::FeatureNames> const&
  */
 std::vector<base::FeatureKey> StructuredDocument::getFeatureKeys() const &
-{ return utils::getKeyVect(this->featureMap); }
-
+{
+    return utils::getKeyVect(this->featureMap);
+}
 
 /**
  * @brief Get the value of the given feature.
@@ -254,8 +243,9 @@ std::vector<base::FeatureKey> StructuredDocument::getFeatureKeys() const &
  */
 base::FValType const & StructuredDocument::getFeatureValue(
     base::FeatureKey const & fName) const
-{ return this->featureMap.at(fName); }
-
+{
+    return this->featureMap.at(fName);
+}
 
 /* Setters */
 
@@ -267,8 +257,9 @@ base::FValType const & StructuredDocument::getFeatureValue(
  */
 void StructuredDocument::updateFeature(
     base::FeatureKey const & fKey, base::FValType const & fValue)
-{ this->featureMap[fKey] = fValue; }
-
+{
+    this->featureMap[fKey] = fValue;
+}
 
 /* Private class methods */
 
@@ -296,4 +287,4 @@ void StructuredDocument::fillFullFromOthers()
         utils::findMaxValuePair(fullTermFreqMap).second;
 }
 
-}
+}  // namespace lowletorfeats

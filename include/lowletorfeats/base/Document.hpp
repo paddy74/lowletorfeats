@@ -1,13 +1,10 @@
 #pragma once
 
 #include <lowletorfeats/base/stdDef.hpp>
-
 #include <vector>
-
 
 namespace lowletorfeats
 {
-
 class StructuredDocument
 {
 public:
@@ -20,23 +17,17 @@ public:
     // Preanalyzed
 
     StructuredDocument(  // The indicated section only
-        uint const & docLen,
-        base::StrUintMap const & fullTermFrequencyMap,
-        std::string const & sectionKey
-    );
+        uint const & docLen, base::StrUintMap const & fullTermFrequencyMap,
+        std::string const & sectionKey);
     StructuredDocument(  // `"full"` section only
-        uint const & docLen,
-        base::StrUintMap const & fullTermFrequencyMap
-    );
+        uint const & docLen, base::StrUintMap const & fullTermFrequencyMap);
     StructuredDocument(  // One or more sections
         base::StrUintMap const & docLenMap,
-        base::StructuredTermFrequencyMap const & structuredTermFrequencyMap
-    );
+        base::StructuredTermFrequencyMap const & structuredTermFrequencyMap);
 
     // Copy constructor
 
     StructuredDocument(StructuredDocument const & other);
-
 
     /* Public class methods */
 
@@ -46,35 +37,29 @@ public:
     void clearSection(std::string const & section);
     void clearFeatureMap();
 
-
     /* Getter methods */
-
 
     std::size_t getDocLen() const;
     std::size_t getDocLen(std::string const & section) const;
 
-    base::StructuredTermFrequencyMap const &
-        getStructuredTermFrequencyMap() const;
+    base::StructuredTermFrequencyMap const & getStructuredTermFrequencyMap()
+        const;
 
     base::StrUintMap const & getTermFrequencyMap() const;
 
     base::StrUintMap const & getTermFrequencyMap(
-        std::string const & section
-    ) const;
+        std::string const & section) const;
 
     std::size_t getMaxTF() const;
 
-    std::size_t getMaxTF(
-        std::string const & section
-    ) const;
+    std::size_t getMaxTF(std::string const & section) const;
 
     base::FeatureMap const & getFeatureMap() const;
 
     std::vector<base::FeatureKey> getFeatureKeys() const &;
 
-    base::FValType const &
-        getFeatureValue(base::FeatureKey const & fName) const;
-
+    base::FValType const & getFeatureValue(
+        base::FeatureKey const & fName) const;
 
     /* Setters */
 
@@ -91,10 +76,9 @@ private:
 
     base::FeatureMap featureMap;
 
-
     /* Private class methods */
 
     void fillFullFromOthers();
 };
 
-}
+}  // namespace lowletorfeats
