@@ -4,8 +4,8 @@
 #include <map>
 #include <numeric>  // accumulate
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
-
 
 namespace lowletorfeats::utils
 {
@@ -103,10 +103,13 @@ std::vector<T> strSplit(T const & str, char const & delim)
  * @param x
  * @return std::vector<KEY_T>
  */
-template <typename KEY_T, typename VALUE_T>
-std::vector<KEY_T> getKeyVect(std::unordered_map<KEY_T, VALUE_T> x)
+template <class Container>
+auto getKeyVect(Container const & x)
+    -> std::vector<typename Container::key_type>
 {
-    std::vector<KEY_T> outVect;
+    using key_t = typename Container::key_type;
+
+    std::vector<key_t> outVect;
     outVect.reserve(x.size());
 
     for (auto const & imap : x) outVect.push_back(imap.first);
@@ -115,22 +118,24 @@ std::vector<KEY_T> getKeyVect(std::unordered_map<KEY_T, VALUE_T> x)
 }
 
 /**
- * @brief Get a vector of the map's keys
+ * @brief Get an `unordered_set` of the map's keys.
  *
- * @tparam KEY_T
- * @tparam VALUE_T
+ * @tparam Container
  * @param x
- * @return std::vector<KEY_T>
+ * @return std::unordered_set<typename Container::key_type>
  */
-template <typename KEY_T, typename VALUE_T>
-std::vector<KEY_T> getKeyVect(std::map<KEY_T, VALUE_T> x)
+template <class Container>
+auto getKeyUnorderedSet(Container const & x)
+    -> std::unordered_set<typename Container::key_type>
 {
-    std::vector<KEY_T> outVect;
-    outVect.reserve(x.size());
+    using key_t = typename Container::key_type;
 
-    for (auto const & imap : x) outVect.push_back(imap.first);
+    std::unordered_set<key_t> outSet;
+    outSet.reserve(x.size());
 
-    return outVect;
+    for (auto const & imap : x) outSet.insert(imap.first);
+
+    return outSet;
 }
 
 /**
