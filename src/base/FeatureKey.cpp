@@ -1,4 +1,3 @@
-#include <iostream>
 #include <lowletorfeats/base/FeatureKey.hpp>
 #include <lowletorfeats/utils.hpp>
 #include <vector>
@@ -75,7 +74,6 @@ FeatureKey::FeatureKey(
     this->fType = fType;
     this->fName = fName;
     this->fSection = fSection;
-    std::cerr << fName << std::endl;
 
     this->initVKeys();
 }

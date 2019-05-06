@@ -1,11 +1,11 @@
 #include <cassert>
-#include <iostream>
 #include <lowletorfeats/FeatureCollector.hpp>
 #include <lowletorfeats/LMIR.hpp>
 #include <lowletorfeats/Okapi.hpp>
 #include <lowletorfeats/Tfidf.hpp>
 #include <lowletorfeats/utils.hpp>
 #include <textalyzer/utils.hpp>
+
 
 namespace lowletorfeats
 {
@@ -132,10 +132,8 @@ std::string FeatureCollector::toString() const
 
 void FeatureCollector::collectPresetFeatures()
 {
-    std::cerr << "HERE\n";
     this->clearFeatureMaps();
-    std::cerr << "HERE\n";
-    // TODO: Static or naw?
+
     std::vector<base::FeatureKey> static const PRESET_FEATURES = {
         base::FeatureKey("other", "dl", "full"),
         base::FeatureKey("tfidf", "tfdoublenorm", "full"),
@@ -145,9 +143,8 @@ void FeatureCollector::collectPresetFeatures()
         base::FeatureKey("lmir", "abs", "full"),
         base::FeatureKey("lmir", "dir", "full"),
         base::FeatureKey("lmir", "jm", "full")};
-    std::cerr << "HERE\n";
+
     this->collectFeatures(PRESET_FEATURES);
-    std::cerr << "HERE\n";
 }
 
 void FeatureCollector::reCollectFeatures()
