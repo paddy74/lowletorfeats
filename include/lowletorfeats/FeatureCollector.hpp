@@ -138,7 +138,10 @@ private:
         std::vector<base::StrUintMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect);
 
-    void sumTotalTermsPerSection();
+    void initStructDocsWithTermMap(
+        std::string const & sectionKey, base::StrUintMap const & sectionTfMap);
+    void initTotalTermsMap();
+
     void clearFeatureMaps();
     void assertProperties();
 };
