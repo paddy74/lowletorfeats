@@ -61,7 +61,7 @@ StructuredDocument::StructuredDocument(
         }
 
     // Ensure "full" exists, else populate
-    if (!(this->termFrequencyMaps.count("full"))) this->fillFullFromOthers();
+    if (this->termFrequencyMaps.count("full") == 0) this->fillFullFromOthers();
 }
 
 /**
@@ -242,9 +242,9 @@ std::vector<base::FeatureKey> StructuredDocument::getFeatureKeys() const &
  * @return FValType const&
  */
 base::FValType const & StructuredDocument::getFeatureValue(
-    base::FeatureKey const & fName) const
+    base::FeatureKey const & fKey) const
 {
-    return this->featureMap.at(fName);
+    return this->featureMap.at(fKey);
 }
 
 /* Setters */

@@ -70,6 +70,8 @@ public:
     FeatureKey(FeatureKey const & other);
 
     /* Public class methods */
+    void changeKey(std::string const & newKeyString);
+
     std::string toString() const;
     std::size_t toHash() const;
 
@@ -82,18 +84,6 @@ public:
     ValidTypes const & getVType() const { return this->vType; }
     ValidNames const & getVName() const { return this->vName; }
     ValidSections const & getVSection() const { return this->vSection; }
-
-    /* Setters */
-
-    /**
-     * @brief Recreates the `FeatureKey` with the given key string.
-     *
-     * @param newKeyString Str for the new key in format :type.name.section".
-     */
-    void setNewKey(std::string const & newKeyString)
-    {
-        *(this) = FeatureKey(newKeyString);
-    }
 
     /* Public operators */
     // operator std::string() const { return this->toString(); }  // implicit

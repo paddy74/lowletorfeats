@@ -1,3 +1,4 @@
+#include <iostream>
 #include <lowletorfeats/base/FeatureKey.hpp>
 #include <lowletorfeats/utils.hpp>
 #include <vector>
@@ -24,12 +25,12 @@ FeatureKey::FeatureKey()
 /**
  * @brief Construct a new Feature Key from a string "type.name.section".
  *
- * @param fKey A string representation of the `FeatureKey` in the form
+ * @param fKeyStr A string representation of the `FeatureKey` in the form
  *  "type.name.section".
  */
-FeatureKey::FeatureKey(std::string const & fKey)
+FeatureKey::FeatureKey(std::string const & fKeyStr)
 {
-    std::vector<std::string> const & fDelim = utils::strSplit(fKey, '.');
+    std::vector<std::string> const & fDelim = utils::strSplit(fKeyStr, '.');
 
     switch (fDelim.size())
         {
@@ -74,6 +75,7 @@ FeatureKey::FeatureKey(
     this->fType = fType;
     this->fName = fName;
     this->fSection = fSection;
+    std::cerr << fName << std::endl;
 
     this->initVKeys();
 }
@@ -107,6 +109,16 @@ std::size_t FeatureKey::toHash() const
         (std::hash<std::string>()(this->fType)) ^
         (std::hash<std::string>()(this->fName)) ^
         (std::hash<std::string>()(this->fSection)));
+}
+
+/**
+ * @brief Recreates the `FeatureKey` with the given key string.
+ *
+ * @param newKeyString Str for the new key in format :type.name.section".
+ */
+void FeatureKey::changeKey(std::string const & newKeyString)
+{
+    *(this) = FeatureKey(newKeyString);
 }
 
 /* Public operators */
@@ -174,15 +186,18 @@ std::unordered_map<std::string, FeatureKey::ValidNames> const
 
         // TF/IDF
         {"tflognorm", FeatureKey::ValidNames::tflognorm},
-        {"tfdoubleNorm", FeatureKey::ValidNames::tfdoublenorm},
+        {"tfdoublenorm", FeatureKey::ValidNames::tfdoublenorm},
         {"idfdefault", FeatureKey::ValidNames::idfdefault},
         {"idfmax", FeatureKey::ValidNames::idfmax},
         {"idfprob", FeatureKey::ValidNames::idfprob},
         {"idfnorm", FeatureKey::ValidNames::idfnorm},
+        {"tfidf", FeatureKey::ValidNames::tfidf},
 
         // Okapi
         {"bm25", FeatureKey::ValidNames::bm25},
         {"bm25plus", FeatureKey::ValidNames::bm25plus},
+        {"bm25f", FeatureKey::ValidNames::bm25f},
+        {"bm25fplus", FeatureKey::ValidNames::bm25fplus},
 
         // LMIR
         {"abs", FeatureKey::ValidNames::abs},
@@ -219,11 +234,16 @@ void FeatureKey::initVKeys()
         }
     catch (std::out_of_range const & e)  // Invalid key name
         {
-            this->fType = "invalid";
-            this->fName = "invalid";
-            this->fSection = "invalid";
+            std::string ewhat = "_Map_base::at, Invalid `FeatureKey`: ";
 
-            this->initVKeys();
+            if (FeatureKey::inverseValidTypeMap.count(this->fType) == 0)
+                ewhat += "FeatureKey::ValidType::" + this->fType + " ";
+            if (FeatureKey::inverseValidNameMap.count(this->fName) == 0)
+                ewhat += "FeatureKey::ValidName::" + this->fName + " ";
+            if (FeatureKey::inverseValidSectionMap.count(this->fSection) == 0)
+                ewhat += "FeatureKey::ValidSection::" + this->fSection + " ";
+
+            throw std::out_of_range(ewhat);
         }
 }
 

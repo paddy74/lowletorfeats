@@ -2,6 +2,7 @@
 
 #include <lowletorfeats/base/Document.hpp>
 #include <textalyzer/Analyzer.hpp>
+#include <unordered_set>
 
 namespace lowletorfeats
 {
@@ -105,6 +106,8 @@ private:
     std::size_t numDocs;
     base::StrUintMap avgDocLenMap;
 
+    std::unordered_set<std::string> sectionKeys;
+
     // Vector of term frequencies of structured documents
     std::vector<StructuredDocument> docVect;
 
@@ -117,21 +120,14 @@ private:
 
     /* Private static member variables */
 
-    std::vector<base::FeatureKey> const PRESET_FEATURES = {
-        base::FeatureKey("other", "dl", "full"),
-        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
-        base::FeatureKey("tfidf", "idfdefault", "full"),
-        base::FeatureKey("tfidf", "tfidf", "full"),
-        base::FeatureKey("okapi", "bm25", "full"),
-        base::FeatureKey("lmir", "abs", "full"),
-        base::FeatureKey("lmir", "dir", "full"),
-        base::FeatureKey(
-            "lmir", "jm", "full")};  // TODO: somehow static const?
-
     textalyzer::AnlyzerFunType<std::string> static analyzerFun;
     uint8_t static const DEFAULT_NGRAMS;
 
     /* Private class methods */
+
+    void addDoc(
+        base::StrUintMap const & docLenMap,
+        base::StructuredTermFrequencyMap const & strucDocTfMap);
 
     void initDocs(std::vector<base::StrStrMap> const & docTextMapVect);
     void initDocs(
@@ -141,6 +137,8 @@ private:
     void initStructDocsWithTermMap(
         std::string const & sectionKey, base::StrUintMap const & sectionTfMap);
     void initTotalTermsMap();
+
+    void initFullFromOthers();
 
     void clearFeatureMaps();
     void assertProperties();

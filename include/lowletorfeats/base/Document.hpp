@@ -59,7 +59,7 @@ public:
     std::vector<base::FeatureKey> getFeatureKeys() const &;
 
     base::FValType const & getFeatureValue(
-        base::FeatureKey const & fName) const;
+        base::FeatureKey const & fKey) const;
 
     /* Setters */
 

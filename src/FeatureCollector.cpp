@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 #include <lowletorfeats/FeatureCollector.hpp>
 #include <lowletorfeats/LMIR.hpp>
 #include <lowletorfeats/Okapi.hpp>
@@ -131,8 +132,22 @@ std::string FeatureCollector::toString() const
 
 void FeatureCollector::collectPresetFeatures()
 {
+    std::cerr << "HERE\n";
     this->clearFeatureMaps();
-    this->collectFeatures(this->PRESET_FEATURES);
+    std::cerr << "HERE\n";
+    // TODO: Static or naw?
+    std::vector<base::FeatureKey> static const PRESET_FEATURES = {
+        base::FeatureKey("other", "dl", "full"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
+        base::FeatureKey("tfidf", "idfdefault", "full"),
+        base::FeatureKey("tfidf", "tfidf", "full"),
+        base::FeatureKey("okapi", "bm25", "full"),
+        base::FeatureKey("lmir", "abs", "full"),
+        base::FeatureKey("lmir", "dir", "full"),
+        base::FeatureKey("lmir", "jm", "full")};
+    std::cerr << "HERE\n";
+    this->collectFeatures(PRESET_FEATURES);
+    std::cerr << "HERE\n";
 }
 
 void FeatureCollector::reCollectFeatures()
@@ -168,6 +183,9 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
     typedef base::FeatureKey::ValidNames VNames;
 
     std::string const & fSection = fKey.getFSection();
+    // Handle non-existent section
+    if (this->sectionKeys.count(fSection) == 0)
+        throw std::out_of_range("Invalid section key '" + fSection + "'");
 
     switch (fKey.getVType())
         {
@@ -446,7 +464,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 }
 
 /**
- * @brief Collect each feature of the given feature key vector.
+ * @brief Collect multiple features using a vector of `FeatureKey`s.
  *
  * @param fKeyVect
  */
@@ -469,6 +487,26 @@ uint8_t const FeatureCollector::DEFAULT_NGRAMS = 2;
 
 /* Private class methods */
 
+void FeatureCollector::addDoc(
+    base::StrUintMap const & docLenMap,
+    base::StructuredTermFrequencyMap const & strucDocTfMap)
+{
+    // Create a new document, ensures `full` sectionKey
+    StructuredDocument newDoc(docLenMap, strucDocTfMap);
+
+    // For each section,
+    //  setup `structDocsWithTermMap` and `avgDocLenMap`
+    for (auto const & [sectionKey, sectionTfMap] :
+         newDoc.getStructuredTermFrequencyMap())
+        {
+            this->avgDocLenMap[sectionKey] += newDoc.getDocLen(sectionKey);
+            this->initStructDocsWithTermMap(sectionKey, sectionTfMap);
+        }
+
+    // Add the new document
+    this->docVect.push_back(newDoc);
+}
+
 /**
  * @brief Initialize unanalyzed structured documents.
  *
@@ -487,6 +525,7 @@ void FeatureCollector::initDocs(
             base::StrUintMap docLenMap;
             base::StructuredTermFrequencyMap structDocTfMap;
 
+            // For each section
             for (auto const & [sectionKey, sectionText] : docTextMap)
                 {
                     // Analyze text for this document
@@ -500,19 +539,11 @@ void FeatureCollector::initDocs(
                     sectionTfMap =
                         utils::getIntersection(sectionTfMap, this->queryTfMap);
 
-                    // Add to `StructDocTfMap`
+                    // Add to `structDocTfMap`
                     structDocTfMap[sectionKey] = sectionTfMap;
-
-                    // Sum in avgDocLengths
-                    this->avgDocLenMap[sectionKey] += pair.second;
-
-                    // `structDocsWithTermMap`
-                    this->initStructDocsWithTermMap(sectionKey, sectionTfMap);
                 }
 
-            // Create a new document
-            StructuredDocument newDoc(docLenMap, structDocTfMap);
-            this->docVect.push_back(newDoc);
+            this->addDoc(docLenMap, structDocTfMap);
         }
 
     // Calculate avgDocLengths
@@ -544,32 +575,26 @@ void FeatureCollector::initDocs(
          ++docIdx)  // for each document
         {
             base::StrUintMap const & docLenMap = docLenMapVect.at(docIdx);
-            base::StructuredTermFrequencyMap docTfMap =
+            base::StructuredTermFrequencyMap strucDocTfMap =
                 docTfMapVect.at(docIdx);
 
+            // For each section, setup docTfMap for the document
             for (auto const & [sectionKey, sectionTfMap] :
-                 docTfMap)  // for each section
+                 strucDocTfMap)  // for each section
                 {
                     // Filter for query tokens only
-                    docTfMap.at(sectionKey) =
+                    strucDocTfMap.at(sectionKey) =
                         utils::getIntersection(sectionTfMap, queryTfMap);
-
-                    // Sum in avgDocLengths
-                    this->avgDocLenMap[sectionKey] += docLenMap.at(sectionKey);
-
-                    // `structDocsWithTermMap`
-                    this->initStructDocsWithTermMap(sectionKey, sectionTfMap);
                 }
 
-            // Create a new document
-            StructuredDocument newDoc(docLenMap, docTfMap);
-            this->docVect.push_back(newDoc);
+            this->addDoc(docLenMap, strucDocTfMap);
         }
 
     // Calculate avgDocLengths
     for (auto const & [sectionKey, sectionValue] : this->avgDocLenMap)
         this->avgDocLenMap.at(sectionKey) = sectionValue / this->numDocs;
 
+    // Total collection terms for each section
     this->initTotalTermsMap();
 
     // Ensure everything was done right
@@ -601,7 +626,7 @@ void FeatureCollector::initStructDocsWithTermMap(
 }
 
 /**
- * @brief Calculate the total number of terms per section.
+ * @brief Calculate the total number of terms per section in the collection.
  *
  */
 void FeatureCollector::initTotalTermsMap()
@@ -612,6 +637,8 @@ void FeatureCollector::initTotalTermsMap()
             this->totalTermsMap[sectionKey] = utils::mapValueSum(sectionValue);
         }
 }
+
+void FeatureCollector::initFullFromOthers() {}
 
 /**
  * @brief Clear the feature maps of every document.
@@ -631,13 +658,13 @@ void FeatureCollector::assertProperties()
 {
     // Assert same sectionKeys present in:
     //  `avgDocLenMap`, `structDocsWithTermMap`, `totalTermsMap`
-    auto const & sectionKeys = utils::getKeyUnorderedSet(this->avgDocLenMap);
+    this->sectionKeys = utils::getKeyUnorderedSet(this->avgDocLenMap);
 
-    auto const & otherKeys1 =
-        utils::getKeyUnorderedSet(this->structDocsWithTermMap);
-    auto const & otherKeys2 = utils::getKeyUnorderedSet(this->totalTermsMap);
-
-    assert(sectionKeys == otherKeys1 && sectionKeys == otherKeys2);
+    assert(
+        this->sectionKeys ==
+        utils::getKeyUnorderedSet(this->structDocsWithTermMap));
+    assert(
+        this->sectionKeys == utils::getKeyUnorderedSet(this->totalTermsMap));
 }
 
 }  // namespace lowletorfeats
