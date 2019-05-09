@@ -70,19 +70,19 @@ base::FValType Okapi::queryBm25(
     // Sum the scores for each term
     base::FValType score = 0;
     for (auto const & mapPair : queryTermFreqMap)
+    {
+        auto const & term = mapPair.first;
+
+        if (!(docTermFreqMap.count(term) == 0 ||
+              docsWithTermFreqMap.count(term) == 0))
         {
-            auto const & term = mapPair.first;
+            auto const docTermFrequency = docTermFreqMap.at(term);
+            auto const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
-            if (!(docTermFreqMap.count(term) == 0 ||
-                  docsWithTermFreqMap.count(term) == 0))
-                {
-                    auto const docTermFrequency = docTermFreqMap.at(term);
-                    auto const numDocsWithTerm = docsWithTermFreqMap.at(term);
-
-                    score += Okapi::bm25(
-                        docTermFrequency, numDocs, numDocsWithTerm, avgDocLen);
-                }
+            score += Okapi::bm25(
+                docTermFrequency, numDocs, numDocsWithTerm, avgDocLen);
         }
+    }
 
     return score;
 }

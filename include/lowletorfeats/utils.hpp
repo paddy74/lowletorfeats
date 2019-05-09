@@ -83,14 +83,14 @@ std::vector<T> strSplit(T const & str, char const & delim)
     std::string::size_type pos = str.find_first_of(delim, lastPos);
 
     while ((std::string::npos != pos || std::string::npos != lastPos))
-        {
-            // Found token, add to the token vector
-            tokens.push_back(str.substr(lastPos, pos - lastPos));
-            // Skip delimiters
-            lastPos = str.find_first_not_of(delim, pos);
-            // Find next non-delimiter
-            pos = str.find_first_of(delim, lastPos);
-        }
+    {
+        // Found token, add to the token vector
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+        // Skip delimiters
+        lastPos = str.find_first_not_of(delim, pos);
+        // Find next non-delimiter
+        pos = str.find_first_of(delim, lastPos);
+    }
 
     return tokens;
 }
@@ -194,9 +194,9 @@ std::unordered_map<KEY_T, VALUE_T> getIntersection(
     std::unordered_map<KEY_T, VALUE_T> interMap;
 
     for (auto const & pair : a)
-        {
-            if (b.find(pair.first) != b.end()) interMap.insert(pair);
-        }
+    {
+        if (b.find(pair.first) != b.end()) interMap.insert(pair);
+    }
 
     return interMap;
 }

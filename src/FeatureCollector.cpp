@@ -6,7 +6,6 @@
 #include <lowletorfeats/utils.hpp>
 #include <textalyzer/utils.hpp>
 
-
 namespace lowletorfeats
 {
 /* Constructors */
@@ -150,22 +149,22 @@ void FeatureCollector::collectPresetFeatures()
 void FeatureCollector::reCollectFeatures()
 {
     try
-        {
-            // Get vector of keys
-            std::vector<base::FeatureKey> keyVect =
-                this->docVect.at(0).getFeatureKeys();
+    {
+        // Get vector of keys
+        std::vector<base::FeatureKey> keyVect =
+            this->docVect.at(0).getFeatureKeys();
 
-            if (keyVect.size() <= 0) return;  // No features to collect
+        if (keyVect.size() <= 0) return;  // No features to collect
 
-            // Clear all feature maps
-            this->clearFeatureMaps();
+        // Clear all feature maps
+        this->clearFeatureMaps();
 
-            // Collect featuers from key vector
-            this->collectFeatures(keyVect);
-        }
+        // Collect featuers from key vector
+        this->collectFeatures(keyVect);
+    }
     catch (std::out_of_range const & e)  // docVect.size() == 0
-        {
-        }  // Do nothing (no features to collect)
+    {
+    }  // Do nothing (no features to collect)
 }
 
 /**
@@ -185,279 +184,244 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
         throw std::out_of_range("Invalid section key '" + fSection + "'");
 
     switch (fKey.getVType())
+    {
+        case VTypes::other:
         {
-            case VTypes::other:
+            switch (fKey.getVName())
+            {
+                case VNames::dl:
                 {
-                    switch (fKey.getVName())
-                        {
-                            case VNames::dl:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            doc.updateFeature(
-                                                fKey, doc.getDocLen(fSection));
-                                        }
-                                }
+                    for (auto & doc : this->docVect)
+                    {
+                        doc.updateFeature(fKey, doc.getDocLen(fSection));
+                    }
+                }
 
-                            default:
-                                break;
-                        }
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case VTypes::tfidf:
+        {
+            auto const & totalTerms = this->totalTermsMap.at(fSection);
+
+            switch (fKey.getVName())
+            {
+                case VNames::tflognorm:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        auto const & tfMap = doc.getTermFrequencyMap(fSection);
+
+                        base::FValType const fVal = Tfidf::sumTfLogNorm(tfMap);
+                        doc.updateFeature(fKey, fVal);
+                    }
                     break;
                 }
 
-            case VTypes::tfidf:
+                case VNames::tfdoublenorm:
                 {
-                    auto const & totalTerms = this->totalTermsMap.at(fSection);
+                    for (auto & doc : this->docVect)
+                    {
+                        auto const & tfMap = doc.getTermFrequencyMap(fSection);
 
-                    switch (fKey.getVName())
-                        {
-                            case VNames::tflognorm:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            auto const & tfMap =
-                                                doc.getTermFrequencyMap(
-                                                    fSection);
-
-                                            base::FValType const fVal =
-                                                Tfidf::sumTfLogNorm(tfMap);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::tfdoublenorm:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            auto const & tfMap =
-                                                doc.getTermFrequencyMap(
-                                                    fSection);
-
-                                            base::FValType const fVal =
-                                                Tfidf::sumTfDoubleNorm(
-                                                    tfMap, doc.getMaxTF());
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::idfdefault:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Tfidf::idfDefault(
-                                                    this->numDocs, totalTerms);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::idfsmooth:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Tfidf::idfSmooth(
-                                                    this->numDocs, totalTerms);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::idfmax:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Tfidf::idfMax(
-                                                    totalTerms,
-                                                    doc.getMaxTF());
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::idfprob:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Tfidf::idfProb(
-                                                    this->numDocs, totalTerms);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::idfnorm:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Tfidf::idfNorm(
-                                                    this->numDocs, totalTerms);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::tfidf:
-                                {
-                                    base::StrUintMap const & docsWithTermMap =
-                                        this->structDocsWithTermMap.at(
-                                            fSection);
-
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            auto const & tfMap =
-                                                doc.getTermFrequencyMap(
-                                                    fSection);
-
-                                            base::FValType const fVal =
-                                                Tfidf::queryTfidf(
-                                                    tfMap, doc.getMaxTF(),
-                                                    this->numDocs,
-                                                    docsWithTermMap,
-                                                    this->queryTfMap);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            default:
-                                break;
-                        }
+                        base::FValType const fVal =
+                            Tfidf::sumTfDoubleNorm(tfMap, doc.getMaxTF());
+                        doc.updateFeature(fKey, fVal);
+                    }
                     break;
                 }
 
-            case VTypes::okapi:
+                case VNames::idfdefault:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal =
+                            Tfidf::idfDefault(this->numDocs, totalTerms);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::idfsmooth:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal =
+                            Tfidf::idfSmooth(this->numDocs, totalTerms);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::idfmax:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal =
+                            Tfidf::idfMax(totalTerms, doc.getMaxTF());
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::idfprob:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal =
+                            Tfidf::idfProb(this->numDocs, totalTerms);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::idfnorm:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal =
+                            Tfidf::idfNorm(this->numDocs, totalTerms);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::tfidf:
                 {
                     base::StrUintMap const & docsWithTermMap =
                         this->structDocsWithTermMap.at(fSection);
-                    auto const & avgDocLen = this->avgDocLenMap.at(fSection);
 
-                    switch (fKey.getVName())
-                        {
-                            case VNames::invalid:
-                                break;  // do nothing
-                            case VNames::bm25:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            auto const & tfMap =
-                                                doc.getTermFrequencyMap(
-                                                    fSection);
+                    for (auto & doc : this->docVect)
+                    {
+                        auto const & tfMap = doc.getTermFrequencyMap(fSection);
 
-                                            base::FValType const fVal =
-                                                Okapi::queryBm25(
-                                                    tfMap, this->numDocs,
-                                                    docsWithTermMap, avgDocLen,
-                                                    this->queryTfMap);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::bm25plus:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            auto const & tfMap =
-                                                doc.getTermFrequencyMap(
-                                                    fSection);
-
-                                            base::FValType const fVal =
-                                                Okapi::queryBm25plus(
-                                                    tfMap, this->numDocs,
-                                                    docsWithTermMap, avgDocLen,
-                                                    this->queryTfMap);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::bm25f:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Okapi::queryBm25f(
-                                                    doc.getStructuredTermFrequencyMap(),
-                                                    this->numDocs,
-                                                    this->structDocsWithTermMap,
-                                                    this->avgDocLenMap,
-                                                    this->queryTfMap,
-                                                    this->sectionWeights);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            case VNames::bm25fplus:
-                                {
-                                    for (auto & doc : this->docVect)
-                                        {
-                                            base::FValType const fVal =
-                                                Okapi::queryBm25fplus(
-                                                    doc.getStructuredTermFrequencyMap(),
-                                                    this->numDocs,
-                                                    this->structDocsWithTermMap,
-                                                    this->avgDocLenMap,
-                                                    this->queryTfMap,
-                                                    this->sectionWeights);
-                                            doc.updateFeature(fKey, fVal);
-                                        }
-                                    break;
-                                }
-
-                            default:
-                                break;
-                        }
+                        base::FValType const fVal = Tfidf::queryTfidf(
+                            tfMap, doc.getMaxTF(), this->numDocs,
+                            docsWithTermMap, this->queryTfMap);
+                        doc.updateFeature(fKey, fVal);
+                    }
                     break;
                 }
 
-            case VTypes::lmir:
-                {
-                    switch (fKey.getVName())
-                        {
-                            case VNames::abs:
-                                {
-                                    // for (auto & doc : this->docVect)
-                                    {
-                                        // TODO:
-                                    }
-                                    break;
-                                }
-
-                            case VNames::dir:
-                                {
-                                    // for (auto & doc : this->docVect)
-                                    {
-                                        // TODO:
-                                    }
-                                    break;
-                                }
-
-                            case VNames::jm:
-                                {
-                                    // for (auto & doc : this->docVect)
-                                    {
-                                        // TODO:
-                                    }
-                                    break;
-                                }
-
-                            default:
-                                break;
-                        }
+                default:
                     break;
-                }
-
-            default:
-                break;
+            }
+            break;
         }
+
+        case VTypes::okapi:
+        {
+            base::StrUintMap const & docsWithTermMap =
+                this->structDocsWithTermMap.at(fSection);
+            auto const & avgDocLen = this->avgDocLenMap.at(fSection);
+
+            switch (fKey.getVName())
+            {
+                case VNames::invalid:
+                    break;  // do nothing
+                case VNames::bm25:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        auto const & tfMap = doc.getTermFrequencyMap(fSection);
+
+                        base::FValType const fVal = Okapi::queryBm25(
+                            tfMap, this->numDocs, docsWithTermMap, avgDocLen,
+                            this->queryTfMap);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::bm25plus:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        auto const & tfMap = doc.getTermFrequencyMap(fSection);
+
+                        base::FValType const fVal = Okapi::queryBm25plus(
+                            tfMap, this->numDocs, docsWithTermMap, avgDocLen,
+                            this->queryTfMap);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::bm25f:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal = Okapi::queryBm25f(
+                            doc.getStructuredTermFrequencyMap(), this->numDocs,
+                            this->structDocsWithTermMap, this->avgDocLenMap,
+                            this->queryTfMap, this->sectionWeights);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                case VNames::bm25fplus:
+                {
+                    for (auto & doc : this->docVect)
+                    {
+                        base::FValType const fVal = Okapi::queryBm25fplus(
+                            doc.getStructuredTermFrequencyMap(), this->numDocs,
+                            this->structDocsWithTermMap, this->avgDocLenMap,
+                            this->queryTfMap, this->sectionWeights);
+                        doc.updateFeature(fKey, fVal);
+                    }
+                    break;
+                }
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        case VTypes::lmir:
+        {
+            switch (fKey.getVName())
+            {
+                case VNames::abs:
+                {
+                    // for (auto & doc : this->docVect)
+                    {
+                        // TODO:
+                    }
+                    break;
+                }
+
+                case VNames::dir:
+                {
+                    // for (auto & doc : this->docVect)
+                    {
+                        // TODO:
+                    }
+                    break;
+                }
+
+                case VNames::jm:
+                {
+                    // for (auto & doc : this->docVect)
+                    {
+                        // TODO:
+                    }
+                    break;
+                }
+
+                default:
+                    break;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
 /**
@@ -495,10 +459,10 @@ void FeatureCollector::addDoc(
     //  setup `structDocsWithTermMap` and `avgDocLenMap`
     for (auto const & [sectionKey, sectionTfMap] :
          newDoc.getStructuredTermFrequencyMap())
-        {
-            this->avgDocLenMap[sectionKey] += newDoc.getDocLen(sectionKey);
-            this->initStructDocsWithTermMap(sectionKey, sectionTfMap);
-        }
+    {
+        this->avgDocLenMap[sectionKey] += newDoc.getDocLen(sectionKey);
+        this->initStructDocsWithTermMap(sectionKey, sectionTfMap);
+    }
 
     // Add the new document
     this->docVect.push_back(newDoc);
@@ -518,30 +482,30 @@ void FeatureCollector::initDocs(
     // Initialize every document, filtering with `queryTfMap`
     this->docVect.reserve(this->numDocs);
     for (auto const & docTextMap : docTextMapVect)  // for each document
+    {
+        base::StrUintMap docLenMap;
+        base::StructuredTermFrequencyMap structDocTfMap;
+
+        // For each section
+        for (auto const & [sectionKey, sectionText] : docTextMap)
         {
-            base::StrUintMap docLenMap;
-            base::StructuredTermFrequencyMap structDocTfMap;
+            // Analyze text for this document
+            base::StrUintMap sectionTfMap;
+            auto const & pair = FeatureCollector::analyzerFun(
+                sectionText, FeatureCollector::DEFAULT_NGRAMS);
+            sectionTfMap = textalyzer::asFrequencyMap(pair.first);
+            docLenMap[sectionKey] = pair.second;
 
-            // For each section
-            for (auto const & [sectionKey, sectionText] : docTextMap)
-                {
-                    // Analyze text for this document
-                    base::StrUintMap sectionTfMap;
-                    auto const & pair = FeatureCollector::analyzerFun(
-                        sectionText, FeatureCollector::DEFAULT_NGRAMS);
-                    sectionTfMap = textalyzer::asFrequencyMap(pair.first);
-                    docLenMap[sectionKey] = pair.second;
+            // Filter for query tokens only
+            sectionTfMap =
+                utils::getIntersection(sectionTfMap, this->queryTfMap);
 
-                    // Filter for query tokens only
-                    sectionTfMap =
-                        utils::getIntersection(sectionTfMap, this->queryTfMap);
-
-                    // Add to `structDocTfMap`
-                    structDocTfMap[sectionKey] = sectionTfMap;
-                }
-
-            this->addDoc(docLenMap, structDocTfMap);
+            // Add to `structDocTfMap`
+            structDocTfMap[sectionKey] = sectionTfMap;
         }
+
+        this->addDoc(docLenMap, structDocTfMap);
+    }
 
     // Calculate avgDocLengths
     for (auto const & [sectionKey, sectionValue] : this->avgDocLenMap)
@@ -570,22 +534,22 @@ void FeatureCollector::initDocs(
     this->docVect.reserve(this->numDocs);
     for (std::size_t docIdx = 0; docIdx < this->numDocs;
          ++docIdx)  // for each document
+    {
+        base::StrUintMap const & docLenMap = docLenMapVect.at(docIdx);
+        base::StructuredTermFrequencyMap strucDocTfMap =
+            docTfMapVect.at(docIdx);
+
+        // For each section, setup docTfMap for the document
+        for (auto const & [sectionKey, sectionTfMap] :
+             strucDocTfMap)  // for each section
         {
-            base::StrUintMap const & docLenMap = docLenMapVect.at(docIdx);
-            base::StructuredTermFrequencyMap strucDocTfMap =
-                docTfMapVect.at(docIdx);
-
-            // For each section, setup docTfMap for the document
-            for (auto const & [sectionKey, sectionTfMap] :
-                 strucDocTfMap)  // for each section
-                {
-                    // Filter for query tokens only
-                    strucDocTfMap.at(sectionKey) =
-                        utils::getIntersection(sectionTfMap, queryTfMap);
-                }
-
-            this->addDoc(docLenMap, strucDocTfMap);
+            // Filter for query tokens only
+            strucDocTfMap.at(sectionKey) =
+                utils::getIntersection(sectionTfMap, queryTfMap);
         }
+
+        this->addDoc(docLenMap, strucDocTfMap);
+    }
 
     // Calculate avgDocLengths
     for (auto const & [sectionKey, sectionValue] : this->avgDocLenMap)
@@ -610,16 +574,16 @@ void FeatureCollector::initStructDocsWithTermMap(
     if (this->structDocsWithTermMap.count(sectionKey) == 0)
         this->structDocsWithTermMap[sectionKey] = base::StrUintMap();
     for (auto const & mapPair : sectionTfMap)
-        {
-            std::string termKey = mapPair.first;
+    {
+        std::string termKey = mapPair.first;
 
-            // Create the term count at 0
-            if (this->structDocsWithTermMap.at(sectionKey).count(termKey) == 0)
-                this->structDocsWithTermMap.at(sectionKey)[termKey] = 0;
+        // Create the term count at 0
+        if (this->structDocsWithTermMap.at(sectionKey).count(termKey) == 0)
+            this->structDocsWithTermMap.at(sectionKey)[termKey] = 0;
 
-            // Increment the term count
-            this->structDocsWithTermMap.at(sectionKey).at(termKey)++;
-        }
+        // Increment the term count
+        this->structDocsWithTermMap.at(sectionKey).at(termKey)++;
+    }
 }
 
 /**
@@ -630,9 +594,9 @@ void FeatureCollector::initTotalTermsMap()
 {
     // Fill the `totalTermsMap`
     for (auto const & [sectionKey, sectionValue] : this->structDocsWithTermMap)
-        {
-            this->totalTermsMap[sectionKey] = utils::mapValueSum(sectionValue);
-        }
+    {
+        this->totalTermsMap[sectionKey] = utils::mapValueSum(sectionValue);
+    }
 }
 
 void FeatureCollector::initFullFromOthers() {}

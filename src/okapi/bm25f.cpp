@@ -30,24 +30,24 @@ base::FValType Okapi::queryBm25f(
     // Calculate BM25 for each field
     base::FValType totalBm25 = 0;
     for (auto const & [sectionKey, tfMap] : structDocTermFreqMap)
+    {
+        if (!(structDocsWithTermFreqMap.count(sectionKey) == 0 ||
+              sectionWeights.count(sectionKey) == 0) ||
+            avgDocLenMap.count(sectionKey) == 0)
         {
-            if (!(structDocsWithTermFreqMap.count(sectionKey) == 0 ||
-                  sectionWeights.count(sectionKey) == 0) ||
-                avgDocLenMap.count(sectionKey) == 0)
-                {
-                    auto const & docsWithTermFreqMap =
-                        structDocsWithTermFreqMap.at(sectionKey);
-                    auto const & weight = sectionWeights.at(sectionKey);
-                    auto const & avgDocLen = avgDocLenMap.at(sectionKey);
+            auto const & docsWithTermFreqMap =
+                structDocsWithTermFreqMap.at(sectionKey);
+            auto const & weight = sectionWeights.at(sectionKey);
+            auto const & avgDocLen = avgDocLenMap.at(sectionKey);
 
-                    base::FValType bm25 = Okapi::queryBm25(
-                        tfMap, numDocs, docsWithTermFreqMap, avgDocLen,
-                        queryTermFreqMap);
-                    bm25 *= weight;
+            base::FValType bm25 = Okapi::queryBm25(
+                tfMap, numDocs, docsWithTermFreqMap, avgDocLen,
+                queryTermFreqMap);
+            bm25 *= weight;
 
-                    totalBm25 += bm25;
-                }
+            totalBm25 += bm25;
         }
+    }
 
     // Calculate BM25f
     return fullIdf * totalBm25;
@@ -80,24 +80,24 @@ base::FValType Okapi::queryBm25fplus(
     // Calculate BM25 for each field
     base::FValType totalBm25plus = 0;
     for (auto const & [sectionKey, tfMap] : structDocTermFreqMap)
+    {
+        if (!(structDocsWithTermFreqMap.count(sectionKey) == 0 ||
+              sectionWeights.count(sectionKey) == 0) ||
+            avgDocLenMap.count(sectionKey) == 0)
         {
-            if (!(structDocsWithTermFreqMap.count(sectionKey) == 0 ||
-                  sectionWeights.count(sectionKey) == 0) ||
-                avgDocLenMap.count(sectionKey) == 0)
-                {
-                    auto const & docsWithTermFreqMap =
-                        structDocsWithTermFreqMap.at(sectionKey);
-                    auto const & weight = sectionWeights.at(sectionKey);
-                    auto const & avgDocLen = avgDocLenMap.at(sectionKey);
+            auto const & docsWithTermFreqMap =
+                structDocsWithTermFreqMap.at(sectionKey);
+            auto const & weight = sectionWeights.at(sectionKey);
+            auto const & avgDocLen = avgDocLenMap.at(sectionKey);
 
-                    base::FValType bm25plus = Okapi::queryBm25plus(
-                        tfMap, numDocs, docsWithTermFreqMap, avgDocLen,
-                        queryTermFreqMap);
-                    bm25plus *= weight;
+            base::FValType bm25plus = Okapi::queryBm25plus(
+                tfMap, numDocs, docsWithTermFreqMap, avgDocLen,
+                queryTermFreqMap);
+            bm25plus *= weight;
 
-                    totalBm25plus += bm25plus;
-                }
+            totalBm25plus += bm25plus;
         }
+    }
 
     // Calculate BM25f
     return fullIdf * totalBm25plus;

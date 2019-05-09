@@ -55,10 +55,9 @@ StructuredDocument::StructuredDocument(
 
     // Fill maxTermMap
     for (auto const & [sectionKey, tfMap] : this->termFrequencyMaps)
-        {
-            this->maxTermMaps[sectionKey] =
-                utils::findMaxValuePair(tfMap).second;
-        }
+    {
+        this->maxTermMaps[sectionKey] = utils::findMaxValuePair(tfMap).second;
+    }
 
     // Ensure "full" exists, else populate
     if (this->termFrequencyMaps.count("full") == 0) this->fillFullFromOthers();
@@ -99,11 +98,10 @@ std::string StructuredDocument::toString() const
 
     outStr += "\nFeature Map:";
     for (auto const & [fKey, fVal] : this->featureMap)
-        {
-            outStr += "\n\t" + fKey.getFType() + "\t" + fKey.getFName() +
-                      "\t" + fKey.getFSection() +
-                      "\t: " + std::to_string(fVal);
-        }
+    {
+        outStr += "\n\t" + fKey.getFType() + "\t" + fKey.getFName() + "\t" +
+                  fKey.getFSection() + "\t: " + std::to_string(fVal);
+    }
 
     outStr += '\n';
     return outStr;

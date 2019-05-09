@@ -32,30 +32,30 @@ FeatureKey::FeatureKey(std::string const & fKeyStr)
     std::vector<std::string> const & fDelim = utils::strSplit(fKeyStr, '.');
 
     switch (fDelim.size())
+    {
+        case 2:
         {
-            case 2:
-                {
-                    this->fType = fDelim.at(0);
-                    this->fName = fDelim.at(1);
-                    this->fSection = "full";
-                    break;
-                }
-
-            case 3:
-                {
-                    this->fType = fDelim.at(0);
-                    this->fName = fDelim.at(1);
-                    this->fSection = fDelim.at(2);
-                    break;
-                }
-
-            default:
-                {
-                    this->fType = "invalid";
-                    this->fName = "invalid";
-                    this->fSection = "invalid";
-                }
+            this->fType = fDelim.at(0);
+            this->fName = fDelim.at(1);
+            this->fSection = "full";
+            break;
         }
+
+        case 3:
+        {
+            this->fType = fDelim.at(0);
+            this->fName = fDelim.at(1);
+            this->fSection = fDelim.at(2);
+            break;
+        }
+
+        default:
+        {
+            this->fType = "invalid";
+            this->fName = "invalid";
+            this->fSection = "invalid";
+        }
+    }
 
     this->initVKeys();
 }
@@ -224,25 +224,24 @@ std::unordered_map<std::string, FeatureKey::ValidSections> const
 void FeatureKey::initVKeys()
 {
     try
-        {
-            this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
-            this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
-            this->vSection =
-                FeatureKey::inverseValidSectionMap.at(this->fSection);
-        }
+    {
+        this->vType = FeatureKey::inverseValidTypeMap.at(this->fType);
+        this->vName = FeatureKey::inverseValidNameMap.at(this->fName);
+        this->vSection = FeatureKey::inverseValidSectionMap.at(this->fSection);
+    }
     catch (std::out_of_range const & e)  // Invalid key name
-        {
-            std::string ewhat = "_Map_base::at, Invalid `FeatureKey`: ";
+    {
+        std::string ewhat = "_Map_base::at, Invalid `FeatureKey`: ";
 
-            if (FeatureKey::inverseValidTypeMap.count(this->fType) == 0)
-                ewhat += "FeatureKey::ValidType::" + this->fType + " ";
-            if (FeatureKey::inverseValidNameMap.count(this->fName) == 0)
-                ewhat += "FeatureKey::ValidName::" + this->fName + " ";
-            if (FeatureKey::inverseValidSectionMap.count(this->fSection) == 0)
-                ewhat += "FeatureKey::ValidSection::" + this->fSection + " ";
+        if (FeatureKey::inverseValidTypeMap.count(this->fType) == 0)
+            ewhat += "FeatureKey::ValidType::" + this->fType + " ";
+        if (FeatureKey::inverseValidNameMap.count(this->fName) == 0)
+            ewhat += "FeatureKey::ValidName::" + this->fName + " ";
+        if (FeatureKey::inverseValidSectionMap.count(this->fSection) == 0)
+            ewhat += "FeatureKey::ValidSection::" + this->fSection + " ";
 
-            throw std::out_of_range(ewhat);
-        }
+        throw std::out_of_range(ewhat);
+    }
 }
 
 }  // namespace lowletorfeats::base

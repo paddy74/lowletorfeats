@@ -1,33 +1,30 @@
 #include <cassert>
-
 #include <lowletorfeats/Tfidf.hpp>
-
 
 namespace lowletorfeats
 {
-
 /**
  * @brief Calculate Term Frequency / Inverse Document Frequency (TF/IDF) for
  *  a single term.
  *
  * @param docTermFrequency The term's term frequency in the given document.
- * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
+ * @param docMaxTermFrequency Frequency of the document's maximum occuring
+ * term.
  * @param numDocs Number of documents in the collection.
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
 base::FValType Tfidf::tfidf(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
-    uint const & numDocs, uint const & numDocsWithTerm
-)
+    uint const & numDocs, uint const & numDocsWithTerm)
 {
-    return tfDoubleNorm(docTermFrequency, docMaxTermFrequency)
-        * idfNorm(numDocs, numDocsWithTerm);
+    return tfDoubleNorm(docTermFrequency, docMaxTermFrequency) *
+           idfNorm(numDocs, numDocsWithTerm);
 }
 
-
 /**
- * @brief Calculate TF/IDF with the given TF and IDF versions for a single term.
+ * @brief Calculate TF/IDF with the given TF and IDF versions for a single
+ * term.
  *
  * @param docTermFrequency The term's term frequency in the given document.
  * @param numDocs Number of documents in the collection.
@@ -37,35 +34,33 @@ base::FValType Tfidf::tfidf(
 base::FValType Tfidf::tfidf(
     base::FValType (*tfFunction)(uint const &),
     base::FValType (*idfFunction)(uint const &, uint const &),
-    uint const & docTermFrequency,
-    uint const & numDocs, uint const & numDocsWithTerm
-)
+    uint const & docTermFrequency, uint const & numDocs,
+    uint const & numDocsWithTerm)
 {
-    return (*tfFunction)(docTermFrequency)
-        * (*idfFunction)(numDocs, numDocsWithTerm);
+    return (*tfFunction)(docTermFrequency) *
+           (*idfFunction)(numDocs, numDocsWithTerm);
 }
 
-
 /**
- * @brief Calculate TF/IDF with the given TF and IDF versions for a single term.
+ * @brief Calculate TF/IDF with the given TF and IDF versions for a single
+ * term.
  *
  * @param docTermFrequency The term's term frequency in the given document.
- * @param docMaxTermFrequency Frequency of the document's maximum occuring term.
+ * @param docMaxTermFrequency Frequency of the document's maximum occuring
+ * term.
  * @param numDocs Number of documents in the collection.
  * @param numDocsWithTerm Number of documents in the collection with the term.
  * @return double
  */
 base::FValType Tfidf::tfidf(
     base::FValType (*tfFunction)(uint, uint),
-    base::FValType (*idfFunction)(uint, uint),
-    uint const & docTermFrequency, uint const & docMaxTermFrequency,
-    uint const & numDocs, uint const & numDocsWithTerm
-)
+    base::FValType (*idfFunction)(uint, uint), uint const & docTermFrequency,
+    uint const & docMaxTermFrequency, uint const & numDocs,
+    uint const & numDocsWithTerm)
 {
-    return (*tfFunction)(docTermFrequency, docMaxTermFrequency)
-        * (*idfFunction)(numDocs, numDocsWithTerm);
+    return (*tfFunction)(docTermFrequency, docMaxTermFrequency) *
+           (*idfFunction)(numDocs, numDocsWithTerm);
 }
-
 
 /**
  * @brief Calculate the TF-IDF of a document for a group of terms (query).
@@ -83,8 +78,7 @@ base::FValType Tfidf::tfidf(
 base::FValType Tfidf::queryTfidf(
     base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency,
     uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
-    base::StrUintMap const & queryTermFreqMap
-)
+    base::StrUintMap const & queryTermFreqMap)
 {
     // Sum the scores for each term
     base::FValType score = 0;
@@ -92,19 +86,19 @@ base::FValType Tfidf::queryTfidf(
     {
         auto const & term = mapPair.first;
 
-        if (!(docTermFreqMap.count(term) == 0
-            || docsWithTermFreqMap.count(term) == 0))
+        if (!(docTermFreqMap.count(term) == 0 ||
+              docsWithTermFreqMap.count(term) == 0))
         {
             uint const docTermFrequency = docTermFreqMap.at(term);
             uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
             score += tfidf(
-                docTermFrequency, docMaxTermFrequency,
-                numDocs, numDocsWithTerm);
+                docTermFrequency, docMaxTermFrequency, numDocs,
+                numDocsWithTerm);
         }
     }
 
     return score;
 }
 
-}
+}  // namespace lowletorfeats
