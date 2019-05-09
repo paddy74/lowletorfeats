@@ -198,7 +198,8 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 }
 
                 default:
-                    break;
+                    FeatureCollector::throwUnsupportedFeatureName(
+                        fKey.getFName());
             }
             break;
         }
@@ -307,7 +308,8 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 }
 
                 default:
-                    break;
+                    FeatureCollector::throwUnsupportedFeatureName(
+                        fKey.getFName());
             }
             break;
         }
@@ -377,7 +379,8 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 }
 
                 default:
-                    break;
+                    FeatureCollector::throwUnsupportedFeatureName(
+                        fKey.getFName());
             }
             break;
         }
@@ -414,13 +417,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 }
 
                 default:
-                    break;
+                    FeatureCollector::throwUnsupportedFeatureName(
+                        fKey.getFName());
             }
             break;
         }
 
         default:
-            break;
+            FeatureCollector::throwUnsupportedFeatureType(fKey.getFName());
     }
 }
 
@@ -626,6 +630,18 @@ void FeatureCollector::assertProperties()
         utils::getKeyUnorderedSet(this->structDocsWithTermMap));
     assert(
         this->sectionKeys == utils::getKeyUnorderedSet(this->totalTermsMap));
+}
+
+/* Private static class methods */
+
+void FeatureCollector::throwUnsupportedFeatureType(std::string const & fType)
+{
+    throw std::runtime_error("Unsupported feature type '" + fType + "'");
+}
+
+void FeatureCollector::throwUnsupportedFeatureName(std::string const & fName)
+{
+    throw std::runtime_error("Unsupported feature name '" + fName + "'");
 }
 
 }  // namespace lowletorfeats

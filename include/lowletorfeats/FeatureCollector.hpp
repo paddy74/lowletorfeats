@@ -142,6 +142,11 @@ private:
 
     void clearFeatureMaps();
     void assertProperties();
+
+    /* Private static class methods */
+
+    void static throwUnsupportedFeatureType(std::string const & fType);
+    void static throwUnsupportedFeatureName(std::string const & fName);
 };
 
 }  // namespace lowletorfeats
