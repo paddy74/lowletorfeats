@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iostream>
 #include <lowletorfeats/FeatureCollector.hpp>
 #include <lowletorfeats/LMIR.hpp>
 #include <lowletorfeats/Okapi.hpp>
@@ -143,6 +144,50 @@ void FeatureCollector::collectPresetFeatures()
         base::FeatureKey("lmir", "dir", "full"),
         base::FeatureKey("lmir", "jm", "full")};
 
+    /*
+    std::vector<base::FeatureKey> static const PRESET_FEATURES = {
+        base::FeatureKey("tfidf", "tfdoublenorm", "body"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "anchor"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "title"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "url"),
+        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
+        base::FeatureKey("tfidf", "idfdefault", "body"),
+        base::FeatureKey("tfidf", "idfdefault", "anchor"),
+        base::FeatureKey("tfidf", "idfdefault", "title"),
+        base::FeatureKey("tfidf", "idfdefault", "url"),
+        base::FeatureKey("tfidf", "idfdefault", "full"),
+        base::FeatureKey("tfidf", "tfidf", "body"),
+        base::FeatureKey("tfidf", "tfidf", "anchor"),
+        base::FeatureKey("tfidf", "tfidf", "title"),
+        base::FeatureKey("tfidf", "tfidf", "url"),
+        base::FeatureKey("tfidf", "tfidf", "full"),
+        base::FeatureKey("other", "dl", "body"),
+        base::FeatureKey("other", "dl", "anchor"),
+        base::FeatureKey("other", "dl", "title"),
+        base::FeatureKey("other", "dl", "url"),
+        base::FeatureKey("other", "dl", "full"),
+        base::FeatureKey("okapi", "bm25", "body"),
+        base::FeatureKey("okapi", "bm25", "anchor"),
+        base::FeatureKey("okapi", "bm25", "title"),
+        base::FeatureKey("okapi", "bm25", "url"),
+        base::FeatureKey("okapi", "bm25", "full"),
+        base::FeatureKey("lmir", "abs", "body"),
+        base::FeatureKey("lmir", "abs", "anchor"),
+        base::FeatureKey("lmir", "abs", "title"),
+        base::FeatureKey("lmir", "abs", "url"),
+        base::FeatureKey("lmir", "abs", "full"),
+        base::FeatureKey("lmir", "dir", "body"),
+        base::FeatureKey("lmir", "dir", "anchor"),
+        base::FeatureKey("lmir", "dir", "title"),
+        base::FeatureKey("lmir", "dir", "url"),
+        base::FeatureKey("lmir", "dir", "full"),
+        base::FeatureKey("lmir", "jm", "body"),
+        base::FeatureKey("lmir", "jm", "anchor"),
+        base::FeatureKey("lmir", "jm", "title"),
+        base::FeatureKey("lmir", "jm", "url"),
+        base::FeatureKey("lmir", "jm", "full")};
+    */
+
     this->collectFeatures(PRESET_FEATURES);
 }
 
@@ -195,11 +240,13 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                     {
                         doc.updateFeature(fKey, doc.getDocLen(fSection));
                     }
+                    break;
                 }
 
                 default:
                     FeatureCollector::throwUnsupportedFeatureName(
                         fKey.getFName());
+                    break;
             }
             break;
         }
@@ -310,6 +357,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 default:
                     FeatureCollector::throwUnsupportedFeatureName(
                         fKey.getFName());
+                    break;
             }
             break;
         }
@@ -381,6 +429,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 default:
                     FeatureCollector::throwUnsupportedFeatureName(
                         fKey.getFName());
+                    break;
             }
             break;
         }
@@ -419,12 +468,14 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 default:
                     FeatureCollector::throwUnsupportedFeatureName(
                         fKey.getFName());
+                    break;
             }
             break;
         }
 
         default:
             FeatureCollector::throwUnsupportedFeatureType(fKey.getFName());
+            break;
     }
 }
 
