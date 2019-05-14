@@ -217,6 +217,7 @@ std::unordered_map<std::string, FeatureKey::ValidSections> const
         {"full", FeatureKey::ValidSections::full},
         {"body", FeatureKey::ValidSections::body},
         {"anchor", FeatureKey::ValidSections::anchor},
+        {"title", FeatureKey::ValidSections::title},
         {"url", FeatureKey::ValidSections::url}};
 
 /* Private class methods */
