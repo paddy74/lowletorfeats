@@ -135,17 +135,6 @@ void FeatureCollector::collectPresetFeatures()
     this->clearFeatureMaps();
 
     std::vector<base::FeatureKey> static const PRESET_FEATURES = {
-        base::FeatureKey("other", "dl", "full"),
-        base::FeatureKey("tfidf", "tfdoublenorm", "full"),
-        base::FeatureKey("tfidf", "idfdefault", "full"),
-        base::FeatureKey("tfidf", "tfidf", "full"),
-        base::FeatureKey("okapi", "bm25", "full"),
-        base::FeatureKey("lmir", "abs", "full"),
-        base::FeatureKey("lmir", "dir", "full"),
-        base::FeatureKey("lmir", "jm", "full")};
-
-    /*
-    std::vector<base::FeatureKey> static const PRESET_FEATURES = {
         base::FeatureKey("tfidf", "tfdoublenorm", "body"),
         base::FeatureKey("tfidf", "tfdoublenorm", "anchor"),
         base::FeatureKey("tfidf", "tfdoublenorm", "title"),
@@ -186,7 +175,6 @@ void FeatureCollector::collectPresetFeatures()
         base::FeatureKey("lmir", "jm", "title"),
         base::FeatureKey("lmir", "jm", "url"),
         base::FeatureKey("lmir", "jm", "full")};
-    */
 
     this->collectFeatures(PRESET_FEATURES);
 }
@@ -226,7 +214,11 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
     std::string const & fSection = fKey.getFSection();
     // Handle non-existent section
     if (this->sectionKeys.count(fSection) == 0)
-        throw std::out_of_range("Invalid section key '" + fSection + "'");
+    {
+        // throw std::out_of_range("Invalid section key '" + fSection + "'");
+        for (auto & doc : this->docVect) doc.updateFeature(fKey, 0);
+        return;
+    }
 
     switch (fKey.getVType())
     {
@@ -237,9 +229,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 case VNames::dl:
                 {
                     for (auto & doc : this->docVect)
-                    {
                         doc.updateFeature(fKey, doc.getDocLen(fSection));
-                    }
                     break;
                 }
 
