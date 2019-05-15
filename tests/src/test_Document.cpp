@@ -2,7 +2,12 @@
 
 int main()
 {
-    auto doc = lowletorfeats::StructuredDocument();
+    // Test constructors
+    lowletorfeats::StructuredDocument doc =
+        lowletorfeats::StructuredDocument();
+    doc = lowletorfeats::StructuredDocument(doc);
+
+    // Test public methods
 
     return 0;
 }
