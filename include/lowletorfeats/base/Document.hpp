@@ -46,12 +46,10 @@ public:
         const;
 
     base::StrUintMap const & getTermFrequencyMap() const;
-
     base::StrUintMap const & getTermFrequencyMap(
         std::string const & section) const;
 
     std::size_t getMaxTF() const;
-
     std::size_t getMaxTF(std::string const & section) const;
 
     base::FeatureMap const & getFeatureMap() const;
