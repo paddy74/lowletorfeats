@@ -71,13 +71,12 @@ public:
 
     /* Getter methods */
 
-    std::size_t getNumDocs() const { return this->numDocs; };
+    std::size_t getNumDocs() const;
     std::size_t getNumFeatures() const;
 
-    std::vector<StructuredDocument> const & getDocVect() const
-    {
-        return this->docVect;
-    }
+    std::vector<StructuredDocument> const & getDocVect() const;
+
+    std::vector<std::vector<base::FValType>> const getFeatureVects() const;
 
     /* Setter methods */
 

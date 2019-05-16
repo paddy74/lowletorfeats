@@ -480,6 +480,37 @@ void FeatureCollector::collectFeatures(
     for (auto const & fKey : fKeyVect) this->collectFeatures(fKey);
 }
 
+/* Getter methods */
+
+std::size_t FeatureCollector::getNumDocs() const { return this->numDocs; };
+
+std::size_t FeatureCollector::getNumFeatures() const
+{
+    if (this->docVect.size() > 0)
+    {
+        auto doc = *docVect.begin();
+        return doc.getFeatureMap().size();
+    }
+    return 0;
+};
+
+std::vector<StructuredDocument> const & FeatureCollector::getDocVect() const
+{
+    return this->docVect;
+}
+
+std::vector<std::vector<base::FValType>> const
+    FeatureCollector::getFeatureVects() const
+{
+    std::vector<std::vector<base::FValType>> outVect;
+    outVect.reserve(this->numDocs);
+
+    for (auto const & doc : this->docVect)
+        outVect.push_back(doc.getFeatureVector());
+
+    return outVect;
+}
+
 /* Private static member variables */
 
 /**
