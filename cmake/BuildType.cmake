@@ -1,7 +1,13 @@
+# - Sets the build type for the project
+# It defines the following variables:
+#   - default_build_type
+#   - CMAKE_BUILD_TYPE
+
 # Set a default build type if none was specified
-set(default_build_type "Release")
 if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
     set(default_build_type "Debug")
+else()
+    set(default_build_type "Release")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
