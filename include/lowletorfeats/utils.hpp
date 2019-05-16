@@ -141,15 +141,16 @@ auto getKeyUnorderedSet(Container const & x)
 /**
  * @brief Get a vector of the map's values
  *
- * @tparam KEY_T
- * @tparam VALUE_T
- * @param x
- * @return std::vector<KEY_T>
+ * @tparam Container A `std::unordered_map` or `std::map`
+ * @param x The map
+ * @return std::vector<typename Container::mapped_type> Vector of map values
  */
-template <typename KEY_T, typename VALUE_T>
-std::vector<KEY_T> getValueVect(std::unordered_map<KEY_T, VALUE_T> x)
+template <class Container>
+std::vector<typename Container::mapped_type> getValueVect(Container const & x)
 {
-    std::vector<KEY_T> outVect;
+    using mapped_t = typename Container::mapped_type;
+
+    std::vector<mapped_t> outVect;
     outVect.reserve(x.size());
 
     for (auto const & imap : x) outVect.push_back(imap.second);

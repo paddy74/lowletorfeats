@@ -61,6 +61,8 @@ public:
     base::FValType const & getFeatureValue(
         base::FeatureKey const & fKey) const;
 
+    std::vector<base::FValType> const getFeatureVector() const;
+
     /* Setters */
 
     void updateFeature(

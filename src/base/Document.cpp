@@ -245,6 +245,11 @@ base::FValType const & StructuredDocument::getFeatureValue(
     return this->featureMap.at(fKey);
 }
 
+std::vector<base::FValType> const StructuredDocument::getFeatureVector() const
+{
+    return utils::getValueVect(this->featureMap);
+}
+
 /* Setters */
 
 /**
