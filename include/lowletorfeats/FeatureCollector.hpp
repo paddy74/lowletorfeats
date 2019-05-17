@@ -4,6 +4,7 @@
 #include <textalyzer/Analyzer.hpp>
 #include <unordered_set>
 
+
 namespace lowletorfeats
 {
 /**
@@ -40,6 +41,7 @@ public:
     /* Public class methods */
 
     std::string toString() const;
+    std::string getFeatureString() const;
 
     /**
      * @brief Collect the predetermined feature set.

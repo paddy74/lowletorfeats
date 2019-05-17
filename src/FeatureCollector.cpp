@@ -1,4 +1,5 @@
 #include <cassert>
+#include <iomanip>
 #include <iostream>
 #include <lowletorfeats/FeatureCollector.hpp>
 #include <lowletorfeats/LMIR.hpp>
@@ -127,6 +128,33 @@ std::string FeatureCollector::toString() const
     outStr += "----------------------\n";
     for (auto const & doc : this->docVect) outStr += doc.toString() + '\n';
 
+    return outStr;
+}
+
+std::string FeatureCollector::getFeatureString() const
+{
+    if (this->numDocs <= 0) return "";
+
+    std::string outStr = "";
+
+    // Construct header
+    outStr += "Feature Vectors\n";
+
+    auto const featKeys = this->docVect.at(0).getFeatureKeys();
+    for (auto const & fKey : featKeys) outStr += "|" + fKey.toString();
+    outStr += "\n";
+
+    // Per document features
+    for (auto const & doc : this->docVect)
+    {
+        auto const & fMap = doc.getFeatureMap();
+
+        for (auto const & fKey : featKeys)
+            outStr += "|" + std::to_string(fMap.at(fKey));
+        outStr += "\n";
+    }
+
+    outStr += "\n";
     return outStr;
 }
 
