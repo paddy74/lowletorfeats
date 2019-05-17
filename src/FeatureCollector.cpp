@@ -430,27 +430,27 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
             {
                 case VNames::abs:
                 {
-                    // for (auto & doc : this->docVect)
-                    {
-                        // TODO:
+                    for (auto & doc : this->docVect)
+                    {  // TODO:
+                        doc.updateFeature(fKey, 0);
                     }
                     break;
                 }
 
                 case VNames::dir:
                 {
-                    // for (auto & doc : this->docVect)
-                    {
-                        // TODO:
+                    for (auto & doc : this->docVect)
+                    {  // TODO:
+                        doc.updateFeature(fKey, 0);
                     }
                     break;
                 }
 
                 case VNames::jm:
                 {
-                    // for (auto & doc : this->docVect)
-                    {
-                        // TODO:
+                    for (auto & doc : this->docVect)
+                    {  // TODO:
+                        doc.updateFeature(fKey, 0);
                     }
                     break;
                 }
@@ -482,7 +482,7 @@ void FeatureCollector::collectFeatures(
 
 /* Getter methods */
 
-std::size_t FeatureCollector::getNumDocs() const { return this->numDocs; };
+std::size_t FeatureCollector::getNumDocs() const { return this->numDocs; }
 
 std::size_t FeatureCollector::getNumFeatures() const
 {
@@ -492,7 +492,7 @@ std::size_t FeatureCollector::getNumFeatures() const
         return doc.getFeatureMap().size();
     }
     return 0;
-};
+}
 
 std::vector<StructuredDocument> const & FeatureCollector::getDocVect() const
 {
