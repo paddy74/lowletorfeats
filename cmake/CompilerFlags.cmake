@@ -10,35 +10,33 @@
 #        - CMAKE_CXX_FLAGS_RELWITHDEBINFO
 #        - CMAKE_CXX_FLAGS_DEBUG
 
-# Handle different operating systems
-if(UNIX OR MINGW OR CYGWIN)
-    include(CheckCXXCompilerFlag)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wextra")
-elseif(WIN32)
-    if (MSVC)
-        message(FATAL_ERROR "MSVC is not supported")
-        set(variables
-            CMAKE_C_FLAGS_DEBUG
-            CMAKE_C_FLAGS_MINSIZEREL
-            CMAKE_C_FLAGS_RELEASE
-            CMAKE_C_FLAGS_RELWITHDEBINFO
-            CMAKE_CXX_FLAGS_DEBUG
-            CMAKE_CXX_FLAGS_MINSIZEREL
-            CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_RELWITHDEBINFO
-        )
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /O2 /Ob2 /Oi /Ot /Oy /GL /MP")
-    endif()
-elseif(APPLE)
-endif()
+# Compiler IDs
+# ------------------------
+# CMAKE_<LANG>_COMPILER_ID
+#
+# gcc           GNU
+# clang (LLVM)  Clang
+# clang (Apple) AppleClang
+# msvc          MSVC
+# icc           Intel
+# ------------------------
 
-# Handle different compilers
+# Passing flags to the compiler or linker
+# -----------------------------------------------------------------------------
+# CMAKE_C_FLAGS / CMAKE_CXX_FLAGS   Used by the compiler
+# CMAKE_EXE_LINKER_FLAGS            Used by linker when linking executables
+# CMAKE_SHARED_LINKER_FLAGS         Used by linker when linking shared obj libs
+# CMAKE_MODULE_LINKER_FLAGS         Used by linker when linking modules
+# CMAKE_STATIC_LINKER_FLAGS         Used by linker when linking static obj libs
+# -----------------------------------------------------------------------------
+
+# Ensure latest compiler versions
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7")
         message(FATAL_ERROR "Insufficient gcc version")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.8")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.9")
         message(FATAL_ERROR "Insufficient Clang version")
     endif()
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
@@ -47,13 +45,21 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
     endif()
 elseif(MSVC)
     if(MSVC_VERSION LESS 1920)
-        message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} doesn't support required C++11 features. Please use a newer MSVC.")
+        message(FATAL_ERROR "Insufficient MSVC version")
     endif()
+#elseif(Intel)
+
 endif()
 
-# Clang/GNU compiler settings
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+# Compiler specific flags
+if(
+    CMAKE_CXX_COMPILER_ID MATCHES "GNU"
+    OR CMAKE_CXX_COMPILER_ID MATCHES "Clang"
+    OR CMAKE_CXX_COMPILER_ID MATCHES "AppleClang"
+)
     include(CheckCXXCompilerFlag)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wextra")
+    #target_compile_options(${PROJECT_NAME_L} PRIVATE -Wall -pedantic -Wextra)
 
     # Additional warnings for GCC
     set(CMAKE_CXX_FLAGS_WARN
@@ -80,4 +86,20 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${CMAKE_CXX_FLAGS_WARN}")
     set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS_WARN} ${CMAKE_CXX_FLAGS_ERROR}")
+
+elseif(MSVC)
+    #target_compile_options(${PROJECT_NAME_L} PRIVATE /W2 /W4 /WX)
+
+    set(variables
+        CMAKE_C_FLAGS_DEBUG
+        CMAKE_C_FLAGS_MINSIZEREL
+        CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_RELWITHDEBINFO
+        CMAKE_CXX_FLAGS_DEBUG
+        CMAKE_CXX_FLAGS_MINSIZEREL
+        CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /O2 /Ob2 /Oi /Ot /Oy /GL /MP")
+
 endif()
