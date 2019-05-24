@@ -1,9 +1,9 @@
 #pragma once
 
+#include <lowletorfeats/LMIR.hpp>
 #include <lowletorfeats/base/Document.hpp>
 #include <textalyzer/Analyzer.hpp>
 #include <unordered_set>
-
 
 namespace lowletorfeats
 {
@@ -104,20 +104,32 @@ private:
         {"full", 0.3},   {"title", 1},    {"body", 0.4},
         {"author", 0.9}, {"anchor", 0.5}, {"url", 0.7}};
 
-    std::size_t numDocs;
-    base::StrUintMap avgDocLenMap;
+    // `TermFrequencyMap` for the query string
+    base::StrUintMap queryTfMap;
 
+    // Number of documents in the collection
+    std::size_t numDocs;
+
+    // Set of the section keys
     std::unordered_set<std::string> sectionKeys;
 
     // Vector of term frequencies of structured documents
     std::vector<StructuredDocument> docVect;
 
-    // Number of documents containing a term for every term
-    base::StructuredTermFrequencyMap structDocsWithTermMap;
-    base::StrUintMap totalTermsMap;
+    // Average document length per section
+    base::StrUintMap avgDocLenPerSection;
 
-    // `TermFrequencyMap` for the query string
-    base::StrUintMap queryTfMap;
+    // Collection wide term frequency map per section
+    base::StructuredTermFrequencyMap tfMapPerSection;
+
+    // Number of documents containing a term for every section
+    base::StructuredTermFrequencyMap nDocsWithTermPerSection;
+
+    // Total number of terms per section
+    base::StrUintMap nTermsPerSection;
+
+    // For calculating LMIR features
+    std::unordered_map<std::string, LMIR> lmirCalculators;
 
     /* Private static member variables */
 
@@ -126,6 +138,9 @@ private:
 
     /* Private class methods */
 
+    void constructLMIR(std::string const & sectionKey);
+
+    void addDoc(StructuredDocument const & newDoc);
     void addDoc(
         base::StrUintMap const & docLenMap,
         base::StructuredTermFrequencyMap const & strucDocTfMap);
@@ -135,9 +150,9 @@ private:
         std::vector<base::StrUintMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect);
 
-    void initStructDocsWithTermMap(
+    void initNDocsWithTermPerSection(
         std::string const & sectionKey, base::StrUintMap const & sectionTfMap);
-    void initTotalTermsMap();
+    void initNTermsPerSection();
 
     void initFullFromOthers();
 
