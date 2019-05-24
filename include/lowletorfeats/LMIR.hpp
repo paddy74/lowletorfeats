@@ -27,7 +27,7 @@ public:
      *
      * @param totalTermsMap
      */
-    LMIR(base::StrUintMap const & totalTermsMap);
+    LMIR(base::StrUintMap const & corpusTfMap);
 
     /**
      * @brief Copy constructor for a new LMIR object.
@@ -40,14 +40,18 @@ public:
 
     base::FValType absolute_discount(
         base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-        base::StrUintMap const & queryTermFreqMap);
-    base::FValType dirichlet();
-    base::FValType jelinek_mercer();
+        base::StrUintMap const & queryTermFreqMap) const;
+    base::FValType dirichlet(
+        base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
+        base::StrUintMap const & queryTermFreqMap) const;
+    base::FValType jelinek_mercer(
+        base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
+        base::StrUintMap const & queryTermFreqMap) const;
 
 private:
     /* Private member variables */
 
-    base::StrDblMap pCorpusMap;  // corpus wide
+    base::StrDblMap termProbabilityMap;  // corpus wide term probability
 
     /* Private class methods */
 
