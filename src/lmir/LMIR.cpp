@@ -2,4 +2,4 @@
 
 namespace lowletorfeats
 {
-}
+}  // namespace lowletorfeats

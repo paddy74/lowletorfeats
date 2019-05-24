@@ -49,9 +49,7 @@ set(libsrc
     src/okapi/bm25plus.cpp
     src/okapi/bm25f.cpp
 
-    src/lmir/abs.cpp
-    src/lmir/dir.cpp
-    src/lmir/jm.cpp
+    src/lmir/LMIR.cpp
 
     src/FeatureCollector.cpp
 )
