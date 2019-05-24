@@ -10,18 +10,17 @@
 namespace lowletorfeats::utils
 {
 /**
- * @brief Calculate the sum of every value in the `unordered_map`.
+ * @brief Calculate the sum of every value in the `unordered_map` or `map`.
  *
- * @tparam KEY_T
- * @tparam VALUE_T
- * @param a
- * @return VALUE_T
+ * @tparam Container
+ * @param x
+ * @return Container::mapped_type
  */
-template <typename KEY_T, typename VALUE_T>
-VALUE_T mapValueSum(std::unordered_map<KEY_T, VALUE_T> const & a)
+template <class Container>
+auto mapValueSum(Container const & x) -> typename Container::mapped_type
 {
     return std::accumulate(
-        a.begin(), a.end(), 0,
+        x.begin(), x.end(), 0,
         [](const std::size_t previous, auto const & element) {
             return previous + element.second;
         });
@@ -30,15 +29,12 @@ VALUE_T mapValueSum(std::unordered_map<KEY_T, VALUE_T> const & a)
 /**
  * @brief Merge b into a (inplace). The values of matching keys are summed.
  *
- * @tparam KEY_T
- * @tparam VALUE_T
+ * @tparam Container
  * @param a
  * @param b
  */
-template <typename KEY_T, typename VALUE_T>
-void additiveMergeInplace(
-    std::unordered_map<KEY_T, VALUE_T> & a,
-    std::unordered_map<KEY_T, VALUE_T> const & b)
+template <class Container>
+void additiveMergeInplace(Container & a, Container const & b)
 {
     for (auto const & [key, value] : b) a[key] += value;
 }
@@ -179,7 +175,7 @@ std::vector<T> getIntersection(
 }
 
 /**
- * @brief Get the intersection of two unorderd_maps
+ * @brief Get the intersection of two maps.
  *
  * @tparam KEY_T
  * @tparam VALUE_T
@@ -187,12 +183,10 @@ std::vector<T> getIntersection(
  * @param filterMap
  * @return std::unordered_map<KEY_T, VALUE_T>
  */
-template <typename KEY_T, typename VALUE_T>
-std::unordered_map<KEY_T, VALUE_T> getIntersection(
-    std::unordered_map<KEY_T, VALUE_T> const & a,
-    std::unordered_map<KEY_T, VALUE_T> const & b)
+template <class Container>
+Container getIntersection(Container const & a, Container const & b)
 {
-    std::unordered_map<KEY_T, VALUE_T> interMap;
+    Container interMap;
 
     for (auto const & pair : a)
     {
