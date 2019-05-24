@@ -1,3 +1,4 @@
+#include <iostream>
 #include <lowletorfeats/FeatureCollector.hpp>
 
 #include "testData.hpp"
@@ -10,6 +11,8 @@ int main()
 
     auto fc = lowletorfeats::FeatureCollector(structDocMap, queryStr);
     fc.collectPresetFeatures();
+
+    std::cout << fc.toString();
 
     return 0;
 }

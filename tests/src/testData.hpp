@@ -4,16 +4,16 @@
 #include <unordered_map>
 #include <vector>
 
-std::pair<
-    std::string, std::vector<std::unordered_map<std::string, std::string>>>
-    getTestData()
+std::string getTestRawQuery()
+{
+    return "Van Helsing's face grow white and purple by turns.";
+}
+
+std::vector<std::unordered_map<std::string, std::string>>
+    getTestStructDocRawVector()
 {
     typedef std::unordered_map<std::string, std::string> StrStrMap;
 
-    std::string const queryString =
-        "Van Helsing's face grow white and purple by turns.";
-
-    // Construct raw data
     std::vector<StrStrMap> structDocTextVector{
         StrStrMap{
             {"id", "00000"},
@@ -185,7 +185,12 @@ std::pair<
              "looking at the poor drooping figure on the bed. Van Helsing "
              "said gravely:--"}}};
 
-    // Construct analyzed data
+    return structDocTextVector;
+}
 
-    return std::pair(queryString, structDocTextVector);
+std::pair<
+    std::string, std::vector<std::unordered_map<std::string, std::string>>>
+    getTestData()
+{
+    return std::pair(getTestRawQuery(), getTestStructDocRawVector());
 }

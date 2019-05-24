@@ -1,4 +1,3 @@
-#include <iostream>
 #include <lowletorfeats/base/FeatureKey.hpp>
 
 int main()
