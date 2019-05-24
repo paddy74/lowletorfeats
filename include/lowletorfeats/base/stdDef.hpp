@@ -8,6 +8,7 @@ namespace lowletorfeats::base
 typedef long double FValType;
 typedef float WeightType;
 
+typedef std::unordered_map<std::string, double> StrDblMap;
 typedef std::unordered_map<std::string, std::size_t> StrUintMap;
 typedef std::unordered_map<std::string, std::string> StrStrMap;
 typedef std::unordered_map<std::string, base::StrUintMap>
