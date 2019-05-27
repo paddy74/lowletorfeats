@@ -1,5 +1,7 @@
 #pragma once
 
+#include <tsl/ordered_map.h>
+
 #include <lowletorfeats/base/FeatureKey.hpp>
 #include <unordered_map>  // unordered_map
 
@@ -14,5 +16,5 @@ typedef std::unordered_map<std::string, std::string> StrStrMap;
 typedef std::unordered_map<std::string, base::StrUintMap>
     StructuredTermFrequencyMap;
 
-typedef std::unordered_map<FeatureKey, FValType> FeatureMap;
+typedef tsl::ordered_map<FeatureKey, FValType> FeatureMap;
 }  // namespace lowletorfeats::base
