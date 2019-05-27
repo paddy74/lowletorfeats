@@ -82,14 +82,17 @@ target_compile_features(${PROJECT_NAME_L} PRIVATE cxx_auto_type)
 # ---------------------
 target_include_directories(${PROJECT_NAME_L}
     PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/ordered-map/include
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/textalyzer/include
 )
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/ordered-map)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/textalyzer)
 
 # Link
 target_link_libraries(${PROJECT_NAME_L}
     PUBLIC
+        tsl::ordered_map
         textalyzer
 )
 
