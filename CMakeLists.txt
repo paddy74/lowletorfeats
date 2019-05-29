@@ -80,6 +80,9 @@ target_compile_features(${PROJECT_NAME_L} PRIVATE cxx_auto_type)
 
 # Include external libs
 # ---------------------
+# Hold the project's export targets
+set(PROJECT_EXPORT_TARGETS ${PROJECT_NAME_L})
+
 target_include_directories(${PROJECT_NAME_L}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/libs/ordered-map/include
@@ -88,6 +91,8 @@ target_include_directories(${PROJECT_NAME_L}
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/ordered-map)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/textalyzer)
+
+list(APPEND PROJECT_EXPORT_TARGETS ordered_map)
 
 # Link
 target_link_libraries(${PROJECT_NAME_L}
@@ -104,7 +109,7 @@ set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 install(
     TARGETS
-        ${PROJECT_NAME_L}
+        ${PROJECT_EXPORT_TARGETS}
     EXPORT
         ${PROJECT_NAME_L}-targets
     LIBRARY DESTINATION
