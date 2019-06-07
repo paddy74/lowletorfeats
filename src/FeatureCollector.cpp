@@ -11,18 +11,8 @@ namespace lowletorfeats
 {
 /* Constructors */
 
-/**
- * @brief Construct an empty Feature Collector.
- *
- */
 FeatureCollector::FeatureCollector() {}
 
-/**
- * @brief Construct a new Feature Collector from raw full text documents.
- *
- * @param docTextMapVect Multiple structured documents of raw text.
- * @param queryText Raw unanalyzed query string.
- */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrStrMap> const & docTextMapVect,
     std::string const & queryText)
@@ -36,12 +26,6 @@ FeatureCollector::FeatureCollector(
     this->initDocs(docTextMapVect);
 }
 
-/**
- * @brief Construct a new Feature Collector from raw full text documents.
- *
- * @param docTextMapVect Multiple structured documents of raw text.
- * @param queryTfMap Preanalyzed query string.
- */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrStrMap> const & docTextMapVect,
     base::StrUintMap const & queryTfMap)
@@ -52,15 +36,6 @@ FeatureCollector::FeatureCollector(
     this->initDocs(docTextMapVect);
 }
 
-/**
- * @brief Construct a new Feature Collector from preanalyzed structured docs.
- *
- * @param docLenMapVect Multiple structured documents with their length for
- *  each section.
- * @param docTfMapVect Multiple structured documents with analyzed tokens for
- *  each section.
- * @param queryText Raw unanalyzed query string.
- */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrUintMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
@@ -75,15 +50,6 @@ FeatureCollector::FeatureCollector(
     this->initDocs(docLenMapVect, docTfMapVect);
 }
 
-/**
- * @brief Construct a new Feature Collector from preanalyzed structured docs.
- *
- * @param docLenMapVect Multiple structured documents with their length for
- *  each section.
- * @param docTfMapVect Multiple structured documentds with analyzed tokens for
- *  each section.
- * @param queryTfMap Preanalyzed query string.
- */
 FeatureCollector::FeatureCollector(
     std::vector<base::StrUintMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
@@ -97,12 +63,6 @@ FeatureCollector::FeatureCollector(
 
 /* Public class methods */
 
-/**
- * @brief Get a string representation of the `FeatureCollector`.
- *  This is not intended to be optimized.
- *
- * @return std::string
- */
 std::string FeatureCollector::toString() const
 {
     std::string outStr = "";
@@ -227,11 +187,6 @@ void FeatureCollector::reCollectFeatures()
     }  // Do nothing (no features to collect)
 }
 
-/**
- * @brief Conduct feature collection for the given feature.
- *
- * @param fKey
- */
 void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 {
     // QOL typedefs
@@ -519,11 +474,6 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
     }
 }
 
-/**
- * @brief Collect multiple features using a vector of `FeatureKey`s.
- *
- * @param fKeyVect
- */
 void FeatureCollector::collectFeatures(
     std::vector<base::FeatureKey> const & fKeyVect)
 {
@@ -563,10 +513,6 @@ std::vector<std::vector<base::FValType>> const
 
 /* Private static member variables */
 
-/**
- * @brief Analyzer method for a string of text into pair<tokenStrVect, docLen>.
- *
- */
 textalyzer::AnlyzerFunType<std::string> FeatureCollector::analyzerFun =
     textalyzer::Analyzer::medAnalyze;
 
@@ -574,10 +520,6 @@ uint8_t const FeatureCollector::DEFAULT_NGRAMS = 2;
 
 /* Private class methods */
 
-/**
- * @brief Construct the lmirCalculator if it is not already constructed.
- *
- */
 void FeatureCollector::constructLMIR(std::string const & sectionKey)
 {
     if (this->lmirCalculators.count(sectionKey) != 0)  // Already constructed
@@ -588,12 +530,6 @@ void FeatureCollector::constructLMIR(std::string const & sectionKey)
         LMIR(this->tfMapPerSection.at(sectionKey));
 }
 
-/**
- * @brief Add the given document to the docVect.
- *  TODO: Add protections so this can only be called from initDocs.
- *
- * @param newDoc
- */
 void FeatureCollector::addDoc(StructuredDocument const & newDoc)
 {
     // For each section,
@@ -609,12 +545,6 @@ void FeatureCollector::addDoc(StructuredDocument const & newDoc)
     this->docVect.push_back(newDoc);
 }
 
-/**
- * @brief Create a new document in the docVect from a preanalyzed map.
- *
- * @param docLenMap
- * @param strucDocTfMap
- */
 void FeatureCollector::addDoc(
     base::StrUintMap const & docLenMap,
     base::StructuredTermFrequencyMap const & strucDocTfMap)
@@ -635,12 +565,6 @@ void FeatureCollector::addDoc(
     this->docVect.push_back(newDoc);
 }
 
-/**
- * @brief Initialize unanalyzed structured documents.
- *  TODO: Add protection so it can only be called from a constructor
- *
- * @param docTextMapVect
- */
 void FeatureCollector::initDocs(
     std::vector<base::StrStrMap> const & docTextMapVect)
 {
@@ -686,12 +610,6 @@ void FeatureCollector::initDocs(
     this->assertProperties();
 }
 
-/**
- * @brief Initialize preanalyzed structured documents.
- *
- * @param docLenMapVect
- * @param docTfMapVect
- */
 void FeatureCollector::initDocs(
     std::vector<base::StrUintMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect)
@@ -732,12 +650,6 @@ void FeatureCollector::initDocs(
     this->assertProperties();
 }
 
-/**
- * @brief Initialize the `nDocsWithTermPerSection` and `tfMapPerSection` class
- *  variables.
- *
- * @param sectionTfMap
- */
 void FeatureCollector::initNDocsWithTermPerSection(
     std::string const & sectionKey, base::StrUintMap const & sectionTfMap)
 {
@@ -761,10 +673,6 @@ void FeatureCollector::initNDocsWithTermPerSection(
     }
 }
 
-/**
- * @brief Calculate the total number of terms per section in the collection.
- *
- */
 void FeatureCollector::initNTermsPerSection()
 {
     // Fill the `nTermsPerSection`
@@ -777,20 +685,11 @@ void FeatureCollector::initNTermsPerSection()
 
 void FeatureCollector::initFullFromOthers() {}
 
-/**
- * @brief Clear the feature maps of every document.
- *
- */
 void FeatureCollector::clearFeatureMaps()
 {
     for (auto & doc : this->docVect) doc.clearFeatureMap();
 }
 
-/**
- * @brief Assert required properties of the feature collector to ensure
- *  acceptable operations.
- *
- */
 void FeatureCollector::assertProperties()
 {
     // Assert same sectionKeys present in:

@@ -6,10 +6,6 @@ namespace lowletorfeats::base
 {
 /* Constructors */
 
-/**
- * @brief Construct a new Feature Key with "invalid" values.
- *
- */
 FeatureKey::FeatureKey()
 {
     this->fType = "invalid";
@@ -21,12 +17,6 @@ FeatureKey::FeatureKey()
     this->vSection = FeatureKey::ValidSections::invalid;
 }
 
-/**
- * @brief Construct a new Feature Key from a string "type.name.section".
- *
- * @param fKeyStr A string representation of the `FeatureKey` in the form
- *  "type.name.section".
- */
 FeatureKey::FeatureKey(std::string const & fKeyStr)
 {
     std::vector<std::string> const & fDelim = utils::strSplit(fKeyStr, '.');
@@ -60,13 +50,6 @@ FeatureKey::FeatureKey(std::string const & fKeyStr)
     this->initVKeys();
 }
 
-/**
- * @brief Construct a new Feature Key from multiple strings.
- *
- * @param fType
- * @param fName
- * @param fSection
- */
 FeatureKey::FeatureKey(
     std::string const & fType, std::string const & fName,
     std::string const & fSection)
@@ -78,11 +61,6 @@ FeatureKey::FeatureKey(
     this->initVKeys();
 }
 
-/**
- * @brief Copy constructor.
- *
- * @param other
- */
 FeatureKey::FeatureKey(FeatureKey const & other)
 {
     this->fType = other.fType;
@@ -109,11 +87,6 @@ std::size_t FeatureKey::toHash() const
         (std::hash<std::string>()(this->fSection)));
 }
 
-/**
- * @brief Recreates the `FeatureKey` with the given key string.
- *
- * @param newKeyString Str for the new key in format :type.name.section".
- */
 void FeatureKey::changeKey(std::string const & newKeyString)
 {
     *(this) = FeatureKey(newKeyString);

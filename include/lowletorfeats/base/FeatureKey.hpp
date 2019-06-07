@@ -5,10 +5,15 @@
 
 namespace lowletorfeats::base
 {
+/**
+ * @brief Class for describing a feature key.
+ *
+ */
 class FeatureKey
 {
 public:
     /* Public type definitions */
+    /***************************/
 
     enum class ValidTypes
     {
@@ -59,33 +64,102 @@ public:
     };
 
     /* Constructors */
+    /****************/
 
+    /**
+     * @brief Construct a new Feature Key with "invalid" values.
+     *
+     */
     FeatureKey();
 
-    FeatureKey(std::string const & fKey);
+    /**
+     * @brief Construct a new Feature Key from a string "type.name.section".
+     *
+     * @param fKeyStr A string representation of the `FeatureKey` in the form
+     *  "type.name.section".
+     */
+    FeatureKey(std::string const & fKeyStr);
+
+    /**
+     * @brief Construct a new Feature Key from multiple strings.
+     *
+     * @param fType
+     * @param fName
+     * @param fSection
+     */
     FeatureKey(
         std::string const & fType, std::string const & fName,
         std::string const & fSection);
 
+    /**
+     * @brief Copy constructor.
+     *
+     * @param other
+     */
     FeatureKey(FeatureKey const & other);
 
     /* Public class methods */
-    void changeKey(std::string const & newKeyString);
 
+    /**
+     * @brief Create a string representation of the FeatureKey.
+     *
+     */
     std::string toString() const;
+
+    /**
+     * @brief Create a hashed representation of the FeatureKey.
+     *
+     */
     std::size_t toHash() const;
 
-    /* Getters */
+    /**
+     * @brief Recreates the `FeatureKey` with the given key string.
+     *
+     * @param newKeyString Str for the new key in format :type.name.section".
+     */
+    void changeKey(std::string const & newKeyString);
 
+    /* Getters */
+    /***********/
+
+    /**
+     * @brief Get the string representation of the feature type.
+     *
+     */
     std::string const & getFType() const { return this->fType; }
+
+    /**
+     * @brief Get the string representation of the feature name.
+     *
+     */
     std::string const & getFName() const { return this->fName; }
+
+    /**
+     * @brief Get the string representation of the feature section.
+     *
+     */
     std::string const & getFSection() const { return this->fSection; }
 
+    /**
+     * @brief Get the enum of the feature type.
+     *
+     */
     ValidTypes const & getVType() const { return this->vType; }
+
+    /**
+     * @brief Get the enum of the feature name.
+     *
+     */
     ValidNames const & getVName() const { return this->vName; }
+
+    /**
+     * @brief Get the enum of the feature section.
+     *
+     */
     ValidSections const & getVSection() const { return this->vSection; }
 
     /* Public operators */
+    /********************/
     // operator std::string() const { return this->toString(); }  // implicit
     // explicit operator std::string*() const { return &(this->toString()); }
 
@@ -95,26 +169,28 @@ public:
 
 private:
     /* Private member variables */
+    /****************************/
 
     // Feature key as a string
-    std::string fType;
-    std::string fName;
-    std::string fSection;
+    std::string fType;     // Feature type string
+    std::string fName;     // Feature name string
+    std::string fSection;  // Feature name section
 
     // Feature key as a enum
-    ValidTypes vType;
-    ValidNames vName;
-    ValidSections vSection;
+    ValidTypes vType;        // Feature type enum
+    ValidNames vName;        // Feature name enum
+    ValidSections vSection;  // Feature section enum
 
     /* Private static member variables */
+    /***********************************/
 
-    // Valid type maps
+    // Valid type maps map enum to string
     std::unordered_map<ValidTypes, std::string> static const validTypeMap;
     std::unordered_map<ValidNames, std::string> static const validNameMap;
     std::unordered_map<
         ValidSections, std::string> static const validSectionMap;
 
-    // Inverse valid type maps
+    // Inverse valid type maps map string to enum
     std::unordered_map<
         std::string, ValidTypes> static const inverseValidTypeMap;
     std::unordered_map<
@@ -123,7 +199,12 @@ private:
         std::string, ValidSections> static const inverseValidSectionMap;
 
     /* Private class methods */
+    /*************************/
 
+    /**
+     * @brief Apply the enum feature values according to the feature strings.
+     *
+     */
     void initVKeys();
 };
 

@@ -7,13 +7,6 @@ namespace lowletorfeats
 
 StructuredDocument::StructuredDocument() {}
 
-/**
- * @brief Construct a new Structured Document object using a preanalyzed
- *  document length and `TermFrequencyMap` for the full document text.
- *
- * @param docLen The full document's length.
- * @param fullTermFrequencyMap Preanalyzed `TermFrequencyMap` for the full doc.
- */
 StructuredDocument::StructuredDocument(
     uint const & docLen, base::StrUintMap const & fullTermFrequencyMap,
     std::string const & sectionKey)
@@ -24,13 +17,6 @@ StructuredDocument::StructuredDocument(
         utils::findMaxValuePair(fullTermFrequencyMap).second;
 }
 
-/**
- * @brief Construct a new Structured Document object using a preanalyzed
- *  document length and `TermFrequencyMap` for the full document text.
- *
- * @param docLen The full document's length.
- * @param fullTermFrequencyMap Preanalyzed `TermFrequencyMap` for the full doc.
- */
 StructuredDocument::StructuredDocument(
     uint const & docLen, base::StrUintMap const & fullTermFrequencyMap)
     : StructuredDocument::StructuredDocument(
@@ -38,14 +24,6 @@ StructuredDocument::StructuredDocument(
 {
 }
 
-/**
- * @brief Construct a new Structured Document object using a preanalyzed
- *  document length map and `TermFrequencyMap`.
- *
- * @param docLenMap The document lengths for each structured section.
- * @param structuredTermFrequencyMap Preanalyzed `TermFrequencyMap`s for each
- *  structured section.
- */
 StructuredDocument::StructuredDocument(
     base::StrUintMap const & docLenMap,
     base::StructuredTermFrequencyMap const & structuredTermFrequencyMap)
@@ -63,11 +41,6 @@ StructuredDocument::StructuredDocument(
     if (this->termFrequencyMaps.count("full") == 0) this->fillFullFromOthers();
 }
 
-/**
- * @brief Copy constructor.
- *
- * @param other
- */
 StructuredDocument::StructuredDocument(StructuredDocument const & other)
 {
     this->docLenMaps = other.docLenMaps;
@@ -78,12 +51,6 @@ StructuredDocument::StructuredDocument(StructuredDocument const & other)
 
 /* Public class methods */
 
-/**
- * @brief Get a string representation of the `StructuredDocument`.
- *  This is not intended to be optimized.
- *
- * @return std::string
- */
 std::string StructuredDocument::toString() const
 {
     std::string outStr = "";
@@ -107,10 +74,6 @@ std::string StructuredDocument::toString() const
     return outStr;
 }
 
-/**
- * @brief Clear all sections from the document.
- *
- */
 void StructuredDocument::clear()
 {
     this->docLenMaps.clear();
@@ -118,11 +81,6 @@ void StructuredDocument::clear()
     this->maxTermMaps.clear();
 }
 
-/**
- * @brief Removes the indicated section from the document.
- *
- * @param section
- */
 void StructuredDocument::clearSection(std::string const & section)
 {
     this->docLenMaps.erase(section);
@@ -130,115 +88,57 @@ void StructuredDocument::clearSection(std::string const & section)
     this->maxTermMaps.erase(section);
 }
 
-/**
- * @brief Clear the document's feature map.
- *
- */
 void StructuredDocument::clearFeatureMap() { this->featureMap.clear(); }
 
 /* Getter methods */
 
-/**
- * @brief Get the document length for the full document.
- *
- * @return std::size_t
- */
 std::size_t StructuredDocument::getDocLen() const
 {
     return this->docLenMaps.at("full");
 }
 
-/**
- * @brief Get the document length for the document.
- *
- * @param section
- * @return std::size_t const&
- */
 std::size_t StructuredDocument::getDocLen(std::string const & section) const
 {
     return this->docLenMaps.at(section);
 }
 
-/**
- * @brief Get the entire structured term frequency map.
- *
- * @return std::unordered_map<std::string, base::TermFrequencyMap> const&
- */
 base::StructuredTermFrequencyMap const &
     StructuredDocument::getStructuredTermFrequencyMap() const
 {
     return this->termFrequencyMaps;
 }
 
-/**
- * @brief Get the `TermFrequencyMap` for the full document.
- *
- * @return base::TermFrequencyMap const&
- */
 base::StrUintMap const & StructuredDocument::getTermFrequencyMap() const
 {
     return this->termFrequencyMaps.at("full");
 }
 
-/**
- * @brief Get the `TermFrequencyMap` for the given section.
- *
- * @param section
- * @return base::TermFrequencyMap const&
- */
 base::StrUintMap const & StructuredDocument::getTermFrequencyMap(
     std::string const & section) const
 {
     return this->termFrequencyMaps.at(section);
 }
 
-/**
- * @brief Get the max term frequency for the full document.
- *
- * @return std::size_t
- */
 std::size_t StructuredDocument::getMaxTF() const
 {
     return this->maxTermMaps.at("full");
 }
 
-/**
- * @brief Get the max term frequency for the given section.
- *
- * @param section
- * @return std::size_t
- */
 std::size_t StructuredDocument::getMaxTF(std::string const & section) const
 {
     return this->maxTermMaps.at(section);
 }
 
-/**
- * @brief Get the entire feature map
- *
- * @return base::DocFeatureMap const&
- */
 base::FeatureMap const & StructuredDocument::getFeatureMap() const
 {
     return this->featureMap;
 }
 
-/**
- * @brief Get a vector of `featureMap.keys`.
- *
- * @return std::vector<base::FeatureNames> const&
- */
 std::vector<base::FeatureKey> StructuredDocument::getFeatureKeys() const &
 {
     return utils::getKeyVect(this->featureMap);
 }
 
-/**
- * @brief Get the value of the given feature.
- *
- * @param fName
- * @return FValType const&
- */
 base::FValType const & StructuredDocument::getFeatureValue(
     base::FeatureKey const & fKey) const
 {
@@ -252,12 +152,6 @@ std::vector<base::FValType> const StructuredDocument::getFeatureVector() const
 
 /* Setters */
 
-/**
- * @brief Create or update a feature in the `featureMap`.
- *
- * @param fKey
- * @param fValue
- */
 void StructuredDocument::updateFeature(
     base::FeatureKey const & fKey, base::FValType const & fValue)
 {
@@ -266,11 +160,6 @@ void StructuredDocument::updateFeature(
 
 /* Private class methods */
 
-/**
- * @brief Fill the "full" sections based on other existing sections.
- *  Assigns docLenMap["full"], termFrequencyMap["full"], maxTermMap["full"].
- *
- */
 void StructuredDocument::fillFullFromOthers()
 {
     // Erase contents of section "full"

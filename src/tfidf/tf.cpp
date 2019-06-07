@@ -4,27 +4,11 @@
 
 namespace lowletorfeats
 {
-/**
- * @brief Log normalized term frequency.
- *
- * @param docTermFrequency The term's frequency.
- * @return base::FValType
- */
 base::FValType Tfidf::tfLogNorm(uint const & docTermFrequency)
 {
     return log(1 + (base::FValType)docTermFrequency);
 }
 
-/**
- * @brief Double normalization term frequency.
- *  Prevents a bias towards longer documents.
- *
- * @param docTermFrequency The term's frequency.
- * @param docMaxTermFrequency Frequency of the document's maximum occuring
- * term.
- * @param k
- * @return base::FValType
- */
 base::FValType Tfidf::tfDoubleNorm(
     uint const & docTermFrequency, uint const & docMaxTermFrequency,
     float const & k)
@@ -34,15 +18,6 @@ base::FValType Tfidf::tfDoubleNorm(
                  (base::FValType)(docMaxTermFrequency + docTermFrequency)));
 }
 
-/**
- * @brief Double normalization term frequency (k = 0.5).
- *  Prevents a bias towards longer documents.
- *
- * @param docTermFrequency The term's frequency.
- * @param docMaxTermFrequency Frequency of the document's maximum occuring
- * term.
- * @return base::FValType
- */
 base::FValType Tfidf::tfDoubleNorm(
     uint const & docTermFrequency, uint const & docMaxTermFrequency)
 {

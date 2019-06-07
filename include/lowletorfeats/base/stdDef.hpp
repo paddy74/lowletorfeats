@@ -7,14 +7,18 @@
 
 namespace lowletorfeats::base
 {
-typedef long double FValType;
-typedef float WeightType;
+typedef long double FValType;  // Feature value type
+typedef float WeightType;      // Section weight type
 
-typedef std::unordered_map<std::string, double> StrDblMap;
-typedef std::unordered_map<std::string, std::size_t> StrUintMap;
-typedef std::unordered_map<std::string, std::string> StrStrMap;
+typedef std::unordered_map<std::string, double>
+    StrDblMap;  // String to double map
+typedef std::unordered_map<std::string, std::size_t>
+    StrUintMap;  // String to size map
+typedef std::unordered_map<std::string, std::string>
+    StrStrMap;  // String to string map
 typedef std::unordered_map<std::string, base::StrUintMap>
-    StructuredTermFrequencyMap;
+    StructuredTermFrequencyMap;  // String to string-size map
 
-typedef tsl::ordered_map<FeatureKey, FValType> FeatureMap;
+typedef tsl::ordered_map<FeatureKey, FValType> FeatureMap;  // FKey to FVal map
+
 }  // namespace lowletorfeats::base
