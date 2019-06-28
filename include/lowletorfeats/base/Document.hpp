@@ -33,7 +33,8 @@ public:
      * doc.
      */
     StructuredDocument(  // The indicated section only
-        uint const & docLen, base::StrSizeMap const & fullTermFrequencyMap,
+        std::size_t const & docLen,
+        base::StrSizeMap const & fullTermFrequencyMap,
         std::string const & sectionKey);
 
     /**
@@ -45,7 +46,8 @@ public:
      * doc.
      */
     StructuredDocument(  // `"full"` section only
-        uint const & docLen, base::StrSizeMap const & fullTermFrequencyMap);
+        std::size_t const & docLen,
+        base::StrSizeMap const & fullTermFrequencyMap);
 
     /**
      * @brief Construct a new Structured Document object using a preanalyzed

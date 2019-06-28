@@ -7,8 +7,8 @@
 
 namespace lowletorfeats::base
 {
-typedef long double FValType;  // Feature value type
-typedef float WeightType;      // Section weight type
+typedef double FValType;   // Feature value type
+typedef float WeightType;  // Section weight type
 
 typedef std::unordered_map<std::string, uint>
     StrUintMap;  // String to uint map

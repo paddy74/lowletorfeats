@@ -8,7 +8,7 @@ namespace lowletorfeats
 StructuredDocument::StructuredDocument() {}
 
 StructuredDocument::StructuredDocument(
-    uint const & docLen, base::StrUintMap const & fullTermFrequencyMap,
+    std::size_t const & docLen, base::StrSizeMap const & fullTermFrequencyMap,
     std::string const & sectionKey)
 {
     this->docLenMaps[sectionKey] = docLen;
@@ -18,14 +18,14 @@ StructuredDocument::StructuredDocument(
 }
 
 StructuredDocument::StructuredDocument(
-    uint const & docLen, base::StrUintMap const & fullTermFrequencyMap)
+    std::size_t const & docLen, base::StrSizeMap const & fullTermFrequencyMap)
     : StructuredDocument::StructuredDocument(
           docLen, fullTermFrequencyMap, "full")
 {
 }
 
 StructuredDocument::StructuredDocument(
-    base::StrUintMap const & docLenMap,
+    base::StrSizeMap const & docLenMap,
     base::StructuredTermFrequencyMap const & structuredTermFrequencyMap)
 {
     this->docLenMaps = docLenMap;
@@ -108,12 +108,12 @@ base::StructuredTermFrequencyMap const &
     return this->termFrequencyMaps;
 }
 
-base::StrUintMap const & StructuredDocument::getTermFrequencyMap() const
+base::StrSizeMap const & StructuredDocument::getTermFrequencyMap() const
 {
     return this->termFrequencyMaps.at("full");
 }
 
-base::StrUintMap const & StructuredDocument::getTermFrequencyMap(
+base::StrSizeMap const & StructuredDocument::getTermFrequencyMap(
     std::string const & section) const
 {
     return this->termFrequencyMaps.at(section);
@@ -169,7 +169,7 @@ void StructuredDocument::fillFullFromOthers()
     this->docLenMaps["full"] = utils::mapValueSum(this->docLenMaps);
 
     // Calculate `termFrequencyMap["full"]`
-    base::StrUintMap fullTermFreqMap;
+    base::StrSizeMap fullTermFreqMap;
     for (auto const & mapPair : this->termFrequencyMaps)
         utils::additiveMergeInplace(fullTermFreqMap, mapPair.second);
     this->termFrequencyMaps["full"] = fullTermFreqMap;

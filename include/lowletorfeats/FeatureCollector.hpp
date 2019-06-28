@@ -41,7 +41,7 @@ public:
      */
     FeatureCollector(
         std::vector<base::StrStrMap> const & docTextMapVect,
-        base::StrUintMap const & queryTfMap);
+        base::StrSizeMap const & queryTfMap);
 
     /**
      * @brief Construct a new Feature Collector from preanalyzed structured
@@ -54,7 +54,7 @@ public:
      * @param queryText Raw unanalyzed query string.
      */
     FeatureCollector(
-        std::vector<base::StrUintMap> const & docLenMapVect,
+        std::vector<base::StrSizeMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
         std::string const & queryText);
 
@@ -69,9 +69,9 @@ public:
      * @param queryTfMap Preanalyzed query string.
      */
     FeatureCollector(
-        std::vector<base::StrUintMap> const & docLenMapVect,
+        std::vector<base::StrSizeMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
-        base::StrUintMap const & queryTfMap);
+        base::StrSizeMap const & queryTfMap);
 
     /* Public class methods */
     /************************/
@@ -156,7 +156,7 @@ private:
         {"author", 0.9}, {"anchor", 0.5}, {"url", 0.7}};
 
     // `TermFrequencyMap` for the query string
-    base::StrUintMap queryTfMap;
+    base::StrSizeMap queryTfMap;
 
     // Number of documents in the collection
     std::size_t numDocs;
@@ -168,7 +168,7 @@ private:
     std::vector<StructuredDocument> docVect;
 
     // Average document length per section
-    base::StrUintMap avgDocLenPerSection;
+    base::StrFltMap avgDocLenPerSection;
 
     // Collection wide term frequency map per section
     base::StructuredTermFrequencyMap tfMapPerSection;
@@ -177,7 +177,7 @@ private:
     base::StructuredTermFrequencyMap nDocsWithTermPerSection;
 
     // Total number of terms per section
-    base::StrUintMap nTermsPerSection;
+    base::StrSizeMap nTermsPerSection;
 
     // For calculating LMIR features
     std::unordered_map<std::string, LMIR> lmirCalculators;
@@ -212,7 +212,7 @@ private:
      * @param strucDocTfMap
      */
     void addDoc(
-        base::StrUintMap const & docLenMap,
+        base::StrSizeMap const & docLenMap,
         base::StructuredTermFrequencyMap const & strucDocTfMap);
 
     /**
@@ -230,7 +230,7 @@ private:
      * @param docTfMapVect
      */
     void initDocs(
-        std::vector<base::StrUintMap> const & docLenMapVect,
+        std::vector<base::StrSizeMap> const & docLenMapVect,
         std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect);
 
     /**
@@ -240,7 +240,7 @@ private:
      * @param sectionTfMap
      */
     void initNDocsWithTermPerSection(
-        std::string const & sectionKey, base::StrUintMap const & sectionTfMap);
+        std::string const & sectionKey, base::StrSizeMap const & sectionTfMap);
 
     /**
      * @brief Calculate the total number of terms per section in the
