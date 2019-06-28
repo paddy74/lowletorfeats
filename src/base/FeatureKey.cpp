@@ -1,5 +1,5 @@
 #include <lowletorfeats/base/FeatureKey.hpp>
-#include <lowletorfeats/utils.hpp>
+#include <textalyzer/tokenize.hpp>
 #include <vector>
 
 namespace lowletorfeats::base
@@ -19,7 +19,7 @@ FeatureKey::FeatureKey()
 
 FeatureKey::FeatureKey(std::string const & fKeyStr)
 {
-    std::vector<std::string> const & fDelim = utils::strSplit(fKeyStr, '.');
+    std::vector<std::string> const fDelim = textalyzer::strSplit(fKeyStr, '.');
 
     switch (fDelim.size())
     {
