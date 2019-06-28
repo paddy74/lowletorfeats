@@ -15,9 +15,9 @@ public:
     /* Public member variables */
     /***************************/
 
-    float lamb = 0.1;
+    float lamb = 0.1f;
     ushort mu = 2000;
-    float delta = 0.7;
+    float delta = 0.7f;
 
     /* Constructors */
     /****************/
@@ -33,7 +33,7 @@ public:
      *
      * @param totalTermsMap
      */
-    LMIR(base::StrUintMap const & corpusTfMap);
+    LMIR(base::StrSizeMap const & corpusTfMap);
 
     /**
      * @brief Copy constructor for a new LMIR object.
@@ -50,24 +50,28 @@ public:
      *
      */
     base::FValType absolute_discount(
-        base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-        base::StrUintMap const & queryTermFreqMap) const;
+        base::StrSizeMap const & docTermFreqMap, std::size_t const docLen,
+        base::StrSizeMap const & queryTermFreqMap) const;
 
     /**
      * @brief Calculate the Dirichlet score.
      *
      */
     base::FValType dirichlet(
-        base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-        base::StrUintMap const & queryTermFreqMap) const;
+        base::StrSizeMap const & docTermFreqMap, std::size_t const docLen,
+        base::StrSizeMap const & queryTermFreqMap) const;
 
     /**
      * @brief Calculate the Jelinek-Mercer Score
      *
+     * @param docTermFreqMap
+     * @param docLen
+     * @param queryTermFreqMap
+     * @return base::FValType
      */
     base::FValType jelinek_mercer(
-        base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-        base::StrUintMap const & queryTermFreqMap) const;
+        base::StrSizeMap const & docTermFreqMap, std::size_t const docLen,
+        base::StrSizeMap const & queryTermFreqMap) const;
 
 private:
     /* Private member variables */
@@ -81,9 +85,12 @@ private:
     /**
      * @brief Calculate the PML score for each term in the document.
      *
+     * @param docTermFreqMap The document's term frequency map.
+     * @param docLen The length of the document.
+     * @return base::StrDblMap The calculated pMl for each term.
      */
     base::StrDblMap calcDocPml(
-        base::StrUintMap const & docTermFreqMap,
+        base::StrSizeMap const & docTermFreqMap,
         std::size_t const docLen) const;
 };
 

@@ -15,8 +15,9 @@ namespace lowletorfeats
  * @return double
  */
 base::FValType Tfidf::tfidf(
-    uint const & docTermFrequency, uint const & docMaxTermFrequency,
-    uint const & numDocs, uint const & numDocsWithTerm)
+    std::size_t const & docTermFrequency,
+    std::size_t const & docMaxTermFrequency, std::size_t const & numDocs,
+    std::size_t const & numDocsWithTerm)
 {
     return tfDoubleNorm(docTermFrequency, docMaxTermFrequency) *
            idfNorm(numDocs, numDocsWithTerm);
@@ -32,10 +33,10 @@ base::FValType Tfidf::tfidf(
  * @return double
  */
 base::FValType Tfidf::tfidf(
-    base::FValType (*tfFunction)(uint const &),
-    base::FValType (*idfFunction)(uint const &, uint const &),
-    uint const & docTermFrequency, uint const & numDocs,
-    uint const & numDocsWithTerm)
+    base::FValType (*tfFunction)(std::size_t const &),
+    base::FValType (*idfFunction)(std::size_t const &, std::size_t const &),
+    std::size_t const & docTermFrequency, std::size_t const & numDocs,
+    std::size_t const & numDocsWithTerm)
 {
     return (*tfFunction)(docTermFrequency) *
            (*idfFunction)(numDocs, numDocsWithTerm);
@@ -53,10 +54,11 @@ base::FValType Tfidf::tfidf(
  * @return double
  */
 base::FValType Tfidf::tfidf(
-    base::FValType (*tfFunction)(uint, uint),
-    base::FValType (*idfFunction)(uint, uint), uint const & docTermFrequency,
-    uint const & docMaxTermFrequency, uint const & numDocs,
-    uint const & numDocsWithTerm)
+    base::FValType (*tfFunction)(std::size_t const &, std::size_t const &),
+    base::FValType (*idfFunction)(std::size_t const &, std::size_t const &),
+    std::size_t const & docTermFrequency,
+    std::size_t const & docMaxTermFrequency, std::size_t const & numDocs,
+    std::size_t const & numDocsWithTerm)
 {
     return (*tfFunction)(docTermFrequency, docMaxTermFrequency) *
            (*idfFunction)(numDocs, numDocsWithTerm);
@@ -76,9 +78,10 @@ base::FValType Tfidf::tfidf(
  * @return double
  */
 base::FValType Tfidf::queryTfidf(
-    base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency,
-    uint const & numDocs, base::StrUintMap const & docsWithTermFreqMap,
-    base::StrUintMap const & queryTermFreqMap)
+    base::StrSizeMap const & docTermFreqMap,
+    std::size_t const & docMaxTermFrequency, std::size_t const & numDocs,
+    base::StrSizeMap const & docsWithTermFreqMap,
+    base::StrSizeMap const & queryTermFreqMap)
 {
     // Sum the scores for each term
     base::FValType score = 0;
@@ -89,8 +92,8 @@ base::FValType Tfidf::queryTfidf(
         if (!(docTermFreqMap.count(term) == 0 ||
               docsWithTermFreqMap.count(term) == 0))
         {
-            uint const docTermFrequency = docTermFreqMap.at(term);
-            uint const numDocsWithTerm = docsWithTermFreqMap.at(term);
+            std::size_t const docTermFrequency = docTermFreqMap.at(term);
+            std::size_t const numDocsWithTerm = docsWithTermFreqMap.at(term);
 
             score += tfidf(
                 docTermFrequency, docMaxTermFrequency, numDocs,

@@ -11,9 +11,11 @@ namespace lowletorfeats
  * @return base::FValType
  */
 base::FValType Tfidf::idfDefault(
-    uint const & numDocs, uint const & numDocsWithTerm)
+    std::size_t const & numDocs, std::size_t const & numDocsWithTerm)
 {
-    return log((base::FValType)numDocs / (base::FValType)numDocsWithTerm);
+    return log(
+        static_cast<base::FValType>(numDocs) /
+        static_cast<base::FValType>(numDocsWithTerm));
 }
 
 /**
@@ -24,10 +26,11 @@ base::FValType Tfidf::idfDefault(
  * @return base::FValType
  */
 base::FValType Tfidf::idfSmooth(
-    uint const & numDocs, uint const & numDocsWithTerm)
+    std::size_t const & numDocs, std::size_t const & numDocsWithTerm)
 {
     return log(
-        (base::FValType)numDocs / (base::FValType)(1 + numDocsWithTerm));
+        static_cast<base::FValType>(numDocs) /
+        static_cast<base::FValType>(1 + numDocsWithTerm));
 }
 
 /**
@@ -38,12 +41,13 @@ base::FValType Tfidf::idfSmooth(
  * @return base::FValType
  */
 base::FValType Tfidf::idfMax(
-    uint const & numDocsWithTerm, uint const & docMaxTermFrequency)
+    std::size_t const & numDocsWithTerm,
+    std::size_t const & docMaxTermFrequency)
 {
     return log(
-        ((base::FValType)docMaxTermFrequency *
-         (base::FValType)numDocsWithTerm) /
-        (base::FValType)(1 + numDocsWithTerm));
+        (static_cast<base::FValType>(docMaxTermFrequency) *
+         static_cast<base::FValType>(numDocsWithTerm)) /
+        static_cast<base::FValType>(1 + numDocsWithTerm));
 }
 
 /**
@@ -54,11 +58,11 @@ base::FValType Tfidf::idfMax(
  * @return base::FValType
  */
 base::FValType Tfidf::idfProb(
-    uint const & numDocs, uint const & numDocsWithTerm)
+    std::size_t const & numDocs, std::size_t const & numDocsWithTerm)
 {
     return log(
-        ((base::FValType)numDocs - (base::FValType)numDocsWithTerm) /
-        (base::FValType)numDocsWithTerm);
+        static_cast<base::FValType>(numDocs - numDocsWithTerm) /
+        static_cast<base::FValType>(numDocsWithTerm));
 }
 
 /**
@@ -69,11 +73,14 @@ base::FValType Tfidf::idfProb(
  * @return base::FValType
  */
 base::FValType Tfidf::idfNorm(
-    uint const & numDocs, uint const & numDocsWithTerm)
+    std::size_t const & numDocs, std::size_t const & numDocsWithTerm)
 {
-    base::FValType const numDocsWithoutTerm = numDocs - numDocsWithTerm;
+    base::FValType const numDocsWithoutTerm =
+        static_cast<base::FValType>(numDocs - numDocsWithTerm);
+
     return log(
-        (numDocsWithoutTerm + 0.5) / ((base::FValType)numDocsWithTerm + 0.5));
+        (numDocsWithoutTerm + 0.5) /
+        (static_cast<base::FValType>(numDocsWithTerm) + 0.5));
 }
 
 }  // namespace lowletorfeats

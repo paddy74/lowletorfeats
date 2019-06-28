@@ -28,7 +28,7 @@ FeatureCollector::FeatureCollector(
 
 FeatureCollector::FeatureCollector(
     std::vector<base::StrStrMap> const & docTextMapVect,
-    base::StrUintMap const & queryTfMap)
+    base::StrSizeMap const & queryTfMap)
 {
     // Query text
     this->queryTfMap = queryTfMap;
@@ -37,7 +37,7 @@ FeatureCollector::FeatureCollector(
 }
 
 FeatureCollector::FeatureCollector(
-    std::vector<base::StrUintMap> const & docLenMapVect,
+    std::vector<base::StrSizeMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
     std::string const & queryText)
 {
@@ -51,9 +51,9 @@ FeatureCollector::FeatureCollector(
 }
 
 FeatureCollector::FeatureCollector(
-    std::vector<base::StrUintMap> const & docLenMapVect,
+    std::vector<base::StrSizeMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect,
-    base::StrUintMap const & queryTfMap)
+    base::StrSizeMap const & queryTfMap)
 {
     // Query text
     this->queryTfMap = queryTfMap;
@@ -211,7 +211,9 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
                 case VNames::dl:
                 {
                     for (auto & doc : this->docVect)
-                        doc.updateFeature(fKey, doc.getDocLen(fSection));
+                        doc.updateFeature(
+                            fKey, static_cast<base::FValType>(
+                                      doc.getDocLen(fSection)));
                     break;
                 }
 
@@ -311,7 +313,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
                 case VNames::tfidf:
                 {
-                    base::StrUintMap const & docsWithTermMap =
+                    base::StrSizeMap const & docsWithTermMap =
                         this->nDocsWithTermPerSection.at(fSection);
 
                     for (auto & doc : this->docVect)
@@ -336,7 +338,7 @@ void FeatureCollector::collectFeatures(base::FeatureKey const & fKey)
 
         case VTypes::okapi:
         {
-            base::StrUintMap const & docsWithTermMap =
+            base::StrSizeMap const & docsWithTermMap =
                 this->nDocsWithTermPerSection.at(fSection);
             auto const & avgDocLen = this->avgDocLenPerSection.at(fSection);
 
@@ -537,7 +539,8 @@ void FeatureCollector::addDoc(StructuredDocument const & newDoc)
     for (auto const & [sectionKey, sectionTfMap] :
          newDoc.getStructuredTermFrequencyMap())
     {
-        this->avgDocLenPerSection[sectionKey] += newDoc.getDocLen(sectionKey);
+        this->avgDocLenPerSection[sectionKey] +=
+            static_cast<float>(newDoc.getDocLen(sectionKey));
         this->initNDocsWithTermPerSection(sectionKey, sectionTfMap);
     }
 
@@ -546,7 +549,7 @@ void FeatureCollector::addDoc(StructuredDocument const & newDoc)
 }
 
 void FeatureCollector::addDoc(
-    base::StrUintMap const & docLenMap,
+    base::StrSizeMap const & docLenMap,
     base::StructuredTermFrequencyMap const & strucDocTfMap)
 {
     // Create a new document, ensures `full` sectionKey
@@ -557,7 +560,8 @@ void FeatureCollector::addDoc(
     for (auto const & [sectionKey, sectionTfMap] :
          newDoc.getStructuredTermFrequencyMap())
     {
-        this->avgDocLenPerSection[sectionKey] += newDoc.getDocLen(sectionKey);
+        this->avgDocLenPerSection[sectionKey] +=
+            static_cast<float>(newDoc.getDocLen(sectionKey));
         this->initNDocsWithTermPerSection(sectionKey, sectionTfMap);
     }
 
@@ -575,14 +579,14 @@ void FeatureCollector::initDocs(
     this->docVect.reserve(this->numDocs);
     for (auto const & docTextMap : docTextMapVect)  // for each document
     {
-        base::StrUintMap docLenMap;
+        base::StrSizeMap docLenMap;
         base::StructuredTermFrequencyMap structDocTfMap;
 
         // For each section
         for (auto const & [sectionKey, sectionText] : docTextMap)
         {
             // Analyze text for this document
-            base::StrUintMap sectionTfMap;
+            base::StrSizeMap sectionTfMap;
             auto const & pair = FeatureCollector::analyzerFun(
                 sectionText, FeatureCollector::DEFAULT_NGRAMS);
             sectionTfMap = textalyzer::asFrequencyMap(pair.first);
@@ -602,7 +606,7 @@ void FeatureCollector::initDocs(
     // Calculate avgDocLengths
     for (auto const & [sectionKey, sectionValue] : this->avgDocLenPerSection)
         this->avgDocLenPerSection.at(sectionKey) =
-            sectionValue / this->numDocs;
+            sectionValue / static_cast<float>(this->numDocs);
 
     this->initNTermsPerSection();
 
@@ -611,7 +615,7 @@ void FeatureCollector::initDocs(
 }
 
 void FeatureCollector::initDocs(
-    std::vector<base::StrUintMap> const & docLenMapVect,
+    std::vector<base::StrSizeMap> const & docLenMapVect,
     std::vector<base::StructuredTermFrequencyMap> const & docTfMapVect)
 {
     // Set the number of documents
@@ -622,7 +626,7 @@ void FeatureCollector::initDocs(
     for (std::size_t docIdx = 0; docIdx < this->numDocs;
          ++docIdx)  // for each document
     {
-        base::StrUintMap const & docLenMap = docLenMapVect.at(docIdx);
+        base::StrSizeMap const & docLenMap = docLenMapVect.at(docIdx);
         base::StructuredTermFrequencyMap strucDocTfMap =
             docTfMapVect.at(docIdx);
 
@@ -641,7 +645,7 @@ void FeatureCollector::initDocs(
     // Calculate avgDocLengths
     for (auto const & [sectionKey, sectionValue] : this->avgDocLenPerSection)
         this->avgDocLenPerSection.at(sectionKey) =
-            sectionValue / this->numDocs;
+            sectionValue / static_cast<float>(this->numDocs);
 
     // Total collection terms for each section
     this->initNTermsPerSection();
@@ -651,13 +655,13 @@ void FeatureCollector::initDocs(
 }
 
 void FeatureCollector::initNDocsWithTermPerSection(
-    std::string const & sectionKey, base::StrUintMap const & sectionTfMap)
+    std::string const & sectionKey, base::StrSizeMap const & sectionTfMap)
 {
     // Create the sectionKey key
     if (this->nDocsWithTermPerSection.count(sectionKey) == 0)
-        this->nDocsWithTermPerSection[sectionKey] = base::StrUintMap();
+        this->nDocsWithTermPerSection[sectionKey] = base::StrSizeMap();
     if (this->tfMapPerSection.count(sectionKey) == 0)
-        this->tfMapPerSection[sectionKey] = base::StrUintMap();
+        this->tfMapPerSection[sectionKey] = base::StrSizeMap();
 
     for (auto const & mapPair : sectionTfMap)
     {

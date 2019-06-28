@@ -20,7 +20,7 @@ public:
      * @param docTermFrequency The term's frequency.
      * @return base::FValType
      */
-    static base::FValType tfLogNorm(uint const & docTermFrequency);
+    static base::FValType tfLogNorm(std::size_t const & docTermFrequency);
 
     /**
      * @brief Double normalization term frequency.
@@ -33,8 +33,8 @@ public:
      * @return base::FValType
      */
     static base::FValType tfDoubleNorm(
-        uint const & docTermFrequency, uint const & docMaxTermFrequency,
-        float const & k);
+        std::size_t const & docTermFrequency,
+        std::size_t const & docMaxTermFrequency, float const & k);
 
     /**
      * @brief Double normalization term frequency (k = 0.5).
@@ -46,56 +46,62 @@ public:
      * @return base::FValType
      */
     static base::FValType tfDoubleNorm(
-        uint const & docTermFrequency, uint const & docMaxTermFrequency);
+        std::size_t const & docTermFrequency,
+        std::size_t const & docMaxTermFrequency);
 
     /**
      * @brief Return the sum of tfLogNorm for a document.
      *
      */
     static base::FValType sumTfLogNorm(
-        base::StrUintMap const & docTermFreqMap);
+        base::StrSizeMap const & docTermFreqMap);
 
     /**
      * @brief Return the sum of tfDoubleNorm for a document.
      *
      */
     static base::FValType sumTfDoubleNorm(
-        base::StrUintMap const & docTermFreqMap,
-        uint const & docMaxTermFrequency);
+        base::StrSizeMap const & docTermFreqMap,
+        std::size_t const & docMaxTermFrequency);
 
     /* Inverse document frequency */
     /******************************/
     base::FValType static idfDefault(
-        uint const & numDocs, uint const & numDocsWithTerm);
+        std::size_t const & numDocs, std::size_t const & numDocsWithTerm);
     base::FValType static idfSmooth(
-        uint const & numDocs, uint const & numDocsWithTerm);
+        std::size_t const & numDocs, std::size_t const & numDocsWithTerm);
     base::FValType static idfMax(
-        uint const & numDocsWithTerm, uint const & docMaxTermFrequency);
+        std::size_t const & numDocsWithTerm,
+        std::size_t const & docMaxTermFrequency);
     base::FValType static idfProb(
-        uint const & numDocs, uint const & numDocsWithTerm);
+        std::size_t const & numDocs, std::size_t const & numDocsWithTerm);
     base::FValType static idfNorm(
-        uint const & numDocs, uint const & numDocsWithTerm);
+        std::size_t const & numDocs, std::size_t const & numDocsWithTerm);
 
     /* TF/IDF */
     /**********/
     base::FValType static tfidf(
-        uint const & docTermFrequency, uint const & docMaxTermFrequency,
-        uint const & numDocs, uint const & numDocsWithTerm);
+        std::size_t const & docTermFrequency,
+        std::size_t const & docMaxTermFrequency, std::size_t const & numDocs,
+        std::size_t const & numDocsWithTerm);
     base::FValType static tfidf(
-        base::FValType (*tfFunction)(uint const &),
-        base::FValType (*idfFunction)(uint const &, uint const &),
-        uint const & docTermFrequency, uint const & numDocs,
-        uint const & numDocsWithTerm);
+        base::FValType (*tfFunction)(std::size_t const &),
+        base::FValType (*idfFunction)(
+            std::size_t const &, std::size_t const &),
+        std::size_t const & docTermFrequency, std::size_t const & numDocs,
+        std::size_t const & numDocsWithTerm);
     base::FValType static tfidf(
-        base::FValType (*tfFunction)(uint, uint),
-        base::FValType (*idfFunction)(uint, uint),
-        uint const & docTermFrequency, uint const & docMaxTermFrequency,
-        uint const & numDocs, uint const & numDocsWithTerm);
+        base::FValType (*tfFunction)(std::size_t const &, std::size_t const &),
+        base::FValType (*idfFunction)(
+            std::size_t const &, std::size_t const &),
+        std::size_t const & docTermFrequency,
+        std::size_t const & docMaxTermFrequency, std::size_t const & numDocs,
+        std::size_t const & numDocsWithTerm);
     base::FValType static queryTfidf(
-        base::StrUintMap const & docTermFreqMap,
-        uint const & docMaxTermFrequency, uint const & numDocs,
-        base::StrUintMap const & docsWithTermFreqMap,
-        base::StrUintMap const & queryTermFreqMap);
+        base::StrSizeMap const & docTermFreqMap,
+        std::size_t const & docMaxTermFrequency, std::size_t const & numDocs,
+        base::StrSizeMap const & docsWithTermFreqMap,
+        base::StrSizeMap const & queryTermFreqMap);
 
 private:
     Tfidf() {}

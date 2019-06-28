@@ -16,17 +16,19 @@ namespace lowletorfeats
  * @return double
  */
 base::FValType Okapi::bm25plus(
-    uint const & docTermFrequency, uint const & numDocs, uint numDocsWithTerm,
-    uint const & avgDocLen, float const & b, float const & k1,
-    float const & delta)
+    std::size_t const & docTermFrequency, std::size_t const & numDocs,
+    std::size_t const & numDocsWithTerm, float const & avgDocLen,
+    float const & b, float const & k1, float const & delta)
 {
     base::FValType const idf = Tfidf::idfNorm(numDocs, numDocsWithTerm);
 
-    base::FValType const numer = docTermFrequency * (k1 + 1);
+    base::FValType const numer =
+        static_cast<float>(docTermFrequency) * (k1 + 1);
     base::FValType const denom =
-        docTermFrequency +
+        static_cast<base::FValType>(docTermFrequency) +
         (k1 * (1 - b +
-               (b * ((base::FValType)numDocs / (base::FValType)avgDocLen))));
+               (b * (static_cast<base::FValType>(numDocs) /
+                     static_cast<base::FValType>(avgDocLen)))));
 
     return idf * ((numer / denom) + delta);
 }
@@ -41,12 +43,12 @@ base::FValType Okapi::bm25plus(
  * @return double
  */
 base::FValType Okapi::bm25plus(
-    uint const & docTermFrequency, uint const & numDocs,
-    uint const & numDocsWithTerm, uint const & avgDocLen)
+    std::size_t const & docTermFrequency, std::size_t const & numDocs,
+    std::size_t const & numDocsWithTerm, float const & avgDocLen)
 {
-    float const k1 = 1.2;
-    float const b = 0.74;
-    float const delta = 1.0;
+    float const k1 = 1.2f;
+    float const b = 0.74f;
+    float const delta = 1.0f;
 
     return bm25plus(
         docTermFrequency, numDocs, numDocsWithTerm, avgDocLen, b, k1, delta);
@@ -65,9 +67,9 @@ base::FValType Okapi::bm25plus(
  * @return double
  */
 base::FValType Okapi::queryBm25plus(
-    base::StrUintMap const & docTermFreqMap, uint const & numDocs,
-    base::StrUintMap const & docsWithTermFreqMap, uint const & avgDocLen,
-    base::StrUintMap const & queryTermFreqMap)
+    base::StrSizeMap const & docTermFreqMap, std::size_t const & numDocs,
+    base::StrSizeMap const & docsWithTermFreqMap, float const & avgDocLen,
+    base::StrSizeMap const & queryTermFreqMap)
 {
     // Sum the scores for each term
     base::FValType score = 0;

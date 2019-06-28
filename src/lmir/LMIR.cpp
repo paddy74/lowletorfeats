@@ -8,12 +8,14 @@ namespace lowletorfeats
 
 LMIR::LMIR() {}
 
-LMIR::LMIR(base::StrUintMap const & corpusTfMap)
+LMIR::LMIR(base::StrSizeMap const & corpusTfMap)
 {
     std::size_t nTotalTerms = utils::mapValueSum(corpusTfMap);
 
     for (auto const & mapPair : corpusTfMap)
-        this->termProbabilityMap[mapPair.first] = mapPair.second / nTotalTerms;
+        this->termProbabilityMap[mapPair.first] =
+            static_cast<double>(mapPair.second) /
+            static_cast<double>(nTotalTerms);
 }
 
 LMIR::LMIR(LMIR const & other)
@@ -24,8 +26,8 @@ LMIR::LMIR(LMIR const & other)
 /* Public class methods */
 
 base::FValType LMIR::absolute_discount(
-    base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-    base::StrUintMap const & queryTermFreqMap) const
+    base::StrSizeMap const & docTermFreqMap, std::size_t const docLen,
+    base::StrSizeMap const & queryTermFreqMap) const
 {
     std::size_t const nUniqueTerms = docTermFreqMap.size();
     base::FValType score = 0;
@@ -37,12 +39,14 @@ base::FValType LMIR::absolute_discount(
         {
             std::size_t const docTermFrequency = docTermFreqMap.at(term);
 
-            long double c = docTermFrequency - delta;
+            double c = static_cast<double>(docTermFrequency) - this->delta;
             if (!(c > 0)) c = 0;
 
             score +=
-                log(c / docLen + this->delta * nUniqueTerms / docLen *
-                                     this->termProbabilityMap.at(term));
+                log(c / static_cast<float>(docLen) +
+                    this->delta * static_cast<float>(nUniqueTerms) /
+                        static_cast<float>(docLen) *
+                        this->termProbabilityMap.at(term));
         }
     }
 
@@ -50,8 +54,8 @@ base::FValType LMIR::absolute_discount(
 }
 
 base::FValType LMIR::dirichlet(
-    base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-    base::StrUintMap const & queryTermFreqMap) const
+    base::StrSizeMap const & docTermFreqMap, std::size_t const docLen,
+    base::StrSizeMap const & queryTermFreqMap) const
 {
     base::FValType score = 0;
     for (auto const & mapPair : queryTermFreqMap)
@@ -60,12 +64,14 @@ base::FValType LMIR::dirichlet(
 
         if (docTermFreqMap.count(term) != 0)
         {
-            auto const docTermFrequency = docTermFreqMap.at(term);
+            double const & docTermFrequency =
+                static_cast<double>(docTermFreqMap.at(term));
+            double const & termProb =
+                static_cast<double>(this->termProbabilityMap.at(term));
 
             score +=
-                log((docTermFrequency +
-                     this->mu * this->termProbabilityMap.at(term)) /
-                    (docLen + this->mu));
+                log((docTermFrequency + this->mu * termProb) /
+                    static_cast<double>(docLen + this->mu));
         }
     }
 
@@ -73,8 +79,8 @@ base::FValType LMIR::dirichlet(
 }
 
 base::FValType LMIR::jelinek_mercer(
-    base::StrUintMap const & docTermFreqMap, std::size_t const docLen,
-    base::StrUintMap const & queryTermFreqMap) const
+    base::StrSizeMap const & docTermFreqMap, std::size_t const docLen,
+    base::StrSizeMap const & queryTermFreqMap) const
 {
     auto const docPml = this->calcDocPml(docTermFreqMap, docLen);
 
@@ -97,11 +103,12 @@ base::FValType LMIR::jelinek_mercer(
 /* Private class methods */
 
 base::StrDblMap LMIR::calcDocPml(
-    base::StrUintMap const & docTermFreqMap, std::size_t const docLen) const
+    base::StrSizeMap const & docTermFreqMap, std::size_t const docLen) const
 {
     base::StrDblMap pMl;
     for (auto const & mapPair : docTermFreqMap)
-        pMl[mapPair.first] = mapPair.second / docLen;
+        pMl[mapPair.first] =
+            static_cast<double>(mapPair.second) / static_cast<double>(docLen);
 
     return pMl;
 }

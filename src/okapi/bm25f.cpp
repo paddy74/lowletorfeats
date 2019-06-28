@@ -16,10 +16,10 @@ namespace lowletorfeats
  */
 base::FValType Okapi::queryBm25f(
     base::StructuredTermFrequencyMap const & structDocTermFreqMap,
-    uint const & numDocs,
+    std::size_t const & numDocs,
     base::StructuredTermFrequencyMap const & structDocsWithTermFreqMap,
-    base::StrUintMap const & avgDocLenMap,
-    base::StrUintMap const & queryTermFreqMap,
+    base::StrFltMap const & avgDocLenMap,
+    base::StrSizeMap const & queryTermFreqMap,
     std::unordered_map<std::string, base::WeightType> const & sectionWeights)
 {
     // Calculate full idf
@@ -66,10 +66,10 @@ base::FValType Okapi::queryBm25f(
  */
 base::FValType Okapi::queryBm25fplus(
     base::StructuredTermFrequencyMap const & structDocTermFreqMap,
-    uint const & numDocs,
+    std::size_t const & numDocs,
     base::StructuredTermFrequencyMap const & structDocsWithTermFreqMap,
-    base::StrUintMap const & avgDocLenMap,
-    base::StrUintMap const & queryTermFreqMap,
+    base::StrFltMap const & avgDocLenMap,
+    base::StrSizeMap const & queryTermFreqMap,
     std::unordered_map<std::string, base::WeightType> const & sectionWeights)
 {
     // Calculate full idf

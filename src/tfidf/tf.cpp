@@ -4,34 +4,36 @@
 
 namespace lowletorfeats
 {
-base::FValType Tfidf::tfLogNorm(uint const & docTermFrequency)
+base::FValType Tfidf::tfLogNorm(std::size_t const & docTermFrequency)
 {
-    return log(1 + (base::FValType)docTermFrequency);
+    return log(1 + static_cast<base::FValType>(docTermFrequency));
 }
 
 base::FValType Tfidf::tfDoubleNorm(
-    uint const & docTermFrequency, uint const & docMaxTermFrequency,
-    float const & k)
+    std::size_t const & docTermFrequency,
+    std::size_t const & docMaxTermFrequency, float const & k)
 {
-    return k + ((1 - k) *
-                ((base::FValType)docTermFrequency /
-                 (base::FValType)(docMaxTermFrequency + docTermFrequency)));
+    return k + ((1 - k) * (static_cast<base::FValType>(docTermFrequency) /
+                           static_cast<base::FValType>(
+                               (docMaxTermFrequency + docTermFrequency))));
 }
 
 base::FValType Tfidf::tfDoubleNorm(
-    uint const & docTermFrequency, uint const & docMaxTermFrequency)
+    std::size_t const & docTermFrequency,
+    std::size_t const & docMaxTermFrequency)
 {
     return tfDoubleNorm(docTermFrequency, docMaxTermFrequency, 0.5);
 }
 
-base::FValType Tfidf::sumTfLogNorm(base::StrUintMap const & docTermFreqMap)
+base::FValType Tfidf::sumTfLogNorm(base::StrSizeMap const & docTermFreqMap)
 {
     return Tfidf::tfLogNorm(utils::mapValueSum(docTermFreqMap));
     ;
 }
 
 base::FValType Tfidf::sumTfDoubleNorm(
-    base::StrUintMap const & docTermFreqMap, uint const & docMaxTermFrequency)
+    base::StrSizeMap const & docTermFreqMap,
+    std::size_t const & docMaxTermFrequency)
 {
     return tfDoubleNorm(
         utils::mapValueSum(docTermFreqMap), docMaxTermFrequency);
