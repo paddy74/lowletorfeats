@@ -33,7 +33,7 @@ public:
      * doc.
      */
     StructuredDocument(  // The indicated section only
-        uint const & docLen, base::StrUintMap const & fullTermFrequencyMap,
+        uint const & docLen, base::StrSizeMap const & fullTermFrequencyMap,
         std::string const & sectionKey);
 
     /**
@@ -45,7 +45,7 @@ public:
      * doc.
      */
     StructuredDocument(  // `"full"` section only
-        uint const & docLen, base::StrUintMap const & fullTermFrequencyMap);
+        uint const & docLen, base::StrSizeMap const & fullTermFrequencyMap);
 
     /**
      * @brief Construct a new Structured Document object using a preanalyzed
@@ -56,7 +56,7 @@ public:
      * each structured section.
      */
     StructuredDocument(  // One or more sections
-        base::StrUintMap const & docLenMap,
+        base::StrSizeMap const & docLenMap,
         base::StructuredTermFrequencyMap const & structuredTermFrequencyMap);
 
     // Copy constructor
@@ -128,7 +128,7 @@ public:
      *
      * @return base::TermFrequencyMap const&
      */
-    base::StrUintMap const & getTermFrequencyMap() const;
+    base::StrSizeMap const & getTermFrequencyMap() const;
 
     /**
      * @brief Get the `TermFrequencyMap` for the given section.
@@ -136,7 +136,7 @@ public:
      * @param section
      * @return base::TermFrequencyMap const&
      */
-    base::StrUintMap const & getTermFrequencyMap(
+    base::StrSizeMap const & getTermFrequencyMap(
         std::string const & section) const;
 
     /**
@@ -199,10 +199,10 @@ private:
     /* Private member variables */
     /****************************/
 
-    base::StrUintMap docLenMaps;
+    base::StrSizeMap docLenMaps;
 
     base::StructuredTermFrequencyMap termFrequencyMaps;
-    base::StrUintMap maxTermMaps;
+    base::StrSizeMap maxTermMaps;
 
     base::FeatureMap featureMap;
 
